@@ -1,13 +1,23 @@
 import Logo from "@/assets/Logo.png";
 import { Link } from "react-router-dom";
 
-function Header() {
+// 사이드바 연결(하윤)
+interface HeaderProps {
+  onMenuClick?: () => void;
+}
+
+function Header({ onMenuClick }: HeaderProps) {
   return (
     <header className="w-[1420px] mx-auto bg-[#5C4033]">
       <div className="mx-auto max-w-[1280px] h-[120px] flex justify-between px-[24px] relative">
         {/* 왼쪽 */}
         <div className="flex mt-[20px] gap-[20px]">
-          <span className="text-[28px] text-white cursor-pointer">☰</span>
+          <span
+            className="text-[28px] text-white cursor-pointer"
+            onClick={onMenuClick}
+          >
+            ☰
+          </span>
         </div>
 
         {/* 가운데 로고 */}

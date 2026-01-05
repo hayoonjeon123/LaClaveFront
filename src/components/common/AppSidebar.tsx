@@ -8,29 +8,30 @@ import {
     SheetDescription,
     SheetHeader,
     SheetTitle,
-    SheetTrigger,
 } from "@/components/ui/sheet"
 import { useState, useEffect } from "react"
 
 
-function AppSidebar() {
+interface AppSidebarProps {
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
+}
+
+function AppSidebar({ open, onOpenChange }: AppSidebarProps) {
     const [openMenuId, setOpenMenuId] = useState<number | null>(null);
-    const [isSheetOpen, setIsSheetOpen] = useState(false);
+
     const toggleMenu = (id: number) => {
         setOpenMenuId((prev) => (prev === id ? null : id));
     };
 
     useEffect(() => {
-        if (!isSheetOpen) {
+        if (!open) {
             setOpenMenuId(null);
         }
-    }, [isSheetOpen]);
+    }, [open]);
 
     return (
-        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-            <SheetTrigger className="p-2 bg-[#5C4033] text-white rounded-lg" onClick={() => setIsSheetOpen(true)}>
-                메뉴
-            </SheetTrigger>
+        <Sheet open={open} onOpenChange={onOpenChange}>
 
             <SheetContent side="left" className="w-80 p-0 bg-[#5C4033] border-none">
                 <div className="h-full flex flex-col">

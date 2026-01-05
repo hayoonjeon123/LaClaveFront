@@ -1,4 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Aguafina+Script&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Luxurious+Script&display=swap");
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -119,6 +121,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     font-family: "Gowun Dodum", sans-serif;
 
