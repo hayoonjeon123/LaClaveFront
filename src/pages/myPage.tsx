@@ -1,0 +1,87 @@
+import {
+  ShoppingCart,
+  Bell,
+  Settings,
+  Heart,
+  Phone,
+  ClipboardList,
+  Gift,
+  Database,
+  Truck,
+  List,
+} from "lucide-react";
+
+export default function MyPage() {
+  return (
+    <div className="min-h-screen bg-[#F5F5F5] font-['Gowun_Dodum'] text-black">
+      {/* Title */}
+      <div className="text-center my-10">
+        <h2 className="text-3xl font-bold text-[#5C4033]">My Page</h2>
+      </div>
+
+      {/* User Info */}
+      <div className="max-w-5xl mx-auto px-6">
+        <div className="flex justify-between items-center mb-8">
+          <div className="flex items-center gap-3">
+            <span className="font-semibold text-[#5C4033] text-3xl">
+              빛나는 초코님 VIP
+            </span>
+          </div>
+          <div className="flex gap-4 text-[#5C4033]">
+            <ShoppingCart size={30} strokeWidth={2} />
+            <Bell size={30} strokeWidth={2} />
+            <Settings size={30} strokeWidth={2} />
+          </div>
+        </div>
+
+        {/* Quick Menu */}
+        <div className="mb-10">
+          <div className="w-full h-[140px] grid grid-cols-6 gap-6 p-6 border border-[#5C4033] rounded-[10px] bg-white">
+            {[
+              { icon: <List size={30} />, label: "주문" },
+              { icon: <ClipboardList size={30} />, label: "리뷰" },
+              { icon: <Phone size={30} />, label: "문의" },
+              { icon: <Heart size={30} />, label: "찜" },
+              { icon: <Gift size={30} />, label: "쿠폰" },
+              { icon: <Database size={30} />, label: "포인트" },
+            ].map((item, idx) => (
+              <div
+                key={idx}
+                className="flex flex-col items-center gap-2 text-[#5C4033]"
+              >
+                <div className="w-12 h-12 flex items-center justify-center">
+                  {item.icon}
+                </div>
+                <span className="text-sm font-semibold">{item.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        {/* 배송현황 */}
+        <div className="mb-10">
+          <div className="flex justify-between items-center border-b border-black pb-2 mb-4">
+            <h3 className="font-semibold flex items-center gap-2 text-3xl">
+              <Truck size={40} strokeWidth={2} className="text-[#5C4033]" />
+              배송현황
+            </h3>
+            <span className="cursor-pointer">→</span>
+          </div>
+        </div>
+
+        {/* Section Box */}
+        {["최근 본 상품", "AI 추천 상품"].map((title, idx) => (
+          <div key={idx} className="mb-10">
+            <div className="flex justify-between items-center border-b border-black pb-2 mb-4">
+              <Gift size={40} strokeWidth={2} className="text-[#5C4033]" />
+              <h3 className="font-semibold text-3xl">{title}</h3>
+              <span className="cursor-pointer">→</span>
+            </div>
+            <div className="bg-[#F5F5F5] rounded-[10px] p-6 text-sm">
+              콘텐츠 영역
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
