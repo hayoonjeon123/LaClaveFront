@@ -16,5 +16,5 @@ export const ADMIN_CATEGORY = [
     { id: 4, label: "배송", subItems: ['배송 준비중', '배송 관리'] },
     { id: 5, label: "고객" },
     { id: 6, label: "게시판" },
-    { id: 7, label: "공통코드", subItems: ['공통코드 관리', '공통코드 추가'] },
+    { id: 7, label: "공통코드" },
 ]
