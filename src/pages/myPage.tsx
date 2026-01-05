@@ -9,6 +9,7 @@ import {
   Database,
   Truck,
   List,
+  ArrowRight,
 } from "lucide-react";
 
 export default function MyPage() {
@@ -28,9 +29,13 @@ export default function MyPage() {
             </span>
           </div>
           <div className="flex gap-4 text-[#5C4033]">
-            <ShoppingCart size={30} strokeWidth={2} />
-            <Bell size={30} strokeWidth={2} />
-            <Settings size={30} strokeWidth={2} />
+            <ShoppingCart
+              size={30}
+              strokeWidth={2}
+              className="cursor-pointer"
+            />
+            <Bell size={30} strokeWidth={2} className="cursor-pointer" />
+            <Settings size={30} strokeWidth={2} className="cursor-pointer" />
           </div>
         </div>
 
@@ -64,7 +69,7 @@ export default function MyPage() {
               <Truck size={40} strokeWidth={2} className="text-[#5C4033]" />
               배송현황
             </h3>
-            <span className="cursor-pointer">→</span>
+            <ArrowRight className="cursor-pointer" />
           </div>
         </div>
 
@@ -74,7 +79,7 @@ export default function MyPage() {
             <div className="flex justify-between items-center border-b border-black pb-2 mb-4">
               <Gift size={40} strokeWidth={2} className="text-[#5C4033]" />
               <h3 className="font-semibold text-3xl">{title}</h3>
-              <span className="cursor-pointer">→</span>
+              <ArrowRight className="cursor-pointer" />
             </div>
             <div className="bg-[#F5F5F5] rounded-[10px] p-6 text-sm">
               콘텐츠 영역

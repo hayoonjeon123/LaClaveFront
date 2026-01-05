@@ -1,3 +1,5 @@
+import { ArrowDownIcon } from "lucide-react";
+
 export default function MyOrders() {
   return (
     <div className="min-h-screen bg-[#F5F5F5] font-['Gowun_Dodum'] text-black">
@@ -17,7 +19,7 @@ export default function MyOrders() {
         <img
           src="/sample-product.jpg"
           alt="상품 이미지"
-          className="w-24 h-28 object-cover rounded"
+          className="w-28 h-28 object-cover rounded"
         />
 
         {/* 상품 정보 */}
@@ -30,14 +32,14 @@ export default function MyOrders() {
           <p className="text-gray-600">수량: 1개</p>
 
           {/* 버튼 영역 */}
-          <div className="flex gap-3 mt-4">
-            <button className="px-4 py-2 border-2 border-[#A8A9AD] rounded-[15px] text-sm">
+          <div className="flex gap-5 mt-4">
+            <button className="px-4 py-2 border-2 w-[250px] border-[#A8A9AD] rounded-[5px] text-sm">
               취소
             </button>
-            <button className="px-4 py-2 border-2 border-[#A8A9AD] rounded-[15px] text-sm font-medium">
+            <button className="px-4 py-2 border-2 w-[250px] border-[#A8A9AD] rounded-[5px] text-sm font-medium">
               리뷰쓰기
             </button>
-            <button className="px-4 py-2 border-2 border-[#A8A9AD] rounded-[15px] text-sm">
+            <button className="px-4 py-2 border-2 w-[250px] border-[#A8A9AD] rounded-[5px] text-sm">
               문의하기
             </button>
           </div>
@@ -48,6 +50,11 @@ export default function MyOrders() {
           <p className="text-gray-600 mb-1">결제완료</p>
           <p className="font-semibold">84,000원</p>
         </div>
+      </div>
+      <hr className="max-w-5xl mx-auto border-black border-t-[1px] my-3" />
+      <div className="max-w-5xl h-15 rounded-[10px] p-6 mx-auto border-black border-[1px] my-3  items-center flex  justify-between">
+        <div className="font-semibold text-[20px]">배송지 정보</div>
+        <ArrowDownIcon size={20} strokeWidth={2} className="cursor-pointer" />
       </div>
     </div>
   );
