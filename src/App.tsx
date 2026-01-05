@@ -4,6 +4,7 @@ function App() {
   return (
     <div>
       <AppSidebar />
+      <div></div>
     </div>
   );
 }
