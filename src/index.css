@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap");
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -46,8 +48,8 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --background: #f5f5f5;
+  --foreground: #000000;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -118,6 +120,8 @@
     @apply border-border outline-ring/50;
   }
   body {
+    font-family: "Gowun Dodum", sans-serif;
+
     @apply bg-background text-foreground;
   }
 }
