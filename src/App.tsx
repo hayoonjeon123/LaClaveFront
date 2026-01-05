@@ -1,10 +1,11 @@
 import { AppSidebar } from "@/components/common";
+import { AdminSidebar } from "@/components/common/AdminSidebar";
 
 function App() {
   return (
     <div>
       <AppSidebar />
-      <div></div>
+      <AdminSidebar />
     </div>
   );
 }

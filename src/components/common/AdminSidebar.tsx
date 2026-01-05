@@ -1,4 +1,4 @@
-import { CLASS_CATEGORY } from "@/constants/category.constants"
+import { ADMIN_CATEGORY, CLASS_CATEGORY } from "@/constants/category.constants"
 import { Separator } from "@/components/ui/separator"
 import Logo from "@/assets/Logo.png"
 import { ChevronDown } from "lucide-react"
@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/sheet"
 import { useState, useEffect } from "react"
 
-
-function AppSidebar() {
+// 관리자 사이드바
+function AdminSidebar() {
     const [openMenuId, setOpenMenuId] = useState<number | null>(null);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const toggleMenu = (id: number) => {
@@ -42,26 +42,21 @@ function AppSidebar() {
                             className="h-10 w-auto object-contain mx-auto block"
                         />
 
-                        <div className="mt-3 flex items-center gap-2 text-[9px] flex-wrap justify-center">
-                            <button className="text-white font-semibold cursor-pointer px-1 py-0.5 hover:bg-white/10 rounded">
-                                회원가입
-                            </button>
-                            <button className="text-white font-semibold cursor-pointer px-1 py-0.5 hover:bg-white/10 rounded">
-                                로그인
-                            </button>
-                            <button className="text-white font-semibold cursor-pointer px-1 py-0.5 hover:bg-white/10 rounded">
-                                주문조회
-                            </button>
-                            <button className="text-white font-semibold cursor-pointer px-1 py-0.5 hover:bg-white/10 rounded">
-                                최근 본 상품
-                            </button>
+                        <div className="flex items-center gap-3 w-full justify-center mb-3">
+                            <img
+                                src={Logo}
+                                alt="LaClave Logo"
+                                className="h-10 w-auto object-contain flex-shrink-0"
+                            />
+                            <span className="text-white font-semibold text-[20px]">관리자님</span>
                         </div>
+
                     </div>
 
                     {/* 카테고리 + 서브메뉴 */}
                     <div className="flex-1 mt-4 px-5 py-2">
                         <div className="w-full flex flex-col gap-5">
-                            {CLASS_CATEGORY.map((menu, index) => (
+                            {ADMIN_CATEGORY.map((menu, index) => (
                                 <div key={menu.id} className="w-full">
                                     {/* 메인 메뉴 버튼 */}
                                     <button
@@ -91,11 +86,6 @@ function AppSidebar() {
                                             ))}
                                         </div>
                                     )}
-
-                                    {/* 고객센터(7) 위에 선 추가 */}
-                                    {menu.id === 6 && (
-                                        <Separator className="my-4 bg-white/40" />
-                                    )}
                                 </div>
                             ))}
                         </div>
@@ -105,4 +95,4 @@ function AppSidebar() {
         </Sheet>
     );
 }
-export { AppSidebar }
+export { AdminSidebar }
