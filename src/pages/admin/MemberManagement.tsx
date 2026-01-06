@@ -1,4 +1,5 @@
 import { Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 // Mock Data for the table
 const MEMBERS = Array.from({ length: 10 }).map((_, i) => ({
@@ -11,19 +12,22 @@ const MEMBERS = Array.from({ length: 10 }).map((_, i) => ({
 }));
 
 export function MemberManagement() {
+    const navigate = useNavigate();
+
+    const handleDetailClick = (id: number) => {
+        navigate(`/admin/member/${id}`);
+    };
+
     return (
         <div className="w-full max-w-[1200px] mx-auto space-y-8">
             <h2 className="text-2xl font-bold mb-4 text-[30px]">회원 현황</h2>
 
-            <div className="bg-white rounded-lg bg-[#5C4033] shadow-sm border border-gray-200">
-                <div className="grid grid-cols-4">
+            <div className="bg-[#E5E5E5] p-8 rounded-lg">
+                <div className="grid grid-cols-4 gap-4 ">
                     {[1, 2, 3, 4].map((_, idx) => (
-                        <div key={idx} className="relative h-[120px] px-6 py-4 text-left flex flex-col justify-between">
-                            <h3 className="font-medium font-bold">신규 회원</h3>
-                            <p className="text-3xl text-s text-gray-900">0</p>
-                            {idx < 3 && (
-                                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[1px] h-[60%] bg-gray-200"></div>
-                            )}
+                        <div key={idx} className="bg-white rounded-[5px] border border-[#5C4033] p-4 h-[120px] flex flex-col justify-between">
+                            <span className="font-medium font-bold">신규 회원</span>
+                            <span className="text-3xl text-s text-gray-900">0</span>
                         </div>
                     ))}
                 </div>
@@ -53,7 +57,7 @@ export function MemberManagement() {
                     <div className="flex-1">이메일</div>
                     <div className="flex-1">가입일</div>
                     <div className="w-32">회원 상태</div>
-                    <div className="w-[280px]">회원 관리</div>
+                    <div className="w-[320px]">회원 관리</div>
                 </div>
 
                 <div className="divide-y divide-gray-200">
@@ -65,14 +69,19 @@ export function MemberManagement() {
                             <div className="flex-1">{member.email}</div>
                             <div className="flex-1">{member.joinDate}</div>
                             <div className="w-32 flex justify-center">
-                                <span className="px-3 py-1 bg-[#5C4033] text-white rounded text-xs">
+                                <span className="px-3 py-1 bg-[#5C4033] text-white text-md text-center rounded-[5px] border-[#A8A9AD] border-[2px] w-[80px] h-[30px] cursor-pointer flex justify-center items-center">
                                     {member.status}
                                 </span>
                             </div>
-                            <div className="w-[280px] flex justify-center gap-2">
-                                <button className="px-3 py-1 bg-[#5C4033] text-white rounded text-xs hover:bg-[#4a332a]">상세보기</button>
-                                <button className="px-3 py-1 bg-[#5C4033] text-white rounded text-xs hover:bg-[#4a332a]">등급</button>
-                                <button className="px-3 py-1 bg-[#5C4033] text-white rounded text-xs hover:bg-[#4a332a]">삭제</button>
+                            <div className="w-[320px] flex justify-center gap-4">
+                                <button
+                                    onClick={() => handleDetailClick(member.id)}
+                                    className="px-3 py-1 bg-[#5C4033] text-white text-md text-center rounded-[5px] border-[#A8A9AD] border-[2px] w-[80px] h-[30px] cursor-pointer flex justify-center items-center"
+                                >
+                                    상세보기
+                                </button>
+                                <button className="px-3 py-1 bg-[#5C4033] text-white text-md text-center rounded-[5px] border-[#A8A9AD] border-[2px] w-[80px] h-[30px] cursor-pointer flex justify-center items-center">등급</button>
+                                <button className="px-3 py-1 bg-[#5C4033] text-white text-md text-center rounded-[5px] border-[#A8A9AD] border-[2px] w-[80px] h-[30px] cursor-pointer flex justify-center items-center">삭제</button>
                             </div>
                         </div>
                     ))}

@@ -2,8 +2,8 @@
 function StatusCard({ title, value }: { title: string, value: number }) {
     return (
         <div className="bg-white rounded-[5px] border border-[#5C4033] p-4 h-[120px] flex flex-col justify-between">
-            <span className="text-sm font-bold text-gray-700">{title}</span>
-            <span className="text-3xl font-bold text-gray-900">{value}</span>
+            <span className="font-medium font-bold">{title}</span>
+            <span className="text-3xl text-s text-gray-900">{value}</span>
         </div>
     );
 }
@@ -12,13 +12,13 @@ function DualStatusCard({ leftTitle, leftValue, rightTitle, rightValue }: { left
     return (
         <div className="bg-white rounded-[5px] border border-[#5C4033] p-4 h-[120px] relative flex">
             <div className="flex-1 flex flex-col justify-between">
-                <span className="text-sm font-bold text-gray-700">{leftTitle}</span>
-                <span className="text-3xl font-bold text-gray-900">{leftValue}</span>
+                <span className="font-medium font-bold">{leftTitle}</span>
+                <span className="text-3xl  text-s text-gray-900">{leftValue}</span>
             </div>
             <div className="w-[1px] bg-gray-200 h-[60%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
             <div className="flex-1 flex flex-col justify-between pl-6">
-                <span className="text-sm font-bold text-gray-700">{rightTitle}</span>
-                <span className="text-3xl font-bold text-gray-900">{rightValue}</span>
+                <span className="font-medium font-bold">{rightTitle}</span>
+                <span className="text-3xl text-s text-gray-900">{rightValue}</span>
             </div>
         </div>
     )
@@ -30,12 +30,12 @@ export function AdminHome() {
             {/* 오늘의 할 일 Section */}
             <div className="space-y-4">
                 <div className="flex items-end gap-2">
-                    <h2 className="text-2xl font-bold text-gray-900">오늘의 할 일</h2>
+                    <h2 className="font-bold text-gray-900 text-[30px]">오늘의 할 일</h2>
                     <span className="text-sm text-gray-500 mb-1">2025년 12월 18일 ~ 현재날짜</span>
                 </div>
 
                 <div className="bg-[#E5E5E5] p-8 rounded-lg">
-                    <div className="grid grid-cols-5 gap-4">
+                    <div className="grid grid-cols-5 gap-4 ">
                         <StatusCard title="입금 전" value={0} />
                         <StatusCard title="배송 준비중" value={0} />
                         <StatusCard title="배송 보류중" value={0} />
@@ -63,7 +63,7 @@ export function AdminHome() {
 
             <div className="space-y-4">
                 <div className="flex items-end gap-2">
-                    <h2 className="text-2xl font-bold text-gray-900">매출 통계</h2>
+                    <h2 className="font-bold text-gray-900 text-[30px]">매출 통계</h2>
                     <span className="text-sm text-gray-500 mb-1">2025년 12월 18일 ~ 현재날짜</span>
                 </div>
 

@@ -10,11 +10,38 @@ export const CLASS_CATEGORY = [
 ]
 
 export const ADMIN_CATEGORY = [
-    { id: 1, label: "홈" },
-    { id: 2, label: "주문", subItems: ['주문 조회', '취소', '교환', '반품', '환불', '결제목록'] },
-    { id: 3, label: "상품", subItems: ['상품 등록', '상품 조회', '상품 수정', '재고 관리'] },
-    { id: 4, label: "배송", subItems: ['배송 준비중', '배송 관리'] },
-    { id: 5, label: "고객" },
-    { id: 6, label: "게시판" },
-    { id: 7, label: "공통코드" },
+    { id: 1, label: "홈", path: "/admin" },
+    {
+        id: 2,
+        label: "주문",
+        subItems: [
+            { label: '주문 조회', path: '/admin/order/list' },
+            { label: '취소', path: '/admin/order/cancel' },
+            { label: '교환', path: '/admin/order/exchange' },
+            { label: '반품', path: '/admin/order/return' },
+            { label: '환불', path: '/admin/order/refund' },
+            { label: '결제목록', path: '/admin/order/payment' }
+        ]
+    },
+    {
+        id: 3,
+        label: "상품",
+        subItems: [
+            { label: '상품 등록', path: '/admin/product/register' },
+            { label: '상품 조회', path: '/admin/product/list' },
+            { label: '상품 수정', path: '/admin/product/edit' },
+            { label: '재고 관리', path: '/admin/product/stock' }
+        ]
+    },
+    {
+        id: 4,
+        label: "배송",
+        subItems: [
+            { label: '배송 준비중', path: '/admin/delivery/ready' },
+            { label: '배송 관리', path: '/admin/delivery/manage' }
+        ]
+    },
+    { id: 5, label: "고객", path: "/admin/member" },
+    { id: 6, label: "게시판", path: "/admin/board" },
+    { id: 7, label: "공통코드", path: "/admin/code" },
 ]

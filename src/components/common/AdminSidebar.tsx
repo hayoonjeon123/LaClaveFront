@@ -2,13 +2,24 @@ import { ADMIN_CATEGORY } from "@/constants/category.constants"
 import Logo from "@/assets/Logo.png"
 import { ChevronDown } from "lucide-react"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom";
 
 // 관리자 사이드바
 function AdminSidebar() {
     const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+    const navigate = useNavigate();
 
     const toggleMenu = (id: number) => {
         setOpenMenuId((prev) => (prev === id ? null : id));
+    };
+
+    const handleMenuClick = (menu: any) => {
+        if (menu.subItems) {
+            toggleMenu(menu.id);
+        } else if (menu.path) {
+            console.log('Navigating to:', menu.path);
+            navigate(menu.path);
+        }
     };
 
     return (
@@ -38,7 +49,7 @@ function AdminSidebar() {
                     {ADMIN_CATEGORY.map((menu) => (
                         <div key={menu.id} className="w-full">
                             <button
-                                onClick={() => toggleMenu(menu.id)}
+                                onClick={() => handleMenuClick(menu)}
                                 className={`flex items-center justify-between w-full text-left text-white text-sm py-3 px-3 rounded-lg transition-all duration-200 ${openMenuId === menu.id ? 'bg-[#4A332A]' : 'hover:bg-[#4A332A]'}`}
                             >
                                 <span className="font-medium text-[15px]">{menu.label}</span>
@@ -52,12 +63,13 @@ function AdminSidebar() {
 
                             {menu.subItems && openMenuId === menu.id && (
                                 <div className="mt-1 ml-2 pl-2 border-l border-[#7A5C4E] space-y-1">
-                                    {menu.subItems.map((subItem, index) => (
+                                    {menu.subItems.map((subItem: any, index: number) => (
                                         <button
                                             key={index}
+                                            onClick={() => navigate(subItem.path)}
                                             className="w-full text-left text-[#D4C5C0] hover:text-white hover:bg-[#4A332A] text-sm py-2 px-3 rounded-md transition-colors"
                                         >
-                                            {subItem}
+                                            {subItem.label}
                                         </button>
                                     ))}
                                 </div>
