@@ -9,3 +9,6 @@ export { Outer } from "./product/Outer";
 export { Top } from "./product/Top";
 export { Bottom } from "./product/Bottom";
 export { Acc } from "./product/Acc";
+export { FAQ } from "./board/FAQ";
+export { MemberManagement } from "./admin/MemberManagement";
+export { AdminHome } from "./admin/AdminHome";
