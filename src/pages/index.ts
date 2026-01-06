@@ -5,3 +5,7 @@ export { Cart } from "./payment/CartPage";
 export { AiSelect } from "./AiSelect";
 export { ProductDetail } from "./product/ProductDetail";
 export { Order } from "./payment/Order";
+export { Outer } from "./product/Outer";
+export { Top } from "./product/Top";
+export { Bottom } from "./product/Bottom";
+export { Acc } from "./product/Acc";

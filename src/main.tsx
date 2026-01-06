@@ -8,9 +8,6 @@ import { BlankLayout, MainLayout } from "./layouts";
 import { SignUp } from "./pages/member/SignUp";
 import MyPage from "./pages/mypage/myPage";
 import MyOrders from "./pages/mypage/myOrders";
-import MyClaim from "./pages/mypage/myClaim";
-import MyRecent from "./pages/mypage/myRecent";
-import MyReview from "./pages/mypage/myReview";
 import { AiSelect } from "./pages/AiSelect";
 import { AppLogin } from "./pages/member/AppLogin";
 import { ProductDetail } from "./pages/product/ProductDetail";
@@ -18,6 +15,10 @@ import { Cart } from "./pages/payment/CartPage";
 import { Order } from "./pages";
 import { FindAccount } from "./pages/member/FindAccount";
 import { FindResult } from "./pages/member/FindResult";
+import { Outer } from "./pages/product/Outer";
+import { Top } from "./pages/product/Top";
+import { Bottom } from "./pages/product/Bottom";
+import { Acc } from "./pages/product/Acc";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -27,12 +28,13 @@ createRoot(document.getElementById("root")!).render(
           <Route index element={<App />} />
           <Route path="myPage" element={<MyPage />} />
           <Route path="myOrders" element={<MyOrders />} />
-          <Route path="myClaim" element={<MyClaim />} />
-          <Route path="myRecent" element={<MyRecent />} />
-          <Route path="myReview" element={<MyReview />} />
           <Route path="aiselect" element={<AiSelect />} />
           <Route path="login" element={<AppLogin />} />
           <Route path="product/:productId" element={<ProductDetail />} />
+          <Route path="outer" element={<Outer />} />
+          <Route path="top" element={<Top />} />
+          <Route path="bottom" element={<Bottom />} />
+          <Route path="acc" element={<Acc />} />
           <Route path="cart" element={<Cart />} />
           <Route path="order" element={<Order />} />
           <Route path="findAccount" element={<FindAccount />} />
