@@ -37,7 +37,11 @@ function Header({ onMenuClick }: HeaderProps) {
             마이페이지
           </div>
           <div className="text-white text-[14px] cursor-pointer">좋아요</div>
-          <div className="text-white text-[14px] cursor-pointer">장바구니</div>
+          <Link to="/cart">
+            <div className="text-white text-[14px] cursor-pointer">
+              장바구니
+            </div>
+          </Link>
           <Link to="/login">
             <div className="text-white text-[14px] cursor-pointer">로그인</div>
           </Link>
