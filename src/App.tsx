@@ -1,7 +1,7 @@
-import mainBanner from "@/assets/mainBanner.png";
+import mainBanner from "@/assets/main/mainBanner.png";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
-import mainBanner2 from "@/assets/mainBanner2.png";
+import mainBanner2 from "@/assets/main/mainBanner2.png";
 import { Lookbook } from "@/components/home/Lookbook";
 
 const bannerImages = [mainBanner, mainBanner2];
@@ -29,4 +29,4 @@ function App() {
     </div>
   );
 }
-export default App;
+export { App };
