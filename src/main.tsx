@@ -29,6 +29,8 @@ createRoot(document.getElementById("root")!).render(
           <Route path="product/:productId" element={<ProductDetail />} />
           <Route path="cart" element={<Cart />} />
           <Route path="order" element={<Order />} />
+          <Route path="findAccount" element={<FindAccount />} />
+          <Route path="findResult" element={<FindResult />} />
         </Route>
 
         <Route element={<BlankLayout />}>

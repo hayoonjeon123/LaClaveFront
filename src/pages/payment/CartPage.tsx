@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Cart = () => {
   // 샘플 데이터
@@ -33,6 +34,8 @@ const Cart = () => {
   const finalAmount = totalProductAmount + deliveryFee;
 
   const [allChecked, setAllChecked] = useState(true);
+
+  const navigate = useNavigate();
 
   return (
     <div className="w-full max-w-[1200px] mx-auto py-20 px-6 font-sans">
@@ -226,7 +229,12 @@ const Cart = () => {
 
       {/* 주문 하기 버튼 */}
       <div className="flex justify-center">
-        <button className="w-full max-w-[1200px] h-16 border border-[#000000] rounded-lg text-[20px] font-bold hover:bg-[#5C4033] hover:text-white cursor-pointer transition-colors shadow-sm">
+        <button
+          onClick={() => {
+            navigate("/order");
+          }}
+          className="w-full max-w-[1200px] h-16 border border-[#000000] rounded-lg text-[20px] font-bold hover:bg-[#5C4033] hover:text-white cursor-pointer transition-colors shadow-sm"
+        >
           주문 하기
         </button>
       </div>

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Order = () => {
   const [orderItems, setOrderItems] = useState([
@@ -30,6 +31,9 @@ const Order = () => {
   const appliedPoints = points >= 1000 ? points : 0;
   const finalAmount =
     totalProductAmount + deliveryFee - couponDiscount - appliedPoints;
+
+  const location = useLocation();
+  const navigate = useNavigate();
 
   return (
     <div className="w-full max-w-[800px] mx-auto py-20 px-6 font-sans text-[#000]">
