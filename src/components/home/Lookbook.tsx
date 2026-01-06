@@ -1,8 +1,8 @@
-import main_t1 from "@/assets/main_t1.png";
-import main_t2 from "@/assets/main_t2.png";
-import main_b1 from "@/assets/main_b1.png";
-import main_b2 from "@/assets/main_b2.png";
-import main_b3 from "@/assets/main_b3.png";
+import main_t1 from "@/assets/main/main_t1.png";
+import main_t2 from "@/assets/main/main_t2.png";
+import main_b1 from "@/assets/main/main_b1.png";
+import main_b2 from "@/assets/main/main_b2.png";
+import main_b3 from "@/assets/main/main_b3.png";
 
 function Lookbook() {
     return (
