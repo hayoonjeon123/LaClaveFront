@@ -1,4 +1,3 @@
-
 import { useNavigate, useParams } from "react-router-dom";
 
 const MOCK_ORDERS = [
