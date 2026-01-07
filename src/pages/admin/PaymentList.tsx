@@ -22,13 +22,10 @@ export function PaymentList() {
     return (
         <div className="w-full max-w-[1400px] mx-auto space-y-8">
             <div className="relative w-full max-w-2xl mx-auto">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <div className="text-xs text-gray-400">▼</div>
-                </div>
                 <input
                     type="text"
                     placeholder="검색어를 입력하세요"
-                    className="w-full pl-8 pr-10 py-3 rounded-full border-[2px] border-[#A8A9AD] focus:outline-none text-sm shadow-sm placeholder-gray-400"
+                    className="w-full pl-4 pr-10 py-3 rounded-full border-[2px] border-[#A8A9AD] focus:outline-none text-sm shadow-sm placeholder-gray-400"
                 />
                 <div className="absolute inset-y-0 right-0 pr-4 flex items-center cursor-pointer">
                     <Search className="h-5 w-5 text-gray-400" />
@@ -58,7 +55,7 @@ export function PaymentList() {
                             <div className="flex-1">{payment.date}</div>
                             <div className="w-32 flex justify-center">
                                 <Select defaultValue={payment.status}>
-                                    <SelectTrigger className="!w-[80px] !h-[30px] !p-0 bg-[#5C4033] text-white !text-[13px] font-medium rounded-[5px] !border-[#A8A9AD] !border-[2px] flex justify-center items-center focus:ring-0 focus:ring-offset-0 [&>svg]:hidden">
+                                    <SelectTrigger className="cursor-pointer !w-[80px] !h-[30px] !p-0 bg-[#5C4033] text-white !text-[13px] font-medium rounded-[5px] !border-[#A8A9AD] !border-[2px] flex justify-center items-center focus:ring-0 focus:ring-offset-0 [&>svg]:hidden">
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -75,12 +72,12 @@ export function PaymentList() {
 
             {/* Pagination */}
             <div className="flex justify-center items-center gap-4 text-sm font-medium text-gray-500 pt-8 pb-8">
-                <button className="w-8 h-8 flex items-center justify-center text-black font-bold">1</button>
-                <button className="w-8 h-8 flex items-center justify-center hover:text-black">2</button>
-                <button className="w-8 h-8 flex items-center justify-center hover:text-black">3</button>
-                <button className="w-8 h-8 flex items-center justify-center hover:text-black">4</button>
-                <button className="w-8 h-8 flex items-center justify-center hover:text-black">5</button>
-                <button className="flex items-center hover:text-black tracking-widest text-xs">
+                <button className="cursor-pointer w-8 h-8 flex items-center justify-center text-black font-bold">1</button>
+                <button className="cursor-pointer w-8 h-8 flex items-center justify-center hover:text-black">2</button>
+                <button className="cursor-pointer w-8 h-8 flex items-center justify-center hover:text-black">3</button>
+                <button className="cursor-pointer w-8 h-8 flex items-center justify-center hover:text-black">4</button>
+                <button className="cursor-pointer w-8 h-8 flex items-center justify-center hover:text-black">5</button>
+                <button className="cursor-pointer flex items-center hover:text-black tracking-widest text-xs">
                     {">>"}
                 </button>
             </div>

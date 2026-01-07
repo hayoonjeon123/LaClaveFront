@@ -16,11 +16,8 @@ export function CommonCodeManagement() {
     const navigate = useNavigate();
     return (
         <div className="w-full max-w-[1200px] mx-auto space-y-8">
-            <div className="flex justify-center mb-8">
+            <div className="flex justify-center mb-4">
                 <div className="relative w-full max-w-2xl">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <div className="text-xs text-gray-400">▼</div>
-                    </div>
                     <input
                         type="text"
                         placeholder="검색어를 입력하세요"

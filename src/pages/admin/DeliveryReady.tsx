@@ -24,7 +24,7 @@ const MOCK_DELIVERY_READY = Array.from({ length: 10 }).map((_, i) => ({
 
 export function DeliveryReady() {
     return (
-        <div className="w-full max-w-[1200px] mx-auto space-y-8">
+        <div className="w-full max-w-[1200px] mx-auto space-y-4">
             {/* Header Title */}
             <div className="space-y-2">
                 <h2 className="text-[30px] font-bold text-gray-800">배송 준비중 관리</h2>
@@ -36,7 +36,7 @@ export function DeliveryReady() {
                     <div className="w-32 bg-[#F9F9F9] flex items-center pl-6 py-2 font-bold text-gray-700">기간</div>
                     <div className="flex-1 bg-white flex items-center px-4 py-2 gap-2">
                         {['1개월', '3개월', '6개월', '1년'].map((period) => (
-                            <button key={period} className="px-5 py-1.5 border-[2px] border-[#A8A9AD] rounded-full text-sm hover:bg-gray-50 focus:bg-gray-100 transition-colors">
+                            <button key={period} className="cursor-pointer px-5 py-1.5 border-[2px] border-[#A8A9AD] rounded-full text-sm hover:bg-gray-50 focus:bg-gray-100 transition-colors">
                                 {period}
                             </button>
                         ))}
@@ -99,7 +99,7 @@ export function DeliveryReady() {
                             </div>
                             <div className="w-24 flex justify-center">
                                 <Select defaultValue={item.deliveryStatus}>
-                                    <SelectTrigger className="!w-[80px] !h-[30px] !p-0 bg-[#5C4033] text-white !text-[11px] font-medium rounded-[5px] !border-[#A8A9AD] !border-[2px] flex justify-center items-center focus:ring-0 focus:ring-offset-0 [&>svg]:hidden">
+                                    <SelectTrigger className="cursor-pointer !w-[80px] !h-[30px] !p-0 bg-[#5C4033] text-white !text-[11px] font-medium rounded-[5px] !border-[#A8A9AD] !border-[2px] flex justify-center items-center focus:ring-0 focus:ring-offset-0 [&>svg]:hidden">
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -116,24 +116,24 @@ export function DeliveryReady() {
 
             {/* Pagination */}
             <div className="flex justify-center items-center gap-4 text-sm font-medium text-gray-500 pt-8 pb-8">
-                <button className="w-8 h-8 flex items-center justify-center text-black font-bold">1</button>
-                <button className="w-8 h-8 flex items-center justify-center hover:text-black">2</button>
-                <button className="w-8 h-8 flex items-center justify-center hover:text-black">3</button>
-                <button className="w-8 h-8 flex items-center justify-center hover:text-black">4</button>
-                <button className="w-8 h-8 flex items-center justify-center hover:text-black">5</button>
-                <button className="flex items-center hover:text-black tracking-widest text-xs">
+                <button className="cursor-pointer w-8 h-8 flex items-center justify-center text-black font-bold">1</button>
+                <button className="cursor-pointer w-8 h-8 flex items-center justify-center hover:text-black">2</button>
+                <button className="cursor-pointer w-8 h-8 flex items-center justify-center hover:text-black">3</button>
+                <button className="cursor-pointer w-8 h-8 flex items-center justify-center hover:text-black">4</button>
+                <button className="cursor-pointer w-8 h-8 flex items-center justify-center hover:text-black">5</button>
+                <button className="cursor-pointer flex items-center hover:text-black tracking-widest text-xs">
                     {">>"}
                 </button>
             </div>
 
             {/* Batch Registration Section */}
-            <div className="space-y-4 pt-">
+            <div className="space-y-4 pt-4">
                 <h3 className="text-lg font-bold text-gray-800">발송 예정일 일괄 등록</h3>
                 <div className="w-full border border-gray-300 rounded-lg overflow-hidden">
                     <div className="flex border-b border-gray-300">
                         <div className="w-48 bg-[#F9F9F9] flex items-center pl-6 py-3 font-bold text-gray-700">배송사</div>
                         <div className="flex-1 bg-white flex items-center px-4 py-2">
-                            <button className="px-4 py-2 bg-white border border-gray-300 text-sm font-medium rounded-md hover:bg-gray-50">
+                            <button className="cursor-pointer px-4 py-2 bg-white border border-gray-300 text-sm font-medium rounded-md hover:bg-gray-50">
                                 엑셀양식 다운로드
                             </button>
                         </div>
@@ -141,11 +141,11 @@ export function DeliveryReady() {
                     <div className="flex">
                         <div className="w-48 bg-[#F9F9F9] flex items-center pl-6 py-3 font-bold text-gray-700">엑셀 파일 등록</div>
                         <div className="flex-1 bg-white flex items-center px-4 py-2 gap-2">
-                            <button className="px-4 py-2 bg-white border border-gray-300 text-sm font-medium rounded-md hover:bg-gray-50 flex items-center gap-2">
+                            <button className="cursor-pointer px-4 py-2 bg-white border border-gray-300 text-sm font-medium rounded-md hover:bg-gray-50 flex items-center gap-2">
                                 <span className="text-blue-500">📄</span> 파일 선택
                             </button>
                             <span className="text-sm text-gray-400">선택된 파일 없음</span>
-                            <button className="ml-2 px-6 py-2 bg-[#5C4033] text-white text-sm font-medium rounded-md hover:bg-[#4a332a]">
+                            <button className="cursor-pointer ml-2 px-6 py-2 bg-[#5C4033] text-white text-sm font-medium rounded-md hover:bg-[#4a332a]">
                                 등록
                             </button>
                         </div>

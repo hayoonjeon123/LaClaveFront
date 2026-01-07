@@ -27,8 +27,8 @@ export const ADMIN_CATEGORY = [
         id: 3,
         label: "상품",
         subItems: [
-            { label: '상품 등록', path: '/admin/product/register' },
             { label: '상품 조회', path: '/admin/product/list' },
+            { label: '상품 등록', path: '/admin/product/register' },
             { label: '상품 수정', path: '/admin/product/edit' },
             { label: '재고 관리', path: '/admin/product/stock' }
         ]

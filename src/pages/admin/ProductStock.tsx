@@ -21,9 +21,9 @@ const MOCK_STOCK = Array.from({ length: 10 }).map((_, i) => ({
 export function ProductStock() {
     return (
         <div className="w-full max-w-[1200px] mx-auto space-y-8">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center mb-4">
                 <h2 className="text-[30px] font-bold text-gray-800">재고 관리</h2>
-                <button className="w-[120px] h-[45px] bg-[#5C4033] text-white text-base font-bold rounded-[5px] border-[2px] border-[#A8A9AD] hover:bg-[#4a332a] transition-colors">
+                <button className="cursor-pointer w-[120px] h-[45px] bg-[#5C4033] text-white text-base font-bold rounded-[5px] border-[2px] border-[#A8A9AD] hover:bg-[#4a332a] transition-colors">
                     저장
                 </button>
             </div>
@@ -33,7 +33,7 @@ export function ProductStock() {
                     <div className="w-32 bg-[#F9F9F9] flex items-center pl-6 py-2 font-bold text-gray-700">기간</div>
                     <div className="flex-1 bg-white flex items-center px-4 py-2 gap-2">
                         {['1개월', '3개월', '6개월', '1년'].map((period) => (
-                            <button key={period} className="px-5 py-1.5 border-[2px] border-[#A8A9AD] rounded-full text-sm hover:bg-gray-50 focus:bg-gray-100 transition-colors">
+                            <button key={period} className="cursor-pointer px-5 py-1.5 border-[2px] border-[#A8A9AD] rounded-full text-sm hover:bg-gray-50 focus:bg-gray-100 transition-colors">
                                 {period}
                             </button>
                         ))}
@@ -94,12 +94,12 @@ export function ProductStock() {
 
             {/* Pagination */}
             <div className="flex justify-center items-center gap-4 text-sm font-medium text-gray-500 pt-8 pb-8">
-                <button className="w-8 h-8 flex items-center justify-center text-black font-bold">1</button>
-                <button className="w-8 h-8 flex items-center justify-center hover:text-black">2</button>
-                <button className="w-8 h-8 flex items-center justify-center hover:text-black">3</button>
-                <button className="w-8 h-8 flex items-center justify-center hover:text-black">4</button>
-                <button className="w-8 h-8 flex items-center justify-center hover:text-black">5</button>
-                <button className="flex items-center hover:text-black tracking-widest text-xs">
+                <button className="cursor-pointer w-8 h-8 flex items-center justify-center text-black font-bold">1</button>
+                <button className="cursor-pointer w-8 h-8 flex items-center justify-center hover:text-black">2</button>
+                <button className="cursor-pointer w-8 h-8 flex items-center justify-center hover:text-black">3</button>
+                <button className="cursor-pointer w-8 h-8 flex items-center justify-center hover:text-black">4</button>
+                <button className="cursor-pointer w-8 h-8 flex items-center justify-center hover:text-black">5</button>
+                <button className="cursor-pointer flex items-center hover:text-black tracking-widest text-xs">
                     {">>"}
                 </button>
             </div>

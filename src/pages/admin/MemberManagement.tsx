@@ -78,7 +78,7 @@ export function MemberManagement() {
                             <div className="flex-1">{member.joinDate}</div>
                             <div className="w-32 flex justify-center">
                                 <Select defaultValue={member.status}>
-                                    <SelectTrigger className="!w-[80px] !h-[30px] !p-0 bg-[#5C4033] text-white !text-[13px] font-medium rounded-[5px] !border-[#A8A9AD] !border-[2px] flex justify-center items-center focus:ring-0 focus:ring-offset-0 [&>svg]:hidden">
+                                    <SelectTrigger className="cursor-pointer !w-[80px] !h-[30px] !p-0 bg-[#5C4033] text-white !text-[13px] font-medium rounded-[5px] !border-[#A8A9AD] !border-[2px] flex justify-center items-center focus:ring-0 focus:ring-offset-0 [&>svg]:hidden">
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -90,12 +90,12 @@ export function MemberManagement() {
                             <div className="w-[320px] flex justify-center gap-4">
                                 <button
                                     onClick={() => handleDetailClick(member.id)}
-                                    className="w-[80px] h-[30px] bg-[#5C4033] text-white text-[13px] font-medium rounded-[5px] border-[#A8A9AD] border-[2px] flex justify-center items-center p-0 hover:bg-[#4a332a]"
+                                    className="cursor-pointer w-[80px] h-[30px] bg-[#5C4033] text-white text-[13px] font-medium rounded-[5px] border-[#A8A9AD] border-[2px] flex justify-center items-center p-0 hover:bg-[#4a332a]"
                                 >
                                     상세보기
                                 </button>
                                 <Select defaultValue={member.grade}>
-                                    <SelectTrigger className="!w-[80px] !h-[30px] !p-0 bg-[#5C4033] text-white !text-[13px] font-medium rounded-[5px] !border-[#A8A9AD] !border-[2px] flex justify-center items-center focus:ring-0 focus:ring-offset-0 [&>svg]:hidden">
+                                    <SelectTrigger className="cursor-pointer !w-[80px] !h-[30px] !p-0 bg-[#5C4033] text-white !text-[13px] font-medium rounded-[5px] !border-[#A8A9AD] !border-[2px] flex justify-center items-center focus:ring-0 focus:ring-offset-0 [&>svg]:hidden">
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -105,7 +105,7 @@ export function MemberManagement() {
                                         <SelectItem value="BRONZE">BRONZE</SelectItem>
                                     </SelectContent>
                                 </Select>
-                                <button className="w-[80px] h-[30px] bg-[#5C4033] text-white text-[13px] font-medium rounded-[5px] border-[#A8A9AD] border-[2px] flex justify-center items-center p-0 hover:bg-[#4a332a]">삭제</button>
+                                <button className="cursor-pointer w-[80px] h-[30px] bg-[#5C4033] text-white text-[13px] font-medium rounded-[5px] border-[#A8A9AD] border-[2px] flex justify-center items-center p-0 hover:bg-[#4a332a]">삭제</button>
                             </div>
                         </div>
                     ))}
@@ -113,12 +113,12 @@ export function MemberManagement() {
             </div>
 
             <div className="flex justify-center items-center gap-4 text-sm font-medium text-gray-500 pt-8 pb-8">
-                <button className="w-8 h-8 flex items-center justify-center text-black font-bold">1</button>
-                <button className="w-8 h-8 flex items-center justify-center hover:text-black">2</button>
-                <button className="w-8 h-8 flex items-center justify-center hover:text-black">3</button>
-                <button className="w-8 h-8 flex items-center justify-center hover:text-black">4</button>
-                <button className="w-8 h-8 flex items-center justify-center hover:text-black">5</button>
-                <button className="flex items-center hover:text-black tracking-widest text-xs">
+                <button className="cursor-pointer w-8 h-8 flex items-center justify-center text-black font-bold">1</button>
+                <button className="cursor-pointer w-8 h-8 flex items-center justify-center hover:text-black">2</button>
+                <button className="cursor-pointer w-8 h-8 flex items-center justify-center hover:text-black">3</button>
+                <button className="cursor-pointer w-8 h-8 flex items-center justify-center hover:text-black">4</button>
+                <button className="cursor-pointer w-8 h-8 flex items-center justify-center hover:text-black">5</button>
+                <button className="cursor-pointer flex items-center hover:text-black tracking-widest text-xs">
                     {">>"}
                 </button>
             </div>

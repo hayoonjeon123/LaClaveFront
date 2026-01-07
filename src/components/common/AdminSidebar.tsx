@@ -13,12 +13,8 @@ function AdminSidebar({ onOpenChange }: { onOpenChange?: (open: boolean) => void
 
     const handleMenuClick = (menu: any) => {
         if (menu.subItems && menu.subItems.length > 0) {
-            // 서브메뉴가 있으면 해당 메뉴를 열고 첫 번째 서브아이템으로 이동
-            setOpenMenuId(menu.id);
-            const firstPath = menu.subItems[0].path;
-            console.log('Navigating to (first subitem):', firstPath);
-            navigate(firstPath);
-            // onOpenChange?.(false); // 관리자 사이드바는 보통 고정형이므로 닫지 않음
+            // 서브메뉴가 있으면 토글만 수행 (이동하지 않음)
+            setOpenMenuId((prev) => (prev === menu.id ? null : menu.id));
         } else if (menu.path) {
             setOpenMenuId(null);
             console.log('Navigating to:', menu.path);
