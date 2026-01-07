@@ -1,11 +1,22 @@
-import { ChevronDown, Key } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { ChevronDown, Key, ArrowLeft } from "lucide-react";
 
 export default function MyPoint() {
+  const navigate = useNavigate();
   return (
-    <div>
-      <h2 className="text-center text-3xl font-bold text-[#5C4033] my-5">
-        적립금
-      </h2>
+    <div className="pb-10">
+      {/* Header */}
+      <div className="max-w-[1000px] mx-auto px-6 pt-10 flex items-center relative mb-8">
+        <button
+          onClick={() => navigate(-1)}
+          className="absolute left-[-40px] p-1.5 rounded-full hover:bg-gray-100 transition"
+        >
+          <ArrowLeft size={28} strokeWidth={1.5} />
+        </button>
+        <div className="flex-1 text-center">
+          <h2 className="text-[30px] font-bold text-[#5C4033] tracking-tight">적립금</h2>
+        </div>
+      </div>
 
       <div className="max-w-5xl mx-auto px-6">
         <hr className="border-[#5C4033] border-[1px]" />

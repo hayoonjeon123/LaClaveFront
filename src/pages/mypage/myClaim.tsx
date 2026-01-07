@@ -1,11 +1,22 @@
+import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import sampleImg from "../../assets/sample-product.jpg";
 export default function MyClaim() {
+  const navigate = useNavigate();
   return (
-    <div>
-      {/* 타이틀 영역 */}
-      <h1 className="text-3xl font-bold text-[#5C4033] text-center my-10">
-        취소/반품/교환 내역
-      </h1>
+    <div className="pb-10">
+      {/* Header */}
+      <div className="max-w-[1000px] mx-auto px-6 pt-10 flex items-center relative mb-8">
+        <button
+          onClick={() => navigate(-1)}
+          className="absolute left-[-40px] p-1.5 rounded-full hover:bg-gray-100 transition"
+        >
+          <ArrowLeft size={28} strokeWidth={1.5} />
+        </button>
+        <div className="flex-1 text-center">
+          <h2 className="text-[30px] font-bold text-[#5C4033] tracking-tight">취소/반품/교환 내역</h2>
+        </div>
+      </div>
       {/* 탭 영역 */}
       <div className="max-w-5xl mx-auto font-semibold flex gap-4 ">
         <button className="w-[150px] px-4 py-2 border border-[#5C4033] rounded-[10px] hover:bg-[#5C4033] hover:text-white cursor-pointer">

@@ -1,4 +1,13 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const MOCK_ORDERS = [
   {
@@ -17,8 +26,9 @@ const MOCK_ORDERS = [
 ];
 
 export function MemberDetail() {
-  const { memberId } = useParams();
-  const navigate = useNavigate();
+  const [gender, setGender] = useState("F");
+  const [memberType, setMemberType] = useState("정상");
+  const [grade, setGrade] = useState("VIP");
 
   return (
     <div className="w-full max-w-[1200px] mx-auto space-y-8 font-['Inter',sans-serif]">
@@ -70,16 +80,28 @@ export function MemberDetail() {
         <div className="bg-white rounded-[10px] border border-[#A8A9AD] overflow-hidden">
           <div className="flex border-b border-[#A8A9AD] h-[64px] items-center pl-6 pr-6 justify-between">
             <div className="font-bold">회원 유형</div>
-            <select className="border border-[#A8A9AD] rounded px-2 py-1 min-w-[100px]">
-              <option>정상</option>
-              <option>탈퇴</option>
-            </select>
+            <Select value={memberType} onValueChange={setMemberType}>
+              <SelectTrigger className="w-[100px] h-[32px] border border-[#A8A9AD] rounded px-2 focus:ring-0">
+                <SelectValue placeholder="회원 유형" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="정상">정상</SelectItem>
+                <SelectItem value="탈퇴">탈퇴</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="flex h-[64px] items-center pl-6 pr-6 justify-between">
             <div className="font-bold">등급</div>
-            <select className="border border-[#A8A9AD] rounded px-2 py-1 min-w-[100px]">
-              <option>VIP</option>
-            </select>
+            <Select value={grade} onValueChange={setGrade}>
+              <SelectTrigger className="w-[100px] h-[32px] border border-[#A8A9AD] rounded px-2 focus:ring-0">
+                <SelectValue placeholder="등급" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="VIP">VIP</SelectItem>
+                <SelectItem value="GOLD">GOLD</SelectItem>
+                <SelectItem value="SILVER">SILVER</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
@@ -88,12 +110,24 @@ export function MemberDetail() {
           <div className="flex border-b border-[#A8A9AD] h-[64px] items-center pl-6">
             <div className="font-bold mr-8">성별</div>
             <div className="flex gap-4">
-              <label className="flex items-center gap-2">
-                <input type="radio" name="gender" /> 남
-              </label>
-              <label className="flex items-center gap-2">
-                <input type="radio" name="gender" defaultChecked /> 여
-              </label>
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="gender-man"
+                  checked={gender === "M"}
+                  onCheckedChange={(checked) => checked && setGender("M")}
+                  className="data-[state=checked]:border border-[#5C4033] data-[state=checked]:bg-[#5C4033] data-[state=checked]:text-white"
+                />
+                <Label htmlFor="gender-man" className="cursor-pointer">남</Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="gender-woman"
+                  checked={gender === "F"}
+                  onCheckedChange={(checked) => checked && setGender("F")}
+                  className="data-[state=checked]:border border-[#5C4033] data-[state=checked]:bg-[#5C4033] data-[state=checked]:text-white"
+                />
+                <Label htmlFor="gender-woman" className="cursor-pointer">여</Label>
+              </div>
             </div>
           </div>
           <div className="flex h-[64px] items-center pl-6">

@@ -1,5 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -8,6 +17,8 @@ const SignUp = () => {
   const [agreeTerms, setAgreeTerms] = useState(false); // 필수
   const [agreePrivacy, setAgreePrivacy] = useState(false); // 필수
   const [agreeMarketing, setAgreeMarketing] = useState(false); // 선택
+  const [gender, setGender] = useState<string | null>(null);
+  const [emailDomain, setEmailDomain] = useState<string>("");
 
   /* 전체 동의 클릭 */
   const handleAgreeAll = (checked: boolean) => {
@@ -108,27 +119,31 @@ const SignUp = () => {
           성별
         </label>
 
-        {/* 라디오 그룹 */}
+        {/* 라디오 그룹 대신 체크박스 */}
         <div className="w-full flex max-w-md justify-center mt-[4px] gap-[20px]">
-          <label className="flex items-center gap-[6px] cursor-pointer">
-            <input
-              type="radio"
-              name="gender"
-              value="M"
-              className="w-[16px] h-[16px]"
+          <div className="flex items-center gap-[6px]">
+            <Checkbox
+              id="gender-man"
+              checked={gender === "M"}
+              onCheckedChange={(checked) => checked && setGender("M")}
+              className="data-[state=checked]:border border-[#5C4033] data-[state=checked]:bg-[#5C4033] data-[state=checked]:text-white"
             />
-            <span className="text-[14px]">Man</span>
-          </label>
+            <Label htmlFor="gender-man" className="text-[14px] cursor-pointer">
+              Man
+            </Label>
+          </div>
 
-          <label className="flex items-center gap-[6px] cursor-pointer">
-            <input
-              type="radio"
-              name="gender"
-              value="F"
-              className="w-[16px] h-[16px]"
+          <div className="flex items-center gap-[6px]">
+            <Checkbox
+              id="gender-woman"
+              checked={gender === "F"}
+              onCheckedChange={(checked) => checked && setGender("F")}
+              className="data-[state=checked]:border border-[#5C4033] data-[state=checked]:bg-[#5C4033] data-[state=checked]:text-white"
             />
-            <span className="text-[14px]">Woman</span>
-          </label>
+            <Label htmlFor="gender-woman" className="text-[14px] cursor-pointer">
+              Woman
+            </Label>
+          </div>
         </div>
       </div>
 
@@ -217,17 +232,17 @@ const SignUp = () => {
         />
         <span className="text-[14px] mx-[5px]">@</span>
         {/* 도메인 선택 */}
-        <select
-          className="w-[150px] h-[40px] px-[8px] text-[14px]
-                 border border-[#5C4033]
-                 focus:outline-none focus:ring-1 focus:ring-[#5C4033]"
-        >
-          <option value="">선택</option>
-          <option value="naver">naver.com</option>
-          <option value="gmail">gmail.com</option>
-          <option value="daum">daum.net</option>
-          <option value="kakao">kakao.com</option>
-        </select>{" "}
+        <Select value={emailDomain} onValueChange={setEmailDomain}>
+          <SelectTrigger className="w-[150px] h-[40px] px-[8px] text-[14px] border border-[#5C4033] focus:ring-1 focus:ring-[#5C4033] rounded-none">
+            <SelectValue placeholder="선택" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="naver.com">naver.com</SelectItem>
+            <SelectItem value="gmail.com">gmail.com</SelectItem>
+            <SelectItem value="daum.net">daum.net</SelectItem>
+            <SelectItem value="kakao.com">kakao.com</SelectItem>
+          </SelectContent>
+        </Select>{" "}
         {/* 버튼 영역 */}
         <div className="absolute right-[-102px] top-0 flex flex-col gap-[12px]">
           <button
@@ -264,17 +279,18 @@ const SignUp = () => {
       <div className="w-full flex justify-center mt-[40px]">
         <div className="w-full max-w-[1000px]">
           {/* 전체 동의 */}
-          <label className="flex items-center gap-3 border border-[#5C4033] px-4 py-3 cursor-pointer">
-            <input
-              type="checkbox"
-              className="w-[18px] h-[18px]"
-              onChange={(e) => handleAgreeAll(e.target.checked)}
+          <div className="flex items-center gap-3 border border-[#5C4033] px-4 py-3">
+            <Checkbox
+              id="agree-all"
+              checked={agreeAll}
+              onCheckedChange={(checked: boolean) => handleAgreeAll(checked)}
+              className="data-[state=checked]: border border-[#5C4033] data-[state=checked]:bg-[#5C4033] data-[state=checked]:text-white"
             />
-            <span className="text-[15px]">
+            <Label htmlFor="agree-all" className="text-[15px] cursor-pointer">
               이용 약관 및 개인정보 수집 및 이용, 쇼핑정보 수신(선택)에 모두
               동의합니다.
-            </span>
-          </label>
+            </Label>
+          </div>
 
           {/* 약관 박스 3개 */}
           <div className="grid grid-cols-3 gap-[24px]">
@@ -311,14 +327,15 @@ const SignUp = () => {
                 </p>
               </div>
 
-              <label className="flex justify-end items-center gap-2 px-3 py-2 border-t border-[#5C4033] text-[13px]">
-                <span>동의함</span>
-                <input
-                  type="checkbox"
+              <div className="flex justify-end items-center gap-2 px-3 py-2 border-t border-[#5C4033]">
+                <Label htmlFor="agree-terms" className="text-[13px] cursor-pointer">동의함</Label>
+                <Checkbox
+                  id="agree-terms"
                   checked={agreeTerms}
-                  onChange={(e) => setAgreeTerms(e.target.checked)}
+                  onCheckedChange={(checked: boolean) => setAgreeTerms(checked)}
+                  className="data-[state=checked]:border border-[#5C4033] data-[state=checked]:bg-[#5C4033] data-[state=checked]:text-white"
                 />
-              </label>
+              </div>
             </div>
 
             {/* 개인정보 */}
@@ -351,14 +368,15 @@ const SignUp = () => {
                 </p>
               </div>
 
-              <label className="flex justify-end items-center gap-2 px-3 py-2 border-t border-[#5C4033] text-[13px]">
-                <span>동의함</span>
-                <input
-                  type="checkbox"
+              <div className="flex justify-end items-center gap-2 px-3 py-2 border-t border-[#5C4033]">
+                <Label htmlFor="agree-privacy" className="text-[13px] cursor-pointer">동의함</Label>
+                <Checkbox
+                  id="agree-privacy"
                   checked={agreePrivacy}
-                  onChange={(e) => setAgreePrivacy(e.target.checked)}
+                  onCheckedChange={(checked: boolean) => setAgreePrivacy(checked)}
+                  className="data-[state=checked]:border border-[#5C4033] data-[state=checked]:bg-[#5C4033] data-[state=checked]:text-white"
                 />
-              </label>
+              </div>
             </div>
 
             {/* 쇼핑정보 */}
@@ -388,14 +406,15 @@ const SignUp = () => {
               </div>
 
               {/* 하단 동의 */}
-              <label className="flex justify-end items-center gap-2 px-3 py-2 border-t border-[#5C4033] text-[13px]">
-                <span>동의함</span>
-                <input
-                  type="checkbox"
+              <div className="flex justify-end items-center gap-2 px-3 py-2 border-t border-[#5C4033]">
+                <Label htmlFor="agree-marketing" className="text-[13px] cursor-pointer">동의함</Label>
+                <Checkbox
+                  id="agree-marketing"
                   checked={agreeMarketing}
-                  onChange={(e) => setAgreeMarketing(e.target.checked)}
+                  onCheckedChange={(checked: boolean) => setAgreeMarketing(checked)}
+                  className="data-[state=checked]:border border-[#5C4033] data-[state=checked]:bg-[#5C4033] data-[state=checked]:text-white"
                 />
-              </label>
+              </div>
             </div>
           </div>
           {/* 이전 버튼 */}

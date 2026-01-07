@@ -5,20 +5,19 @@ const FindAccount = () => {
   const [activeTab, setActiveTab] = useState("id");
 
   return (
-    <div className="flex flex-col items-center justify-center py-16">
+    <div className="flex flex-col items-center justify-center py-10">
       <div className="w-full max-w-[600px] px-6">
         {/* 로고 영역 */}
-        <div className="flex justify-center mb-6">
+        <div className="flex justify-center mb-4">
           <img src={Logo} alt="LOGO" className="h-16" />
         </div>
 
         {/* 탭 메뉴 */}
-        <div className="relative flex border-b border-gray-200 mb-12">
+        <div className="relative flex border-b border-gray-200 mb-8">
           <button
             onClick={() => setActiveTab("id")}
-            className={`flex-1 py-4 text-center font-bold text-[18px] transition-colors ${
-              activeTab === "id" ? "text-[#5C4033]" : "text-gray-400"
-            }`}
+            className={`flex-1 py-4 text-center font-bold text-[18px] transition-colors ${activeTab === "id" ? "text-[#5C4033]" : "text-gray-400"
+              }`}
           >
             아이디 찾기
           </button>
@@ -27,9 +26,8 @@ const FindAccount = () => {
 
           <button
             onClick={() => setActiveTab("password")}
-            className={`flex-1 py-4 text-center font-bold text-[18px] transition-colors ${
-              activeTab === "password" ? "text-[#5C4033]" : "text-gray-400"
-            }`}
+            className={`flex-1 py-4 text-center font-bold text-[18px] transition-colors ${activeTab === "password" ? "text-[#5C4033]" : "text-gray-400"
+              }`}
           >
             비밀번호 찾기
           </button>
@@ -45,11 +43,11 @@ const FindAccount = () => {
         </div>
 
         {/* 입력 폼 컨테이너 */}
-        <div className="border border-gray-300 rounded-[10px] p-14 space-y-6 w-full max-w-[800px] mx-auto">
+        <div className="border border-gray-300 rounded-[10px] p-8 space-y-4 w-full max-w-[800px] mx-auto">
           {/* 비밀번호 찾기일 때만 아이디 입력창 노출 */}
           {activeTab === "password" && (
-            <div className="flex items-center">
-              <label className="w-24 text-[16px] font-medium text-[#5C4033]">
+            <div className="flex items-center gap-2">
+              <label className="w-24 text-[16px] font-medium text-[#5C4033] shrink-0">
                 아이디
               </label>
               <input
@@ -59,8 +57,8 @@ const FindAccount = () => {
             </div>
           )}
 
-          <div className="flex items-center">
-            <label className="w-24 text-[16px] font-medium text-[#000000]">
+          <div className="flex items-center gap-2">
+            <label className="w-24 text-[16px] font-medium text-[#000000] shrink-0">
               이름
             </label>
             <input
@@ -70,7 +68,7 @@ const FindAccount = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <label className="w-24 text-[16px] font-medium text-[#000000]">
+            <label className="w-24 text-[16px] font-medium text-[#000000] shrink-0">
               이메일
             </label>
             <div className="flex-1 flex gap-2">
@@ -85,7 +83,7 @@ const FindAccount = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="w-24" /> {/* 레이블 간격 맞춤용 공백 */}
+            <div className="w-24 shrink-0" /> {/* 레이블 간격 맞춤용 공백 */}
             <div className="flex-1 flex gap-2">
               <input
                 type="text"
@@ -100,7 +98,7 @@ const FindAccount = () => {
         </div>
 
         {/* 최종 확인 버튼 */}
-        <div className="mt-12 flex justify-center">
+        <div className="mt-8 flex justify-center">
           <button className="w-[300px] h-14 border border-gray-300 rounded-md text-[16px] font-medium hover:bg-[#5C4033] hover:text-white transition-colors">
             확인
           </button>

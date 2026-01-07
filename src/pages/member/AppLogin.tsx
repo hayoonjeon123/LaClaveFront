@@ -1,9 +1,13 @@
+import { useState } from "react";
 import Logo from "@/assets/Logo_brown.png";
 import Naver from "@/assets/Naver_login.png";
 import Kakao from "@/assets/Kakao_login.png";
 import { Link } from "react-router-dom";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 const AppLogin = () => {
+  const [rememberMe, setRememberMe] = useState(false);
   return (
     <div className="flex flex-col items-center justify-center py-16">
       {/* 컨테이너 너비 설정 */}
@@ -49,10 +53,20 @@ const AppLogin = () => {
 
           {/* 하단 옵션 (아이디 저장 / 찾기) */}
           <div className="flex justify-between items-center text-[12px] text-gray-700 mt-2">
-            <label className="flex items-center gap-1 cursor-pointer">
-              <input type="checkbox" className="w-3 h-3 accent-gray-500" />
-              <span>아이디 저장</span>
-            </label>
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="remember-me"
+                checked={rememberMe}
+                onCheckedChange={(checked) => setRememberMe(checked === true)}
+                className="data-[state=checked]:border border-[#5C4033] data-[state=checked]:bg-[#5C4033] data-[state=checked]:text-white w-[14px] h-[14px]"
+              />
+              <Label
+                htmlFor="remember-me"
+                className="text-[12px] cursor-pointer font-medium text-gray-700"
+              >
+                아이디 저장
+              </Label>
+            </div>
             <div className="flex items-center gap-3 text-gray-500">
               <Link to="/findaccount">
                 <button className="cursor-pointer">아이디 </button>

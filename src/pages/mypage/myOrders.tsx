@@ -10,42 +10,42 @@ export default function MyOrders() {
   return (
     <div className="min-h-screen bg-white text-black pb-20">
       {/* Header */}
-      <div className="max-w-[1000px] mx-auto px-6 pt-10 flex items-center relative mb-8">
+      <div className="max-w-[700px] mx-auto px-6 pt-6 flex items-center relative mb-4">
         <button
           onClick={() => navigate(-1)}
-          className="absolute left-6 p-1.5 rounded-full hover:bg-gray-100 transition"
+          className="absolute left-[-40px] p-1.5 rounded-full hover:bg-gray-100 transition"
         >
           <ArrowLeft size={28} strokeWidth={1.5} />
         </button>
         <div className="flex-1 text-center">
-          <h2 className="text-[30px] font-bold text-[#5C4033] tracking-tight">주문내역 조회</h2>
+          <h2 className="text-[24px] font-bold text-[#5C4033] tracking-tight">주문내역 조회</h2>
         </div>
       </div>
 
-      <div className="max-w-[800px] mx-auto px-6">
+      <div className="max-w-[700px] mx-auto px-6">
         {/* Main Content Box Wrapper */}
-        <div className="border border-[#A8A9AD] rounded-[10px] p-8 bg-white">
+        <div className="border border-[#A8A9AD] rounded-[10px] p-5 bg-white">
           {/* Order Header Info */}
-          <div className="mb-3">
-            <div className="font-bold text-[18px] mb-0.5">주문번호 20251603947</div>
-            <div className="text-[#A8A9AD] font-medium text-[14px]">결제 날짜 : 2025.06.13 오후 15:33</div>
+          <div className="mb-2">
+            <div className="font-bold text-[16px] mb-0.5">주문번호 20251603947</div>
+            <div className="text-[#A8A9AD] font-medium text-[13px]">결제 날짜 : 2025.06.13 오후 15:33</div>
           </div>
 
-          <hr className="border-[#A8A9AD] border-t-[1px] mb-6" />
+          <hr className="border-[#A8A9AD] border-t-[1px] mb-4" />
 
           {/* Product Info Section */}
-          <div className="flex gap-6 items-start mb-8 px-1">
+          <div className="flex gap-5 items-start mb-5 px-1">
             {/* Thumbnail */}
-            <div className="w-[120px] h-[120px] flex-shrink-0 overflow-hidden rounded-sm">
+            <div className="w-[100px] h-[100px] flex-shrink-0 overflow-hidden rounded-sm">
               <img src={sampleImg} alt="상품 이미지" className="w-full h-full object-cover" />
             </div>
 
             {/* Details */}
             <div className="flex-1 pt-0.5">
-              <p className="font-bold text-[18px] mb-1.5 leading-tight">
+              <p className="font-bold text-[16px] mb-1.5 leading-tight">
                 배색 리버시블 컴포트핏 다운패딩(블랙)
               </p>
-              <div className="space-y-0.5 text-[#333] text-[15px] font-medium">
+              <div className="space-y-0.5 text-[#333] text-[14px] font-medium">
                 <p>색상 : 블랙</p>
                 <p>사이즈 : s</p>
                 <p>수량 : 1개</p>
@@ -53,33 +53,39 @@ export default function MyOrders() {
             </div>
 
             {/* Status & Price */}
-            <div className="text-right pt-1 min-w-[120px]">
-              <p className="text-[#333] text-[16px] mb-1 font-medium">결제완료</p>
-              <p className="font-bold text-[20px]">84,000원</p>
+            <div className="text-right pt-1 min-w-[100px]">
+              <p className="text-[#333] text-[14px] mb-1 font-medium">결제완료</p>
+              <p className="font-bold text-[18px]">84,000원</p>
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="grid grid-cols-3 gap-4 mb-4">
-            <button className="h-[52px] bg-[#5C4033] text-white border border-[#A8A9AD] rounded-[10px] text-[18px] font-bold hover:opacity-90 transition cursor-pointer">
+          <div className="grid grid-cols-3 gap-3 mb-3">
+            <button className="h-[48px] bg-[#5C4033] text-white border border-[#A8A9AD] rounded-[10px] text-[16px] font-bold hover:opacity-90 transition cursor-pointer">
               취소
             </button>
-            <button className="h-[52px] bg-white border border-[#A8A9AD] text-black rounded-[10px] text-[18px] font-bold hover:bg-gray-50 transition cursor-pointer">
+            <button
+              onClick={() => navigate("/writeReview")}
+              className="h-[48px] bg-white border border-[#A8A9AD] text-black rounded-[10px] text-[16px] font-bold hover:bg-gray-50 transition cursor-pointer"
+            >
               리뷰쓰기
             </button>
-            <button className="h-[52px] bg-white border border-[#A8A9AD] text-black rounded-[10px] text-[18px] font-bold hover:bg-gray-50 transition cursor-pointer">
+            <button
+              onClick={() => navigate("/myInquiryHistory")}
+              className="h-[48px] bg-white border border-[#A8A9AD] text-black rounded-[10px] text-[16px] font-bold hover:bg-gray-50 transition cursor-pointer"
+            >
               문의하기
             </button>
           </div>
 
-          {/* Collapsible Section (Delivery Info) */}
+          {/* Collapsible Section (Delivery & Payment Info) - INTERNAL to the parent box */}
           <div className="border border-[#A8A9AD] rounded-[10px] overflow-hidden">
             <button
               onClick={() => setIsDeliveryOpen(!isDeliveryOpen)}
-              className={`w-full h-[64px] px-6 flex items-center justify-between transition-colors ${isDeliveryOpen ? "bg-white" : "bg-[#F9F9F9]"
+              className={`w-full h-[50px] px-6 flex items-center justify-between transition-colors ${isDeliveryOpen ? "bg-white" : "bg-[#F9F9F9]"
                 }`}
             >
-              <div className="font-bold text-[18px]">배송지 정보</div>
+              <div className="font-bold text-[16px]">결제 정보</div>
               {isDeliveryOpen ? (
                 <ChevronUp size={24} className="text-gray-400" />
               ) : (
@@ -88,21 +94,60 @@ export default function MyOrders() {
             </button>
 
             {isDeliveryOpen && (
-              <div className="relative border-t border-gray-200 bg-white px-8 pb-8 pt-6 animate-in slide-in-from-top-2 duration-200">
-                {/* Information Header with Button */}
-                <div className="flex justify-between items-start mb-6">
-                  <div className="space-y-3 text-[17px] font-bold">
-                    <p><span className="text-[#333] min-w-[100px] inline-block">수령인 :</span> 송은경</p>
-                    <p><span className="text-[#333] min-w-[100px] inline-block">휴대폰 :</span> 010-1234-5678</p>
-                    <p>
-                      <span className="text-[#333] min-w-[100px] inline-block">주소지 :</span>
-                      <span className="underline decoration-[#007AFF] underline-offset-4 decoration-2">부산시 부산진구 라클라베 12-4</span>
-                    </p>
-                    <p><span className="text-[#333] min-w-[100px] inline-block">배송메모 :</span> 문 앞에 놔둬주세요</p>
+              <div className="relative border-t border-gray-200 bg-white px-5 pb-5 pt-4 animate-in slide-in-from-top-2 duration-200 space-y-5">
+                {/* Delivery Information Section */}
+                <div>
+                  <div className="mb-3 flex justify-between items-center">
+                    <h3 className="font-bold text-[16px]">배송지 정보</h3>
+                    <button
+                      onClick={() => navigate("/addressList")}
+                      className="bg-[#5C4033] text-white px-4 py-1 rounded-full text-[12px] font-bold hover:opacity-90 transition"
+                    >
+                      배송지 변경
+                    </button>
                   </div>
-                  <button className="bg-[#5C4033] text-white px-6 py-2 rounded-full text-[14px] font-bold hover:opacity-90 transition">
-                    배송지 변경
-                  </button>
+                  <div className="space-y-1 text-[14px]">
+                    <p><span className="text-[#333] font-bold min-w-[70px] inline-block">수령인 :</span> <span className="font-medium">송은경</span></p>
+                    <p><span className="text-[#333] font-bold min-w-[70px] inline-block">휴대폰 :</span> <span className="font-medium">010-1234-5678</span></p>
+                    <p>
+                      <span className="text-[#333] font-bold min-w-[70px] inline-block">주소지 :</span>
+                      <span className="font-medium">부산시 부산진구 라클라베 12-4</span>
+                    </p>
+                    <p><span className="text-[#333] font-bold min-w-[70px] inline-block">배송메모 :</span> <span className="font-medium">문 앞에 놔둬주세요</span></p>
+                  </div>
+                </div>
+
+                <hr className="border-[#EEEEEE] " />
+
+                {/* Payment Information Section */}
+                <div>
+                  <h3 className="font-bold text-[16px] mb-3 text-[#333]">결제정보</h3>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-[14px]">
+                      <span className="text-[#333] font-bold">결제방법 :</span>
+                      <span className="font-bold">BC카드</span>
+                    </div>
+                    <div className="flex justify-between text-[14px]">
+                      <span className="text-[#333] font-bold">결제금액 :</span>
+                      <span className="font-bold">84,000원</span>
+                    </div>
+                    <div className="flex justify-between text-[13px] pl-3">
+                      <span className="text-[#666] font-bold">- 상품금액 :</span>
+                      <span className="font-bold">84,000원</span>
+                    </div>
+                    <div className="flex justify-between text-[13px] pl-3">
+                      <span className="text-[#666] font-bold">- 배송비 :</span>
+                      <span className="font-bold">무료배송</span>
+                    </div>
+                    <div className="flex justify-between text-[13px] pl-3">
+                      <span className="text-[#666] font-bold">- 총 할인 금액 :</span>
+                      <span className="font-bold">-</span>
+                    </div>
+                    <div className="pt-2 border-t border-[#EEEEEE] flex justify-between items-center">
+                      <span className="font-bold text-[16px]">최종 결제 금액 :</span>
+                      <span className="font-bold text-[20px]">84,000원</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}

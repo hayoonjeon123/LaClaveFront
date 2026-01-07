@@ -1,9 +1,22 @@
+import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
 export default function MyInquiryHistory() {
+  const navigate = useNavigate();
   return (
-    <div className=" my-10">
-      <h2 className="text-center text-3xl font-bold text-[#5C4033] my-5">
-        문의 내역
-      </h2>
+    <div className="pb-10">
+      {/* Header */}
+      <div className="max-w-[1000px] mx-auto px-6 pt-10 flex items-center relative mb-8">
+        <button
+          onClick={() => navigate(-1)}
+          className="absolute left-[-40px] p-1.5 rounded-full hover:bg-gray-100 transition"
+        >
+          <ArrowLeft size={28} strokeWidth={1.5} />
+        </button>
+        <div className="flex-1 text-center">
+          <h2 className="text-[30px] font-bold text-[#5C4033] tracking-tight">문의 내역</h2>
+        </div>
+      </div>
       <div className="max-w-5xl mx-auto px-6 my-5">
         <div className="border-[#5C4033] border-[3px] rounded-[10px] p-6 gap-6 cursor-pointer">
           <div className="flex items-center justify-between w-full">

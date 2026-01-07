@@ -1,10 +1,22 @@
+import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import sampleImg from "../../assets/sample-product.jpg";
 export default function MyRecent() {
+  const navigate = useNavigate();
   return (
-    <div className="mb-10">
-      <h1 className="text-3xl font-bold text-[#5C4033] text-center my-10">
-        최근 본 상품
-      </h1>
+    <div className="pb-10">
+      {/* Header */}
+      <div className="max-w-[1000px] mx-auto px-6 pt-10 flex items-center relative mb-8">
+        <button
+          onClick={() => navigate(-1)}
+          className="absolute left-[-40px] p-1.5 rounded-full hover:bg-gray-100 transition"
+        >
+          <ArrowLeft size={28} strokeWidth={1.5} />
+        </button>
+        <div className="flex-1 text-center">
+          <h2 className="text-[30px] font-bold text-[#5C4033] tracking-tight">최근 본 상품</h2>
+        </div>
+      </div>
       {/* 최근 본 날짜 */}
       <div className="max-w-5xl mx-auto font-semibold">2026-01-05</div>
       <hr className="max-w-5xl mx-auto border-black border-t-[1px]" />

@@ -1,12 +1,23 @@
-import { Heart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Heart, ArrowLeft } from "lucide-react";
 import downCoat from "../../assets/down_jacket.png";
 
 export default function MyWishList() {
+  const navigate = useNavigate();
   return (
-    <div className="my-10">
-      <h2 className="text-center text-3xl font-bold text-[#5C4033] my-5">
-        찜한 상품
-      </h2>
+    <div className="pb-10">
+      {/* Header */}
+      <div className="max-w-[1000px] mx-auto px-6 pt-10 flex items-center relative mb-8">
+        <button
+          onClick={() => navigate(-1)}
+          className="absolute left-[-40px] p-1.5 rounded-full hover:bg-gray-100 transition"
+        >
+          <ArrowLeft size={28} strokeWidth={1.5} />
+        </button>
+        <div className="flex-1 text-center">
+          <h2 className="text-[30px] font-bold text-[#5C4033] tracking-tight">찜한 상품</h2>
+        </div>
+      </div>
       <div className="max-w-5xl mx-auto px-6">
         <div className="flex gap-10 justify-center">
           <div className="flex flex-col cursor-pointer">

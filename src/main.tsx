@@ -16,6 +16,9 @@ import MyCoupon from "./pages/mypage/myCoupon";
 import MyClaim from "./pages/mypage/myClaim";
 import MyPoint from "./pages/mypage/myPoint";
 import MyWishList from "./pages/mypage/myWishList";
+import WriteReview from "./pages/mypage/writeReview";
+import AddressList from "./pages/mypage/addressList";
+import AddAddress from "./pages/mypage/addAddress";
 import { AiSelect } from "./pages/member/AiSelect";
 import { AppLogin } from "./pages/member/AppLogin";
 import { ProductDetail } from "./pages/product/ProductDetail";
@@ -62,6 +65,9 @@ createRoot(document.getElementById("root")!).render(
           <Route path="myOrders" element={<MyOrders />} />
           {/* 리뷰 */}
           <Route path="myReview" element={<MyReview />} />
+          <Route path="writeReview" element={<WriteReview />} />
+          <Route path="addressList" element={<AddressList />} />
+          <Route path="addAddress" element={<AddAddress />} />
           {/* 문의내역 */}
           <Route path="myInquiryHistory" element={<MyInquiryHistory />} />
           {/* 최근 본 상품 */}

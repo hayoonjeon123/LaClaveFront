@@ -1,5 +1,11 @@
-import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const Order = () => {
   const [orderItems, setOrderItems] = useState([
@@ -18,6 +24,10 @@ const Order = () => {
   const deliveryFee = 0;
   const couponDiscount = 20000;
 
+  const [deliveryMessage, setDeliveryMessage] = useState("집 앞에 배송해주세요");
+  const [selectedCoupon, setSelectedCoupon] = useState("아우터 5% 할인 쿠폰");
+  const [paymentMethod, setPaymentMethod] = useState("카드 결제");
+
   const removeItem = (id: number) => {
     if (window.confirm("상품을 주문 목록에서 삭제하시겠습니까?")) {
       setOrderItems(orderItems.filter((item) => item.id !== id));
@@ -32,9 +42,6 @@ const Order = () => {
   const finalAmount =
     totalProductAmount + deliveryFee - couponDiscount - appliedPoints;
 
-  const location = useLocation();
-  const navigate = useNavigate();
-
   return (
     <div className="w-full max-w-[800px] mx-auto py-20 px-6 font-sans text-[#000]">
       <h2 className="text-center text-[24px] font-bold mb-12 tracking-widest">
@@ -45,7 +52,6 @@ const Order = () => {
       <section className="mb-12">
         <div className="flex justify-between items-center border-b border-black pb-2 mb-6">
           <h3 className="text-[16px] font-bold">배송지</h3>
-          {/* 배송지 변경 버튼 추가 */}
           <button className="border border-[#000000] px-3 py-1 text-[12px] rounded hover:bg-[#5C4033] hover:text-[#ffffff] cursor-pointer transition-colors">
             배송지 변경
           </button>
@@ -56,10 +62,15 @@ const Order = () => {
             [ 16859 ] 부산광역시 수영구 망미동 000아파트, 501동 1702호
           </p>
           <p className="text-gray-600">연락처 : 010 - 0000 - 0000</p>
-          <select className="w-full mt-4 border border-black rounded p-3 text-[14px] outline-none">
-            <option>집 앞에 배송해주세요</option>
-            <option>직접 수령하겠습니다</option>
-          </select>
+          <Select value={deliveryMessage} onValueChange={setDeliveryMessage}>
+            <SelectTrigger className="!w-full !mt-4 !border !border-[#000000] !rounded !px-4 !h-[45px] !text-[14px] !justify-between focus:!ring-0 !outline-none">
+              <SelectValue placeholder="배송 메시지 선택" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="집 앞에 배송해주세요">집 앞에 배송해주세요</SelectItem>
+              <SelectItem value="직접 수령하겠습니다">직접 수령하겠습니다</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </section>
 
@@ -108,19 +119,16 @@ const Order = () => {
         )}
       </section>
 
-      {/* 적립금 / 쿠폰 섹션 */}
       {/* 적립금 / 쿠폰 사용 섹션 */}
       <section className="mb-14">
         <h3 className="text-[14px] font-bold pb-3 mb-8 border-b border-gray-200">
           적립금 / 쿠폰 사용
         </h3>
         <div className="space-y-6">
-          {/* 적립금 입력창 및 보유 현황 */}
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-6">
               <span className="w-20 text-[14px] font-bold">적립금</span>
               <div className="flex-1 flex flex-col gap-2">
-                {/* 보유 적립금 현황 표시 */}
                 <p className="text-[12px] text-gray-500 ml-1">
                   보유 적립금{" "}
                   <strong className="text-black ml-1">
@@ -148,7 +156,6 @@ const Order = () => {
                 </div>
               </div>
             </div>
-            {/* 최소 사용 금액 안내 로직 */}
             {points > 0 && points < 1000 && (
               <p className="text-red-500 text-[11px] ml-[104px] mt-1">
                 * 적립금은 1,000원부터 사용 가능합니다.
@@ -156,16 +163,17 @@ const Order = () => {
             )}
           </div>
 
-          {/* 쿠폰 선택창 */}
           <div className="flex items-center gap-6">
             <span className="w-20 text-[14px] font-bold">쿠폰</span>
-            <div className="flex-1 relative">
-              <select className="w-full border border-[#000000] rounded p-3 text-[13px] appearance-none outline-none cursor-pointer h-[45px]">
-                <option>아우터 5% 할인 쿠폰</option>
-              </select>
-              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 font-light">
-                ⌄
-              </div>
+            <div className="flex-1">
+              <Select value={selectedCoupon} onValueChange={setSelectedCoupon}>
+                <SelectTrigger className="!w-full !border !border-[#000000] !rounded !px-4 !h-[45px] !text-[14px] !justify-between focus:!ring-0 !outline-none">
+                  <SelectValue placeholder="쿠폰 선택" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="아우터 5% 할인 쿠폰">아우터 5% 할인 쿠폰</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </div>
@@ -215,10 +223,15 @@ const Order = () => {
         <h3 className="text-[16px] font-semibold border-b border-[#000000] pb-2 mb-6">
           결제 수단
         </h3>
-        <select className="w-full border border-[#000000] rounded-[10px] p-4 mb-6 outline-none font-semibold cursor-pointer">
-          <option>카드 결제</option>
-          <option>무통장 입금</option>
-        </select>
+        <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+          <SelectTrigger className="!w-full !border !border-[#000000] !rounded !px-4 !h-[45px] !mb-6 !text-[14px] !font-semibold !justify-between focus:!ring-0 !outline-none">
+            <SelectValue placeholder="결제 수단 선택" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="카드 결제">카드 결제</SelectItem>
+            <SelectItem value="무통장 입금">무통장 입금</SelectItem>
+          </SelectContent>
+        </Select>
         <button
           className="w-full h-16 border border-[#000000] rounded-[10px] text-[18px] font-semibold hover:bg-[#5C4033] hover:text-white transition-all cursor-pointer shadow-sm"
           disabled={orderItems.length === 0}
