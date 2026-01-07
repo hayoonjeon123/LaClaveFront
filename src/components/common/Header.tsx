@@ -10,7 +10,7 @@ interface HeaderProps {
 function Header({ onMenuClick }: HeaderProps) {
   return (
     <header className="w-[1420px] mx-auto bg-[#5C4033]">
-      <div className="mx-auto max-w-[1280px] h-[120px] flex justify-between px-[24px] relative">
+      <div className="mx-auto max-w-[1280px] h-[100px] flex justify-between px-[24px] relative">
         {/* 왼쪽 */}
         <div className="flex mt-[20px] gap-[20px]">
           <span
@@ -34,10 +34,14 @@ function Header({ onMenuClick }: HeaderProps) {
 
         {/* 오른쪽 */}
         <div className="ml-auto flex mt-[30px] gap-[20px]">
-          <div className="text-white text-[14px] cursor-pointer ">
-            마이페이지
-          </div>
-          <div className="text-white text-[14px] cursor-pointer">좋아요</div>
+          <Link to="/myPage">
+            <div className="text-white text-[14px] cursor-pointer ">
+              마이페이지
+            </div>
+          </Link>
+          <Link to="/myWishList">
+            <div className="text-white text-[14px] cursor-pointer">좋아요</div>
+          </Link>
           <Link to="/cart">
             <div className="text-white text-[14px] cursor-pointer">
               장바구니

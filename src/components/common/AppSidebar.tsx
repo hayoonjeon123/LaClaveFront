@@ -1,5 +1,6 @@
 import { CLASS_CATEGORY } from "@/constants/category.constants"
 import { Separator } from "@/components/ui/separator"
+import { Link } from "react-router-dom";
 import Logo from "@/assets/Logo.png"
 import { ChevronDown } from "lucide-react"
 import {
@@ -82,14 +83,25 @@ function AppSidebar({ open, onOpenChange }: AppSidebarProps) {
                                     {/* 서브메뉴 */}
                                     {menu.subItems && openMenuId === menu.id && (
                                         <div className="ml-8 mt-2 flex flex-col gap-1 animate-in slide-in-from-top-2 duration-200">
-                                            {menu.subItems.map((subItem, index) => (
-                                                <button
-                                                    key={index}
-                                                    className="text-xs text-gray-200 hover:text-white hover:bg-white/5 py-1.5 px-2 rounded-md transition-colors text-left"
-                                                >
-                                                    {subItem}
-                                                </button>
-                                            ))}
+                                            {menu.subItems.map((subItem, index) => {
+                                                // Determine target route based on main category label
+                                                const lower = menu.label.toLowerCase();
+                                                let path = "/"; // default fallback
+                                                if (lower.includes('상의')) path = '/top';
+                                                else if (lower.includes('하의')) path = '/bottom';
+                                                else if (lower.includes('아우터')) path = '/outer';
+                                                else if (lower.includes('악세서리')) path = '/acc';
+                                                return (
+                                                    <Link
+                                                        key={index}
+                                                        to={path}
+                                                        className="text-xs text-gray-200 hover:text-white hover:bg-white/5 py-1.5 px-2 rounded-md transition-colors text-left"
+                                                        onClick={() => onOpenChange?.(false)}
+                                                    >
+                                                        {subItem}
+                                                    </Link>
+                                                );
+                                            })}
                                         </div>
                                     )}
 
@@ -101,7 +113,9 @@ function AppSidebar({ open, onOpenChange }: AppSidebarProps) {
                             ))}
                         </div>
                     </div>
+
                 </div>
+
             </SheetContent>
         </Sheet>
     );

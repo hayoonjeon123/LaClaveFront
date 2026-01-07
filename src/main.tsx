@@ -34,13 +34,13 @@ import { AdminPlaceholder } from "./pages/admin/AdminPlaceholder";
 import { MemberDetail } from "./pages/admin/MemberDetail";
 import { CommonCodeManagement } from "./pages/admin/CommonCodeManagement";
 import { CommonCodeAdd } from "./pages/admin/CommonCodeAdd";
-import { MemberCancel } from "./pages/Admin/MemberCancel";
-import { MemberExchange } from "./pages/Admin/Memberexchange";
-import { MemberRefund } from "./pages/Admin/MemberRefund";
-import { MemberReturn } from "./pages/Admin/MemberReturn";
-import { ProductRegister } from "./pages/Admin/ProductRegister";
-import { ProductEdit } from "./pages/Admin/ProductEdit";
-import { ProductList } from "./pages/Admin/ProductList";
+import { MemberCancel } from "./pages/admin/MemberCancel";
+import { MemberExchange } from "./pages/admin/MemberExchange";
+import { MemberRefund } from "./pages/admin/MemberRefund";
+import { MemberReturn } from "./pages/admin/MemberReturn";
+import { ProductRegister } from "./pages/admin/ProductRegister";
+import { ProductEdit } from "./pages/admin/ProductEdit";
+import { ProductList } from "./pages/admin/ProductList";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
