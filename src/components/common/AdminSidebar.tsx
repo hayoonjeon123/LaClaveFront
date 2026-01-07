@@ -2,34 +2,40 @@ import { ADMIN_CATEGORY } from "@/constants/category.constants"
 import Logo from "@/assets/Logo.png"
 import { ChevronDown } from "lucide-react"
 import { useState } from "react"
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 // 관리자 사이드바
-function AdminSidebar() {
+function AdminSidebar({ onOpenChange }: { onOpenChange?: (open: boolean) => void }) {
     const [openMenuId, setOpenMenuId] = useState<number | null>(null);
     const navigate = useNavigate();
 
-    const toggleMenu = (id: number) => {
-        setOpenMenuId((prev) => (prev === id ? null : id));
-    };
+
 
     const handleMenuClick = (menu: any) => {
-        if (menu.subItems) {
-            toggleMenu(menu.id);
+        if (menu.subItems && menu.subItems.length > 0) {
+            // 서브메뉴가 있으면 해당 메뉴를 열고 첫 번째 서브아이템으로 이동
+            setOpenMenuId(menu.id);
+            const firstPath = menu.subItems[0].path;
+            console.log('Navigating to (first subitem):', firstPath);
+            navigate(firstPath);
+            // onOpenChange?.(false); // 관리자 사이드바는 보통 고정형이므로 닫지 않음
         } else if (menu.path) {
+            setOpenMenuId(null);
             console.log('Navigating to:', menu.path);
             navigate(menu.path);
+            onOpenChange?.(false);
         }
     };
-
     return (
         <div className="w-[300px] h-full bg-[#5C4033] flex flex-col">
             <div className="p-6 border-b border-[#7A5C4E] flex flex-col items-center">
-                <img
-                    src={Logo}
-                    alt="LaClave"
-                    className="w-24 mb-6"
-                />
+                <Link to="/admin">
+                    <img
+                        src={Logo}
+                        alt="LaClave"
+                        className="w-24 mb-6 cursor-pointer"
+                    />
+                </Link>
                 {/* 사이드바 */}
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">

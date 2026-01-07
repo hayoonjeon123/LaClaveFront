@@ -30,7 +30,7 @@ import { Acc } from "./pages/product/Acc";
 import { FAQ } from "./pages/board/FAQ";
 import { MemberManagement } from "./pages/admin/MemberManagement";
 import { AdminHome } from "./pages/admin/AdminHome";
-import { AdminPlaceholder } from "./pages/admin/AdminPlaceholder";
+
 import { MemberDetail } from "./pages/admin/MemberDetail";
 import { CommonCodeManagement } from "./pages/admin/CommonCodeManagement";
 import { CommonCodeAdd } from "./pages/admin/CommonCodeAdd";
@@ -41,6 +41,14 @@ import { MemberReturn } from "./pages/admin/MemberReturn";
 import { ProductRegister } from "./pages/admin/ProductRegister";
 import { ProductEdit } from "./pages/admin/ProductEdit";
 import { ProductList } from "./pages/admin/ProductList";
+import { OrderList } from "./pages/admin/OrderList";
+import { PaymentList } from "./pages/admin/PaymentList";
+import { ProductStock } from "./pages/admin/ProductStock";
+import { DeliveryReady } from "./pages/admin/DeliveryReady";
+import { DeliveryList } from "./pages/admin/DeliveryList";
+import { InquiryList } from "./pages/admin/InquiryList";
+import { Best } from "./pages/product/Best";
+import { All } from "./pages/product/All";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -71,6 +79,8 @@ createRoot(document.getElementById("root")!).render(
           <Route path="aiselect" element={<AiSelect />} />
           <Route path="login" element={<AppLogin />} />
           <Route path="product/:productId" element={<ProductDetail />} />
+          <Route path="all" element={<All />} />
+          <Route path="best" element={<Best />} />
           <Route path="outer" element={<Outer />} />
           <Route path="top" element={<Top />} />
           <Route path="bottom" element={<Bottom />} />
@@ -85,6 +95,7 @@ createRoot(document.getElementById("root")!).render(
 
         {/* 여기부터 관리자 */}
         <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminHome />} />
           <Route path="member" element={<MemberManagement />} />
           <Route path="member/:memberId" element={<MemberDetail />} />
           <Route path="home" element={<AdminHome />} />
@@ -95,31 +106,13 @@ createRoot(document.getElementById("root")!).render(
           <Route path="product/register" element={<ProductRegister />} />
           <Route path="product/edit" element={<ProductEdit />} />
           <Route path="product/list" element={<ProductList />} />
-          <Route
-            path="order/list"
-            element={<AdminPlaceholder title="주문 조회" />}
-          />
+          <Route path="order/list" element={<OrderList />} />
+          <Route path="order/payment" element={<PaymentList />} />
+          <Route path="product/stock" element={<ProductStock />} />
+          <Route path="delivery/ready" element={<DeliveryReady />} />
+          <Route path="delivery/manage" element={<DeliveryList />} />
 
-          <Route
-            path="order/payment"
-            element={<AdminPlaceholder title="결제목록" />}
-          />
-
-          <Route
-            path="product/stock"
-            element={<AdminPlaceholder title="재고 관리" />}
-          />
-
-          <Route
-            path="delivery/ready"
-            element={<AdminPlaceholder title="배송 준비중" />}
-          />
-          <Route
-            path="delivery/manage"
-            element={<AdminPlaceholder title="배송 관리" />}
-          />
-
-          <Route path="board" element={<AdminPlaceholder title="게시판" />} />
+          <Route path="board" element={<InquiryList />} />
           <Route path="code" element={<CommonCodeManagement />} />
           <Route path="code/add" element={<CommonCodeAdd />} />
         </Route>

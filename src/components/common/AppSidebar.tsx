@@ -1,6 +1,7 @@
 import { CLASS_CATEGORY } from "@/constants/category.constants"
 import { Separator } from "@/components/ui/separator"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+// navigate hook moved inside component
 import Logo from "@/assets/Logo.png"
 import { ChevronDown } from "lucide-react"
 import {
@@ -31,6 +32,7 @@ function AppSidebar({ open, onOpenChange }: AppSidebarProps) {
         }
     }, [open]);
 
+    const navigate = useNavigate();
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
 
@@ -67,7 +69,16 @@ function AppSidebar({ open, onOpenChange }: AppSidebarProps) {
                                 <div key={menu.id} className="w-full">
                                     {/* 메인 메뉴 버튼 */}
                                     <button
-                                        onClick={() => toggleMenu(menu.id)}
+                                        onClick={() => {
+                                            if (menu.subItems) {
+                                                // 서브메뉴가 있으면 토글
+                                                toggleMenu(menu.id);
+                                            } else {
+                                                // 서브메뉴가 없으면(전체, 베스트, 고객센터 등) 바로 이동
+                                                navigate(menu.path);
+                                                onOpenChange?.(false);
+                                            }
+                                        }}
                                         className="flex items-center justify-between w-full text-left text-white text-sm py-3 px-2 hover:pl-4 hover:bg-white/10 rounded-lg transition-all duration-300"
                                     >
                                         <span>{menu.label}</span>
@@ -80,28 +91,19 @@ function AppSidebar({ open, onOpenChange }: AppSidebarProps) {
                                         )}
                                     </button>
 
-                                    {/* 서브메뉴 */}
+                                    {/* 서브메뉴 - Link 컴포넌트 활용 */}
                                     {menu.subItems && openMenuId === menu.id && (
                                         <div className="ml-8 mt-2 flex flex-col gap-1 animate-in slide-in-from-top-2 duration-200">
-                                            {menu.subItems.map((subItem, index) => {
-                                                // Determine target route based on main category label
-                                                const lower = menu.label.toLowerCase();
-                                                let path = "/"; // default fallback
-                                                if (lower.includes('상의')) path = '/top';
-                                                else if (lower.includes('하의')) path = '/bottom';
-                                                else if (lower.includes('아우터')) path = '/outer';
-                                                else if (lower.includes('악세서리')) path = '/acc';
-                                                return (
-                                                    <Link
-                                                        key={index}
-                                                        to={path}
-                                                        className="text-xs text-gray-200 hover:text-white hover:bg-white/5 py-1.5 px-2 rounded-md transition-colors text-left"
-                                                        onClick={() => onOpenChange?.(false)}
-                                                    >
-                                                        {subItem}
-                                                    </Link>
-                                                );
-                                            })}
+                                            {menu.subItems.map((subItem, index) => (
+                                                <Link
+                                                    key={index}
+                                                    to={menu.path} // 미리 정의된 path 사용
+                                                    className="text-xs text-gray-200 hover:text-white hover:bg-white/5 py-1.5 px-2 rounded-md transition-colors text-left"
+                                                    onClick={() => onOpenChange?.(false)}
+                                                >
+                                                    {subItem}
+                                                </Link>
+                                            ))}
                                         </div>
                                     )}
 
