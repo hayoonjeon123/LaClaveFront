@@ -1,7 +1,7 @@
 import sampleImg from "../../assets/sample-product.jpg";
 export default function MyRecent() {
   return (
-    <div>
+    <div className="mb-10">
       <h1 className="text-3xl font-bold text-[#5C4033] text-center my-10">
         최근 본 상품
       </h1>

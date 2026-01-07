@@ -72,9 +72,8 @@ export default function MyReview() {
               </p>
 
               {/* 별점 */}
-              <div className="flex items-center gap-2 mt-3">
+              <div className="flex justify-between items-center gap-2 mt-3">
                 <div className="text-yellow-400 text-lg">★★★★☆</div>
-                <span className="font-semibold">4</span>
               </div>
 
               {/* 리뷰 내용 */}
@@ -84,16 +83,18 @@ export default function MyReview() {
             </div>
 
             {/* 버튼 영역 */}
-            <div className="flex flex-col gap-2 items-end">
-              <span className="text-sm text-gray-400">작성일 : 2025.04.10</span>
-
-              <button className="border px-4 py-1 rounded hover:bg-gray-100 cursor-pointer">
-                수정
-              </button>
-
-              <button className="bg-[#5C4033] text-white px-4 py-1 rounded hover:opacity-90 cursor-pointer">
-                삭제
-              </button>
+            <div className="flex flex-col gap-16">
+              <div className="flex gap-2 justify-end">
+                <button className="border px-4 h-8 py-1 rounded hover:bg-gray-100 cursor-pointer">
+                  수정
+                </button>
+                <button className="bg-[#5C4033] text-white px-4 h-8 py-1 rounded hover:opacity-90 cursor-pointer">
+                  삭제
+                </button>
+              </div>
+              <span className="text-sm text-gray-400 mt-3">
+                작성일 : 2025.04.10
+              </span>
             </div>
           </div>
         </div>
