@@ -11,6 +11,11 @@ import MyOrders from "./pages/mypage/myOrders";
 import MyReview from "./pages/mypage/myReview";
 import MyInquiryHistory from "./pages/mypage/myInquiryHistory";
 import MyRecent from "./pages/mypage/myRecent";
+import MyWithDraw from "./pages/mypage/myWithDraw";
+import MyCoupon from "./pages/mypage/myCoupon";
+import MyClaim from "./pages/mypage/myClaim";
+import MyPoint from "./pages/mypage/myPoint";
+import MyWishList from "./pages/mypage/myWishList";
 import { AiSelect } from "./pages/member/AiSelect";
 import { AppLogin } from "./pages/member/AppLogin";
 import { ProductDetail } from "./pages/product/ProductDetail";
@@ -48,6 +53,11 @@ createRoot(document.getElementById("root")!).render(
           <Route path="myReview" element={<MyReview />} />
           <Route path="myInquiryHistory" element={<MyInquiryHistory />} />
           <Route path="myRecent" element={<MyRecent />} />
+          <Route path="myWithDraw" element={<MyWithDraw />} />
+          <Route path="myCoupon" element={<MyCoupon />} />
+          <Route path="myClaim" element={<MyClaim />} />
+          <Route path="myPoint" element={<MyPoint />} />
+          <Route path="myWishList" element={<MyWishList />} />
           <Route path="aiselect" element={<AiSelect />} />
           <Route path="login" element={<AppLogin />} />
           <Route path="product/:productId" element={<ProductDetail />} />
