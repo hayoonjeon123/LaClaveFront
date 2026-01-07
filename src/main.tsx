@@ -27,7 +27,8 @@ import { MemberManagement } from "./pages/admin/MemberManagement";
 import { AdminHome } from "./pages/admin/AdminHome";
 import { AdminPlaceholder } from "./pages/admin/AdminPlaceholder";
 import { MemberDetail } from "./pages/admin/MemberDetail";
-
+import { CommonCodeManagement } from "./pages/admin/CommonCodeManagement";
+import { CommonCodeAdd } from "./pages/admin/CommonCodeAdd";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
@@ -56,65 +57,28 @@ createRoot(document.getElementById("root")!).render(
 
         {/* 여기부터 관리자 */}
         <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<AdminHome />} />
           <Route path="member" element={<MemberManagement />} />
           <Route path="member/:memberId" element={<MemberDetail />} />
           <Route path="home" element={<AdminHome />} />
 
-          {/* Placeholder Routes for missing pages */}
-          <Route
-            path="order/list"
-            element={<AdminPlaceholder title="주문 조회" />}
-          />
-          <Route
-            path="order/cancel"
-            element={<AdminPlaceholder title="취소" />}
-          />
-          <Route
-            path="order/exchange"
-            element={<AdminPlaceholder title="교환" />}
-          />
-          <Route
-            path="order/return"
-            element={<AdminPlaceholder title="반품" />}
-          />
-          <Route
-            path="order/refund"
-            element={<AdminPlaceholder title="환불" />}
-          />
-          <Route
-            path="order/payment"
-            element={<AdminPlaceholder title="결제목록" />}
-          />
+          <Route path="order/list" element={<AdminPlaceholder title="주문 조회" />} />
+          <Route path="order/cancel" element={<AdminPlaceholder title="취소" />} />
+          <Route path="order/exchange" element={<AdminPlaceholder title="교환" />} />
+          <Route path="order/return" element={<AdminPlaceholder title="반품" />} />
+          <Route path="order/refund" element={<AdminPlaceholder title="환불" />} />
+          <Route path="order/payment" element={<AdminPlaceholder title="결제목록" />} />
 
-          <Route
-            path="product/register"
-            element={<AdminPlaceholder title="상품 등록" />}
-          />
-          <Route
-            path="product/list"
-            element={<AdminPlaceholder title="상품 조회" />}
-          />
-          <Route
-            path="product/edit"
-            element={<AdminPlaceholder title="상품 수정" />}
-          />
-          <Route
-            path="product/stock"
-            element={<AdminPlaceholder title="재고 관리" />}
-          />
+          <Route path="product/register" element={<AdminPlaceholder title="상품 등록" />} />
+          <Route path="product/list" element={<AdminPlaceholder title="상품 조회" />} />
+          <Route path="product/edit" element={<AdminPlaceholder title="상품 수정" />} />
+          <Route path="product/stock" element={<AdminPlaceholder title="재고 관리" />} />
 
-          <Route
-            path="delivery/ready"
-            element={<AdminPlaceholder title="배송 준비중" />}
-          />
-          <Route
-            path="delivery/manage"
-            element={<AdminPlaceholder title="배송 관리" />}
-          />
+          <Route path="delivery/ready" element={<AdminPlaceholder title="배송 준비중" />} />
+          <Route path="delivery/manage" element={<AdminPlaceholder title="배송 관리" />} />
 
           <Route path="board" element={<AdminPlaceholder title="게시판" />} />
-          <Route path="code" element={<AdminPlaceholder title="공통코드" />} />
+          <Route path="code" element={<CommonCodeManagement />} />
+          <Route path="code/add" element={<CommonCodeAdd />} />
         </Route>
 
         {/* 여기부터 공통 */}

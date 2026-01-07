@@ -11,7 +11,7 @@ function Header({ onMenuClick }: HeaderProps) {
     <header className="w-[1420px] mx-auto bg-[#5C4033]">
       <div className="mx-auto max-w-[1280px] h-[120px] flex justify-between px-[24px] relative">
         {/* 왼쪽 */}
-        <div className="flex mt-[35px] gap-[20px]">
+        <div className="flex mt-[20px] gap-[20px]">
           <span
             className="text-[28px] text-white cursor-pointer"
             onClick={onMenuClick}
@@ -26,35 +26,35 @@ function Header({ onMenuClick }: HeaderProps) {
             <img
               src={Logo}
               alt="logo"
-              className="h-[40px] mt-[35px] cursor-pointer"
+              className="h-[40px] mt-[20px] cursor-pointer"
             />
           </Link>
         </div>
 
         {/* 오른쪽 */}
-        <div className="ml-auto flex mt-[40px] gap-[20px]">
-          <div className="text-white text-[18px] cursor-pointer ">
+        <div className="ml-auto flex mt-[30px] gap-[20px]">
+          <div className="text-white text-[14px] cursor-pointer ">
             마이페이지
           </div>
-          <div className="text-white text-[18px] cursor-pointer">좋아요</div>
+          <div className="text-white text-[14px] cursor-pointer">좋아요</div>
           <Link to="/cart">
-            <div className="text-white text-[18px] cursor-pointer">
+            <div className="text-white text-[14px] cursor-pointer">
               장바구니
             </div>
           </Link>
           <Link to="/login">
-            <div className="text-white text-[18px] cursor-pointer">로그인</div>
+            <div className="text-white text-[14px] cursor-pointer">로그인</div>
           </Link>
         </div>
       </div>
 
-      <div className="flex items-center w-[1280px] h-[55px] mx-auto bg-[#F5F5F5] mb-[30px] rounded-full px-[14px] border-[3px] border-[#A8A9AD]">
+      <div className="flex items-center w-[1280px] h-[40px] mx-auto bg-[#F5F5F5] mb-[20px] rounded-full px-[14px] border-[3px] border-[#A8A9AD]">
         <input
           type="text"
           placeholder="검색어를 입력하세요"
-          className="flex-2 text-[18px] outline-none bg-transparent"
+          className="flex-2 text-[14px] outline-none bg-transparent"
         />
-        <span className="text-[18px] cursor-pointer"></span>
+        <span className="text-[14px] cursor-pointer"></span>
       </div>
     </header>
   );
