@@ -28,14 +28,14 @@ import { Top } from "./pages/product/Top";
 import { Bottom } from "./pages/product/Bottom";
 import { Acc } from "./pages/product/Acc";
 import { FAQ } from "./pages/board/FAQ";
-import { MemberManagement } from "./pages/Admin/MemberManagement";
-import { AdminHome } from "./pages/Admin/AdminHome";
-import { AdminPlaceholder } from "./pages/Admin/AdminPlaceholder";
-import { MemberDetail } from "./pages/Admin/MemberDetail";
-import { CommonCodeManagement } from "./pages/Admin/CommonCodeManagement";
-import { CommonCodeAdd } from "./pages/Admin/CommonCodeAdd";
+import { MemberManagement } from "./pages/admin/MemberManagement";
+import { AdminHome } from "./pages/admin/AdminHome";
+import { AdminPlaceholder } from "./pages/admin/AdminPlaceholder";
+import { MemberDetail } from "./pages/admin/MemberDetail";
+import { CommonCodeManagement } from "./pages/admin/CommonCodeManagement";
+import { CommonCodeAdd } from "./pages/admin/CommonCodeAdd";
 import { MemberCancel } from "./pages/Admin/MemberCancel";
-import { MemberExchange } from "./pages/Admin/MemberExchange";
+import { MemberExchange } from "./pages/Admin/Memberexchange";
 import { MemberRefund } from "./pages/Admin/MemberRefund";
 import { MemberReturn } from "./pages/Admin/MemberReturn";
 import { ProductRegister } from "./pages/Admin/ProductRegister";
@@ -48,15 +48,25 @@ createRoot(document.getElementById("root")!).render(
       <Routes>
         <Route element={<MainLayout />}>
           <Route index element={<App />} />
+          {/* 마이페이지 메인 */}
           <Route path="myPage" element={<MyPage />} />
+          {/* 주문내역 */}
           <Route path="myOrders" element={<MyOrders />} />
+          {/* 리뷰 */}
           <Route path="myReview" element={<MyReview />} />
+          {/* 문의내역 */}
           <Route path="myInquiryHistory" element={<MyInquiryHistory />} />
+          {/* 최근 본 상품 */}
           <Route path="myRecent" element={<MyRecent />} />
+          {/* 회원탈퇴 */}
           <Route path="myWithDraw" element={<MyWithDraw />} />
+          {/* 쿠폰 */}
           <Route path="myCoupon" element={<MyCoupon />} />
+          {/* 취소/반품/교환 */}
           <Route path="myClaim" element={<MyClaim />} />
+          {/* 포인트 */}
           <Route path="myPoint" element={<MyPoint />} />
+          {/* 찜목록 */}
           <Route path="myWishList" element={<MyWishList />} />
           <Route path="aiselect" element={<AiSelect />} />
           <Route path="login" element={<AppLogin />} />
