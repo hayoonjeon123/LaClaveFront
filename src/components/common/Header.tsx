@@ -1,4 +1,5 @@
 import Logo from "@/assets/Logo.png";
+import { SearchIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 
 // 사이드바 연결(하윤)
@@ -54,7 +55,7 @@ function Header({ onMenuClick }: HeaderProps) {
           placeholder="검색어를 입력하세요"
           className="flex-2 text-[14px] outline-none bg-transparent"
         />
-        <span className="text-[14px] cursor-pointer"></span>
+        <SearchIcon size={17} />
       </div>
     </header>
   );

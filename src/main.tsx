@@ -11,11 +11,11 @@ import MyOrders from "./pages/mypage/myOrders";
 import MyReview from "./pages/mypage/myReview";
 import MyInquiryHistory from "./pages/mypage/myInquiryHistory";
 import MyRecent from "./pages/mypage/myRecent";
-import { AiSelect } from "./pages/AiSelect";
+import { AiSelect } from "./pages/member/AiSelect";
 import { AppLogin } from "./pages/member/AppLogin";
 import { ProductDetail } from "./pages/product/ProductDetail";
 import { Cart } from "./pages/payment/CartPage";
-import { Order } from "./pages";
+import { Order } from "./pages/payment/Order";
 import { FindAccount } from "./pages/member/FindAccount";
 import { FindResult } from "./pages/member/FindResult";
 import { Outer } from "./pages/product/Outer";
@@ -29,6 +29,14 @@ import { AdminPlaceholder } from "./pages/admin/AdminPlaceholder";
 import { MemberDetail } from "./pages/admin/MemberDetail";
 import { CommonCodeManagement } from "./pages/admin/CommonCodeManagement";
 import { CommonCodeAdd } from "./pages/admin/CommonCodeAdd";
+import { MemberCancel } from "./pages/Admin/MemberCancel";
+import { MemberExchange } from "./pages/Admin/Memberexchange";
+import { MemberRefund } from "./pages/Admin/MemberRefund";
+import { MemberReturn } from "./pages/Admin/MemberReturn";
+import { ProductRegister } from "./pages/Admin/ProductRegister";
+import { ProductEdit } from "./pages/Admin/ProductEdit";
+import { ProductList } from "./pages/Admin/ProductList";
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
@@ -60,21 +68,36 @@ createRoot(document.getElementById("root")!).render(
           <Route path="member" element={<MemberManagement />} />
           <Route path="member/:memberId" element={<MemberDetail />} />
           <Route path="home" element={<AdminHome />} />
+          <Route path="order/cancel" element={<MemberCancel />} />
+          <Route path="order/exchange" element={<MemberExchange />} />
+          <Route path="order/refund" element={<MemberRefund />} />
+          <Route path="order/return" element={<MemberReturn />} />
+          <Route path="product/register" element={<ProductRegister />} />
+          <Route path="product/edit" element={<ProductEdit />} />
+          <Route path="product/list" element={<ProductList />} />
+          <Route
+            path="order/list"
+            element={<AdminPlaceholder title="주문 조회" />}
+          />
 
-          <Route path="order/list" element={<AdminPlaceholder title="주문 조회" />} />
-          <Route path="order/cancel" element={<AdminPlaceholder title="취소" />} />
-          <Route path="order/exchange" element={<AdminPlaceholder title="교환" />} />
-          <Route path="order/return" element={<AdminPlaceholder title="반품" />} />
-          <Route path="order/refund" element={<AdminPlaceholder title="환불" />} />
-          <Route path="order/payment" element={<AdminPlaceholder title="결제목록" />} />
+          <Route
+            path="order/payment"
+            element={<AdminPlaceholder title="결제목록" />}
+          />
 
-          <Route path="product/register" element={<AdminPlaceholder title="상품 등록" />} />
-          <Route path="product/list" element={<AdminPlaceholder title="상품 조회" />} />
-          <Route path="product/edit" element={<AdminPlaceholder title="상품 수정" />} />
-          <Route path="product/stock" element={<AdminPlaceholder title="재고 관리" />} />
+          <Route
+            path="product/stock"
+            element={<AdminPlaceholder title="재고 관리" />}
+          />
 
-          <Route path="delivery/ready" element={<AdminPlaceholder title="배송 준비중" />} />
-          <Route path="delivery/manage" element={<AdminPlaceholder title="배송 관리" />} />
+          <Route
+            path="delivery/ready"
+            element={<AdminPlaceholder title="배송 준비중" />}
+          />
+          <Route
+            path="delivery/manage"
+            element={<AdminPlaceholder title="배송 관리" />}
+          />
 
           <Route path="board" element={<AdminPlaceholder title="게시판" />} />
           <Route path="code" element={<CommonCodeManagement />} />
