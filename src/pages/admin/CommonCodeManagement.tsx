@@ -15,7 +15,7 @@ const COMMON_CODES = Array.from({ length: 10 }).map((_, i) => ({
 export function CommonCodeManagement() {
     const navigate = useNavigate();
     return (
-        <div className="w-full max-w-[1200px] mx-auto space-y-8 font-['Inter',sans-serif]">
+        <div className="w-full max-w-[1200px] mx-auto space-y-8">
             <div className="flex justify-center mb-8">
                 <div className="relative w-full max-w-2xl">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -35,14 +35,14 @@ export function CommonCodeManagement() {
             <div className="flex justify-end mb-2">
                 <button
                     onClick={() => navigate("/admin/code/add")}
-                    className="px-6 py-2 bg-[#5C4033] text-white rounded-[5px] font-medium hover:bg-[#4a332a] transition-colors cursor-pointer"
+                    className="px-6 py-2 bg-[#5C4033] text-white rounded-[5px] font-medium border-[2px] border-[#A8A9AD] hover:bg-[#4a332a] transition-colors cursor-pointer"
                 >
                     공통코드 추가
                 </button>
             </div>
 
             <div className="w-full bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
-                <div className="flex bg-[#5C4033] text-white py-4 text-center font-bold text-sm md:text-base">
+                <div className="flex bg-[#5C4033] text-white py-4 text-center font-medium text-sm md:text-base">
                     <div className="w-16">NO</div>
                     <div className="flex-1">코드타입ID</div>
                     <div className="flex-1">코드타입명</div>
@@ -62,10 +62,10 @@ export function CommonCodeManagement() {
                             <div className="flex-1">{code.commonCodeName}</div>
                             <div className="flex-[1.5]">{code.description}</div>
                             <div className="w-[200px] flex justify-center gap-2">
-                                <button className="px-4 py-1.5 bg-[#5C4033] text-white text-sm text-center rounded-[5px] border-[#A8A9AD] border-[1px] hover:bg-[#4a332a] cursor-pointer">
+                                <button className="px-4 py-1.5 bg-[#5C4033] text-white text-sm text-center rounded-[5px] border-[#A8A9AD] border-[2px] hover:bg-[#4a332a] cursor-pointer">
                                     수정
                                 </button>
-                                <button className="px-4 py-1.5 bg-[#5C4033] text-white text-sm text-center rounded-[5px] border-[#A8A9AD] border-[1px] hover:bg-[#4a332a] cursor-pointer">
+                                <button className="px-4 py-1.5 bg-[#5C4033] text-white text-sm text-center rounded-[5px] border-[#A8A9AD] border-[2px] hover:bg-[#4a332a] cursor-pointer">
                                     삭제
                                 </button>
                             </div>

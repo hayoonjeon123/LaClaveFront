@@ -14,7 +14,7 @@ export function AdminHeader() {
             if (category.subItems) {
                 for (const subItem of category.subItems) {
                     if (typeof subItem !== 'string' && subItem.path && pathname.startsWith(subItem.path)) {
-                        return category.label;
+                        return subItem.label;
                     }
                 }
             }
@@ -23,7 +23,7 @@ export function AdminHeader() {
     };
 
     return (
-        <header className="w-full h-[80px] bg-[#A8A9AD] px-8 flex items-center justify-between font-['Inter',sans-serif]">
+        <header className="w-full h-[80px] bg-[#A8A9AD] px-8 flex items-center justify-between">
             {/* Left Title */}
             <h1 className="text-3xl font-bold text-black tracking-tight">
                 {getPageTitle(location.pathname)}

@@ -37,8 +37,8 @@ export const ADMIN_CATEGORY = [
         id: 4,
         label: "배송",
         subItems: [
-            { label: '배송 준비중', path: '/admin/delivery/ready' },
-            { label: '배송 관리', path: '/admin/delivery/manage' }
+            { label: '배송 관리', path: '/admin/delivery/manage' },
+            { label: '배송 준비중', path: '/admin/delivery/ready' }
         ]
     },
     { id: 5, label: "고객", path: "/admin/member" },

@@ -1,6 +1,6 @@
 export function AdminFooter() {
     return (
-        <footer className="w-full bg-[#A8A9AD] py-8 font-['Inter',sans-serif]">
+        <footer className="w-full bg-[#A8A9AD] py-8">
             <div className="w-full max-w-[1000px] mx-auto text-center space-y-2">
                 <p className="text-[13px] font-bold text-[#1E1E1E] leading-relaxed">
                     ※ 이 페이지는 관리자 전용입니다. 무단 접근 시 법적 처벌을 받을

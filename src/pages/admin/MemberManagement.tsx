@@ -1,5 +1,12 @@
 import { Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 
 // Mock Data for the table
 const MEMBERS = Array.from({ length: 10 }).map((_, i) => ({
@@ -9,6 +16,7 @@ const MEMBERS = Array.from({ length: 10 }).map((_, i) => ({
     email: "이메일",
     joinDate: "가입일",
     status: "정상",
+    grade: "BRONZE",
 }));
 
 export function MemberManagement() {
@@ -26,8 +34,8 @@ export function MemberManagement() {
                 <div className="grid grid-cols-4 gap-4 ">
                     {[1, 2, 3, 4].map((_, idx) => (
                         <div key={idx} className="bg-white rounded-[5px] border border-[#5C4033] p-4 h-[120px] flex flex-col justify-between">
-                            <span className="font-medium font-bold">신규 회원</span>
-                            <span className="text-3xl text-s text-gray-900">0</span>
+                            <span className="font-medium text-base text-black">신규 회원</span>
+                            <span className="text-3xl font-medium text-gray-900">0</span>
                         </div>
                     ))}
                 </div>
@@ -41,7 +49,7 @@ export function MemberManagement() {
                     <input
                         type="text"
                         placeholder="검색어를 입력하세요"
-                        className="w-full pl-8 pr-10 py-3 rounded-full border-[3px] border-[#A8A9AD] focus:outline-none text-sm shadow-sm"
+                        className="w-full pl-8 pr-10 py-3 rounded-full border-[2px] border-[#A8A9AD] focus:outline-none text-sm shadow-sm"
                     />
                     <div className="absolute inset-y-0 right-0 pr-4 flex items-center cursor-pointer">
                         <Search className="h-5 w-5 text-gray-400" />
@@ -50,7 +58,7 @@ export function MemberManagement() {
             </div>
 
             <div className="w-full bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
-                <div className="flex bg-[#5C4033] text-white py-4 text-center font-bold text-sm md:text-base">
+                <div className="flex bg-[#5C4033] text-white py-4 text-center font-medium text-sm md:text-base">
                     <div className="w-16">NO</div>
                     <div className="flex-1">회원 이름</div>
                     <div className="flex-1">아이디</div>
@@ -69,26 +77,42 @@ export function MemberManagement() {
                             <div className="flex-1">{member.email}</div>
                             <div className="flex-1">{member.joinDate}</div>
                             <div className="w-32 flex justify-center">
-                                <span className="px-3 py-1 bg-[#5C4033] text-white text-md text-center rounded-[5px] border-[#A8A9AD] border-[2px] w-[80px] h-[30px] cursor-pointer flex justify-center items-center">
-                                    {member.status}
-                                </span>
+                                <Select defaultValue={member.status}>
+                                    <SelectTrigger className="!w-[80px] !h-[30px] !p-0 bg-[#5C4033] text-white !text-[13px] font-medium rounded-[5px] !border-[#A8A9AD] !border-[2px] flex justify-center items-center focus:ring-0 focus:ring-offset-0 [&>svg]:hidden">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="정상">정상</SelectItem>
+                                        <SelectItem value="탈퇴">탈퇴</SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </div>
                             <div className="w-[320px] flex justify-center gap-4">
                                 <button
                                     onClick={() => handleDetailClick(member.id)}
-                                    className="px-3 py-1 bg-[#5C4033] text-white text-md text-center rounded-[5px] border-[#A8A9AD] border-[2px] w-[80px] h-[30px] cursor-pointer flex justify-center items-center"
+                                    className="w-[80px] h-[30px] bg-[#5C4033] text-white text-[13px] font-medium rounded-[5px] border-[#A8A9AD] border-[2px] flex justify-center items-center p-0 hover:bg-[#4a332a]"
                                 >
                                     상세보기
                                 </button>
-                                <button className="px-3 py-1 bg-[#5C4033] text-white text-md text-center rounded-[5px] border-[#A8A9AD] border-[2px] w-[80px] h-[30px] cursor-pointer flex justify-center items-center">등급</button>
-                                <button className="px-3 py-1 bg-[#5C4033] text-white text-md text-center rounded-[5px] border-[#A8A9AD] border-[2px] w-[80px] h-[30px] cursor-pointer flex justify-center items-center">삭제</button>
+                                <Select defaultValue={member.grade}>
+                                    <SelectTrigger className="!w-[80px] !h-[30px] !p-0 bg-[#5C4033] text-white !text-[13px] font-medium rounded-[5px] !border-[#A8A9AD] !border-[2px] flex justify-center items-center focus:ring-0 focus:ring-offset-0 [&>svg]:hidden">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="VIP">VIP</SelectItem>
+                                        <SelectItem value="GOLD">GOLD</SelectItem>
+                                        <SelectItem value="SILVER">SILVER</SelectItem>
+                                        <SelectItem value="BRONZE">BRONZE</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <button className="w-[80px] h-[30px] bg-[#5C4033] text-white text-[13px] font-medium rounded-[5px] border-[#A8A9AD] border-[2px] flex justify-center items-center p-0 hover:bg-[#4a332a]">삭제</button>
                             </div>
                         </div>
                     ))}
                 </div>
             </div>
 
-            <div className="flex justify-center items-center gap-4 text-sm font-medium text-gray-500 pt-4">
+            <div className="flex justify-center items-center gap-4 text-sm font-medium text-gray-500 pt-8 pb-8">
                 <button className="w-8 h-8 flex items-center justify-center text-black font-bold">1</button>
                 <button className="w-8 h-8 flex items-center justify-center hover:text-black">2</button>
                 <button className="w-8 h-8 flex items-center justify-center hover:text-black">3</button>

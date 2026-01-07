@@ -2,8 +2,8 @@
 function StatusCard({ title, value }: { title: string, value: number }) {
     return (
         <div className="bg-white rounded-[5px] border border-[#5C4033] p-4 h-[120px] flex flex-col justify-between">
-            <span className="font-medium font-bold">{title}</span>
-            <span className="text-3xl text-s text-gray-900">{value}</span>
+            <span className="font-medium text-base text-black">{title}</span>
+            <span className="text-3xl font-medium text-gray-900">{value}</span>
         </div>
     );
 }
@@ -12,26 +12,30 @@ function DualStatusCard({ leftTitle, leftValue, rightTitle, rightValue }: { left
     return (
         <div className="bg-white rounded-[5px] border border-[#5C4033] p-4 h-[120px] relative flex">
             <div className="flex-1 flex flex-col justify-between">
-                <span className="font-medium font-bold">{leftTitle}</span>
-                <span className="text-3xl  text-s text-gray-900">{leftValue}</span>
+                <span className="font-medium text-base text-black">{leftTitle}</span>
+                <span className="text-3xl font-medium text-gray-900">{leftValue}</span>
             </div>
             <div className="w-[1px] bg-gray-200 h-[60%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
             <div className="flex-1 flex flex-col justify-between pl-6">
-                <span className="font-medium font-bold">{rightTitle}</span>
-                <span className="text-3xl text-s text-gray-900">{rightValue}</span>
+                <span className="font-medium text-base text-black">{rightTitle}</span>
+                <span className="text-3xl font-medium text-gray-900">{rightValue}</span>
             </div>
         </div>
     )
 }
 
 export function AdminHome() {
+    // 현재 날짜 가져오기 (YYYY년 MM월 DD일 형식)
+    const today = new Date();
+    const formattedDate = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일`;
+
     return (
-        <div className="w-full max-w-[1200px] mx-auto space-y-12 font-['Inter',sans-serif]">
+        <div className="w-full max-w-[1200px] mx-auto space-y-12">
             {/* 오늘의 할 일 Section */}
             <div className="space-y-4">
                 <div className="flex items-end gap-2">
                     <h2 className="font-bold text-gray-900 text-[30px]">오늘의 할 일</h2>
-                    <span className="text-sm text-gray-500 mb-1">2025년 12월 18일 ~ 현재날짜</span>
+                    <span className="text-sm text-gray-500 mb-1">{formattedDate} 기준</span>
                 </div>
 
                 <div className="bg-[#E5E5E5] p-8 rounded-lg">
@@ -64,7 +68,7 @@ export function AdminHome() {
             <div className="space-y-4">
                 <div className="flex items-end gap-2">
                     <h2 className="font-bold text-gray-900 text-[30px]">매출 통계</h2>
-                    <span className="text-sm text-gray-500 mb-1">2025년 12월 18일 ~ 현재날짜</span>
+                    <span className="text-sm text-gray-500 mb-1">2025년 12월 18일 ~ {formattedDate}</span>
                 </div>
 
                 <div className="bg-[#E5E5E5] p-8 rounded-lg">

@@ -23,7 +23,7 @@ function AdminSidebar() {
     };
 
     return (
-        <div className="w-[300px] h-full bg-[#5C4033] flex flex-col font-['Inter',sans-serif]">
+        <div className="w-[300px] h-full bg-[#5C4033] flex flex-col">
             <div className="p-6 border-b border-[#7A5C4E] flex flex-col items-center">
                 <img
                     src={Logo}
