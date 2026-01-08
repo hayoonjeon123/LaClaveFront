@@ -1,4 +1,5 @@
 import { SiYoutube, SiInstagram } from "@icons-pack/react-simple-icons";
+import { Link } from "react-router-dom";
 
 function Footer() {
   const MailIcon = () => (
@@ -48,42 +49,48 @@ function Footer() {
   );
 
   return (
-    <footer className="w-[1420px] mx-auto bg-[#5C4033] text-white py-8">
+    <footer className="w-[1420px] mx-auto bg-[#5C4033] text-white py-12">
       <div className="max-w-[1280px] mx-auto px-[24px]">
-        {/* 상단 영역 */}
-        <div className="flex justify-between items-start">
+        <div className="flex justify-between items-end">
           {/* 왼쪽 회사 정보 */}
-          <div className="text-[14px] leading-[1.8]">
-            <p className="font-semibold mb-2">상호명 | La Clavé</p>
+          <div className="text-[13px] leading-[2.0] text-white/90">
+            <p>상호명 | La Clavé</p>
             <p>대표자 | ○○○</p>
             <p>사업자등록번호 | 000-00-00000</p>
             <p>통신판매업신고번호 | 2025-부산○○-0000</p>
             <p>주소 | 부산시 ○○구 ○○로 ○○</p>
-            <p className="mt-2">고객센터 | 051-000-0000 / help@laclave.com</p>
+            <p>고객센터 | 051-000-0000 / help@laclave.com</p>
           </div>
 
-          {/* 오른쪽 운영 시간 + 아이콘 */}
-          <div className="text-right text-[14px] flex flex-col gap-6">
-            {/* 운영 시간 */}
-            <div className="leading-[1.8]">
+          {/* 가운데 정책 및 카피라이트 */}
+          <div className="text-center flex flex-col items-center gap-2 mb-1">
+            <div className="flex items-center gap-2 text-[13px] text-white/90">
+              <Link to="/privacypolicy" className="hover:text-white">개인정보처리방침</Link>
+              <span className="text-white/40">|</span>
+              <Link to="/termsofuse" className="hover:text-white">이용약관</Link>
+              <span className="text-white/40">|</span>
+              <Link to="/admin" className="hover:text-white">관리자</Link>
+            </div>
+            <p className="text-[12px] text-white/70">
+              © {new Date().getFullYear()} La Clavé
+            </p>
+          </div>
+
+          {/* 오른쪽 운영 시간 및 아이콘 */}
+          <div className="text-right flex flex-col justify-between h-[160px]">
+            <div className="text-[13px] leading-[1.8] text-white/90">
               <p>평일 10:00 - 17:00</p>
               <p>점심 12:00 - 13:00</p>
               <p>주말/공휴일 휴무</p>
             </div>
 
-            {/* 아이콘 */}
-            <div className="flex justify-end gap-4">
-              <SiInstagram className="w-5 h-5 fill-white cursor-pointer" />
-              <SiYoutube className="w-5 h-5 fill-white cursor-pointer" />
+            <div className="flex justify-end gap-5">
+              <SiInstagram className="w-6 h-6 fill-white cursor-pointer opacity-90 hover:opacity-100 transition-opacity" />
+              <SiYoutube className="w-6 h-6 fill-white cursor-pointer opacity-90 hover:opacity-100 transition-opacity" />
               <MailIcon />
               <PhoneIcon />
             </div>
           </div>
-        </div>
-
-        {/* 하단 */}
-        <div className="mt-8 text-center text-[13px] text-white/80">
-          <p>© {new Date().getFullYear()} La Clavé. All rights reserved.</p>
         </div>
       </div>
     </footer>

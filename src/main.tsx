@@ -56,6 +56,9 @@ import { DeliveryList } from "./pages/admin/DeliveryList";
 import { InquiryList } from "./pages/admin/InquiryList";
 import { Best } from "./pages/product/Best";
 import { All } from "./pages/product/All";
+import TermsOfUse from "./pages/policy/TermsOfUse";
+import PrivacyPolicy from "./pages/policy/PrivacyPolicy";
+import ErrorPage from "./pages/error/ErrorPage";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -95,6 +98,9 @@ createRoot(document.getElementById("root")!).render(
           <Route path="findAccount" element={<FindAccount />} />
           <Route path="findResult" element={<FindResult />} />
           <Route path="faq" element={<FAQ />} />
+          <Route path="termsofuse" element={<TermsOfUse />} />
+          <Route path="privacypolicy" element={<PrivacyPolicy />} />
+          <Route path="*" element={<ErrorPage />} />
         </Route>
 
         {/* 여기부터 관리자 */}
