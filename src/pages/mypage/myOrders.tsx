@@ -83,9 +83,9 @@ export default function MyOrders() {
           <div className="border border-[#A8A9AD] rounded-[10px] overflow-hidden">
             <button
               onClick={() => setIsDeliveryOpen(!isDeliveryOpen)}
-              className={`w-full h-[50px] px-6 flex items-center justify-between cursor-pointer transition-colors ${isDeliveryOpen ? "bg-white" : "bg-[#F9F9F9]"}`}
+              className={`w-full h-[50px] px-6 flex items-center justify-between cursor-pointer transition-colors "}`}
             >
-              <div className="font-bold text-[16px] text-[#333]">결제 정보</div>
+              <div className="font-bold text-[16px] ">결제 정보</div>
               {isDeliveryOpen ? (
                 <ChevronUp size={24} className="text-gray-400" />
               ) : (
@@ -94,7 +94,7 @@ export default function MyOrders() {
             </button>
 
             {isDeliveryOpen && (
-              <div className="relative border-t border-gray-200 bg-white px-5 pb-5 pt-4 animate-in slide-in-from-top-2 duration-200 space-y-5">
+              <div className="relative border-t border-[#A8A9AD] px-5 pb-5 pt-4 animate-in slide-in-from-top-2 duration-200 space-y-5">
                 {/* Delivery Information Section */}
                 <div>
                   <div className="mb-3 flex justify-between items-center">
