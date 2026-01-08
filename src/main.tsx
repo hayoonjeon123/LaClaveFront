@@ -13,7 +13,11 @@ import MyInquiryHistory from "./pages/mypage/myInquiryHistory";
 import MyRecent from "./pages/mypage/myRecent";
 import MyWithDraw from "./pages/mypage/myWithDraw";
 import MyCoupon from "./pages/mypage/myCoupon";
+import MyDelivery from "./pages/mypage/myDelivery";
 import MyClaim from "./pages/mypage/myClaim";
+import MyMemberEdit from "./pages/mypage/MemberEdit";
+import MyPwEdit from "./pages/mypage/PwEdit";
+import WriteInquiry from "./pages/mypage/WriteInquiry";
 import MyPoint from "./pages/mypage/myPoint";
 import MyWishList from "./pages/mypage/myWishList";
 import WriteReview from "./pages/mypage/writeReview";
@@ -59,28 +63,22 @@ createRoot(document.getElementById("root")!).render(
       <Routes>
         <Route element={<MainLayout />}>
           <Route index element={<App />} />
-          {/* 마이페이지 메인 */}
           <Route path="myPage" element={<MyPage />} />
-          {/* 주문내역 */}
           <Route path="myOrders" element={<MyOrders />} />
-          {/* 리뷰 */}
           <Route path="myReview" element={<MyReview />} />
           <Route path="writeReview" element={<WriteReview />} />
           <Route path="addressList" element={<AddressList />} />
           <Route path="addAddress" element={<AddAddress />} />
-          {/* 문의내역 */}
           <Route path="myInquiryHistory" element={<MyInquiryHistory />} />
-          {/* 최근 본 상품 */}
           <Route path="myRecent" element={<MyRecent />} />
-          {/* 회원탈퇴 */}
           <Route path="myWithDraw" element={<MyWithDraw />} />
-          {/* 쿠폰 */}
           <Route path="myCoupon" element={<MyCoupon />} />
-          {/* 취소/반품/교환 */}
+          <Route path="myDelivery" element={<MyDelivery />} />
           <Route path="myClaim" element={<MyClaim />} />
-          {/* 포인트 */}
+          <Route path="myMemberEdit" element={<MyMemberEdit />} />
+          <Route path="myPwEdit" element={<MyPwEdit />} />
+          <Route path="writeInquiry" element={<WriteInquiry />} />
           <Route path="myPoint" element={<MyPoint />} />
-          {/* 찜목록 */}
           <Route path="myWishList" element={<MyWishList />} />
           <Route path="aiselect" element={<AiSelect />} />
           <Route path="login" element={<AppLogin />} />

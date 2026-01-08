@@ -59,7 +59,7 @@ export default function MyReview() {
       {activeTab === "written" && (
         <div className="space-y-4 px-6">
           {/* 리뷰 카드 (Final Redesigned Layout) */}
-          <div className="border border-[#EEEEEE] rounded-[10px] bg-white shadow-sm overflow-hidden">
+          <div className="border border-[#EEEEEE] rounded-[10px] shadow-sm overflow-hidden">
             {/* 상단: 상품 정보 및 액션 버튼 */}
             <div className="p-4 py-3 flex items-center gap-4">
               <div className="w-[52px] h-[52px] flex-shrink-0 overflow-hidden rounded-[8px]">
@@ -78,10 +78,10 @@ export default function MyReview() {
                 </div>
               </div>
               <div className="flex gap-1.5 min-w-fit">
-                <button className="border-[2px] border-[#A8A9AD] px-3 h-7 py-0.5 rounded-[5px] hover:bg-gray-50 text-[11px] font-bold transition cursor-pointer text-[#333]">
+                <button className="border border-[#A8A9AD] px-3 h-7 py-0.5 rounded-[5px] text-[11px] font-bold transition cursor-pointer text-[#333]">
                   수정
                 </button>
-                <button className="border-[2px] border-[#A8A9AD] bg-[#5C4033] text-white px-3 h-7 py-0.5 rounded-[5px] hover:opacity-90 text-[11px] font-bold transition cursor-pointer">
+                <button className="border border-[#A8A9AD] bg-[#5C4033] text-white px-3 h-7 py-0.5 rounded-[5px] text-[11px] font-bold transition cursor-pointer">
                   삭제
                 </button>
               </div>

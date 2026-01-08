@@ -1,12 +1,17 @@
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import sampleImg from "../../assets/sample-product.jpg";
+
 export default function MyClaim() {
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("취소");
+  const tabs = ["취소", "교환", "반품", "환불"];
+
   return (
     <div className="pb-10">
       {/* Header */}
-      <div className="max-w-[1000px] mx-auto px-6 pt-10 flex items-center relative mb-8">
+      <div className="max-w-[1000px] mx-auto px-6 pt-6 flex items-center relative mb-4">
         <button
           onClick={() => navigate(-1)}
           className="absolute left-[-40px] p-1.5 rounded-full hover:bg-gray-100 transition"
@@ -18,16 +23,21 @@ export default function MyClaim() {
         </div>
       </div>
       {/* 탭 영역 */}
-      <div className="max-w-5xl mx-auto font-semibold flex gap-4 ">
-        <button className="w-[150px] px-4 py-2 border border-[#5C4033] rounded-[10px] hover:bg-[#5C4033] hover:text-white cursor-pointer">
-          취소
-        </button>
-        <button className="w-[150px] px-4 py-2 border border-[#5C4033] rounded-[10px] hover:bg-[#5C4033] hover:text-white cursor-pointer">
-          반품
-        </button>
-        <button className="w-[150px] px-4 py-2 border border-[#5C4033] rounded-[10px] hover:bg-[#5C4033] hover:text-white cursor-pointer">
-          교환
-        </button>
+      <div className="max-w-5xl mx-auto mb-6">
+        <div className="flex border-b border-[#D1D1D1] px-4">
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-6 py-4 text-[16px] transition-all ${activeTab === tab
+                ? "font-bold text-black border-b-2 border-[#5C4033]"
+                : "font-normal text-[#555555] hover:text-black"
+                }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
       </div>
       {/* 상품 영역 */}
       <div className="max-w-5xl mx-auto font-semibold mt-4">
@@ -36,28 +46,29 @@ export default function MyClaim() {
       <div className="max-w-5xl mx-auto text-[#A8A9AD] font-semibold mb-2">
         결제날짜 2026-01-05
       </div>
-      <hr className="max-w-5xl mx-auto border-black border-t-[1px]" />
-      <div className="max-w-5xl mx-auto font-semibold flex gap-4 my-4">
+
+      <div className="max-w-5xl mx-auto flex items-center gap-6 my-4">
         {/* 상품 이미지 */}
         <img
           src={sampleImg}
           alt="상품 이미지"
-          className="w-28 h-28 object-cover rounded"
+          className="w-20 h-20 object-cover rounded-lg border border-gray-100 shadow-sm"
         />
-        <div className="flex-1 text-sm">
-          <p className="font-medium font-semibold mb-1 color-[#000000]">
+        <div className="flex-1">
+          <p className="text-[17px] font-bold text-black mb-1">
             백색 리버시블 점퍼또 다운패딩(블랙)
           </p>
-          <p className="text-gray-600">색상: 블랙</p>
-          <p className="text-gray-600">사이즈: S</p>
-          <p className="text-gray-600">수량: 1개</p>
+          <p className="text-[#A8A9AD] text-[14px] font-medium">
+            블랙 / S
+          </p>
         </div>
         {/* 결제 정보 */}
-        <div className="text-right text-sm whitespace-nowrap">
-          <p className="text-gray-600 mb-1">취소 완료</p>
-          <p className="font-semibold">84,000원</p>
+        <div className="text-right whitespace-nowrap">
+          <p className="text-[#555555] text-[14px] mb-1 font-medium">취소 완료</p>
+          <p className="text-[18px] font-bold text-black">84,000원</p>
         </div>
       </div>
+      <hr className="max-w-5xl mx-auto border-[#D1D1D1] border-t-[1px] mt-4" />
     </div>
   );
 }

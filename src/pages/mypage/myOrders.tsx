@@ -1,6 +1,7 @@
 import { ArrowDownIcon, ArrowLeft, ChevronUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { Separator } from "@/components/ui/separator";
 import sampleImg from "../../assets/sample-product.jpg";
 
 export default function MyOrders() {
@@ -8,7 +9,7 @@ export default function MyOrders() {
   const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-white text-black pb-20">
+    <div className="text-black pb-10">
       {/* Header */}
       <div className="max-w-[700px] mx-auto px-6 pt-6 flex items-center relative mb-4">
         <button
@@ -24,14 +25,14 @@ export default function MyOrders() {
 
       <div className="max-w-[700px] mx-auto px-6">
         {/* Main Content Box Wrapper */}
-        <div className="border border-[#A8A9AD] rounded-[10px] p-5 bg-white">
+        <div className="border border-[#A8A9AD] rounded-[10px] p-5">
           {/* Order Header Info */}
           <div className="mb-2">
             <div className="font-bold text-[16px] mb-0.5">주문번호 20251603947</div>
             <div className="text-[#A8A9AD] font-medium text-[13px]">결제 날짜 : 2025.06.13 오후 15:33</div>
           </div>
 
-          <hr className="border-[#A8A9AD] border-t-[1px] mb-4" />
+          <Separator className="bg-[#A8A9AD] h-[1px] mb-4" />
 
           {/* Product Info Section */}
           <div className="flex gap-5 items-start mb-5 px-1">
@@ -61,18 +62,18 @@ export default function MyOrders() {
 
           {/* Action Buttons */}
           <div className="grid grid-cols-3 gap-3 mb-3">
-            <button className="h-[48px] bg-[#5C4033] text-white border border-[#A8A9AD] rounded-[10px] text-[16px] font-bold hover:opacity-90 transition cursor-pointer">
+            <button className="h-[48px] border border-[#A8A9AD] text-black rounded-[10px] text-[16px] font-bold hover:bg-[#5C4033] hover:text-white transition cursor-pointer">
               취소
             </button>
             <button
               onClick={() => navigate("/writeReview")}
-              className="h-[48px] bg-white border border-[#A8A9AD] text-black rounded-[10px] text-[16px] font-bold hover:bg-gray-50 transition cursor-pointer"
+              className="h-[48px] border border-[#A8A9AD] text-black rounded-[10px] text-[16px] font-bold hover:bg-[#5C4033] hover:text-white transition cursor-pointer"
             >
               리뷰쓰기
             </button>
             <button
               onClick={() => navigate("/myInquiryHistory")}
-              className="h-[48px] bg-white border border-[#A8A9AD] text-black rounded-[10px] text-[16px] font-bold hover:bg-gray-50 transition cursor-pointer"
+              className="h-[48px] border border-[#A8A9AD] text-black rounded-[10px] text-[16px] font-bold hover:bg-[#5C4033] hover:text-white transition cursor-pointer"
             >
               문의하기
             </button>
@@ -82,10 +83,9 @@ export default function MyOrders() {
           <div className="border border-[#A8A9AD] rounded-[10px] overflow-hidden">
             <button
               onClick={() => setIsDeliveryOpen(!isDeliveryOpen)}
-              className={`w-full h-[50px] px-6 flex items-center justify-between transition-colors ${isDeliveryOpen ? "bg-white" : "bg-[#F9F9F9]"
-                }`}
+              className={`w-full h-[50px] px-6 flex items-center justify-between cursor-pointer transition-colors ${isDeliveryOpen ? "bg-white" : "bg-[#F9F9F9]"}`}
             >
-              <div className="font-bold text-[16px]">결제 정보</div>
+              <div className="font-bold text-[16px] text-[#333]">결제 정보</div>
               {isDeliveryOpen ? (
                 <ChevronUp size={24} className="text-gray-400" />
               ) : (
@@ -98,7 +98,7 @@ export default function MyOrders() {
                 {/* Delivery Information Section */}
                 <div>
                   <div className="mb-3 flex justify-between items-center">
-                    <h3 className="font-bold text-[16px]">배송지 정보</h3>
+                    <h3 className="font-bold text-[16px] ">배송지 정보</h3>
                     <button
                       onClick={() => navigate("/addressList")}
                       className="bg-[#5C4033] text-white px-4 py-1 rounded-full text-[12px] font-bold hover:opacity-90 transition"
@@ -117,7 +117,7 @@ export default function MyOrders() {
                   </div>
                 </div>
 
-                <hr className="border-[#EEEEEE] " />
+                <Separator className="bg-[#EEEEEE]" />
 
                 {/* Payment Information Section */}
                 <div>
@@ -143,7 +143,10 @@ export default function MyOrders() {
                       <span className="text-[#666] font-bold">- 총 할인 금액 :</span>
                       <span className="font-bold">-</span>
                     </div>
-                    <div className="pt-2 border-t border-[#EEEEEE] flex justify-between items-center">
+
+                    <Separator className="bg-[#EEEEEE] my-2" />
+
+                    <div className="pt-2 flex justify-between items-center">
                       <span className="font-bold text-[16px]">최종 결제 금액 :</span>
                       <span className="font-bold text-[20px]">84,000원</span>
                     </div>

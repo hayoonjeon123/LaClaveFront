@@ -70,7 +70,7 @@ const AiSelect = () => {
         Ai 맞춤 정보
       </div>
 
-      <div className="text-[16px] text-[#A8A9AD] mt-[20px] ">
+      <div className="text-[16px] text-[#A8A9AD] mt-[5px] ">
         AI가 체형과 스타일을 분석해 추천 드려요
       </div>
 
@@ -148,19 +148,17 @@ const AiSelect = () => {
               onClick={() => toggleStyle(style.id)}
               className={`
                 w-[320px] p-[16px] flex flex-col items-start border transition-all cursor-pointer
-                ${
-                  selectedStyles.includes(style.id)
-                    ? "border-[#5C4033] bg-[#F9F8F7]"
-                    : "border-[#E5E7EB] bg-white hover:border-[#5C4033]"
+                ${selectedStyles.includes(style.id)
+                  ? "border-[#5C4033] bg-[#F9F8F7]"
+                  : "border-[#A8A9AD] hover:border-[#5C4033]"
                 }
               `}
             >
               <span
-                className={`text-[15px] font-bold ${
-                  selectedStyles.includes(style.id)
-                    ? "text-[#5C4033]"
-                    : "text-black"
-                }`}
+                className={`text-[15px] font-bold ${selectedStyles.includes(style.id)
+                  ? "text-[#5C4033]"
+                  : "text-black"
+                  }`}
               >
                 {style.label}
               </span>

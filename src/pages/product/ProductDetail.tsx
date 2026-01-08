@@ -103,7 +103,7 @@ function ProductDetail() {
                     <div className="flex flex-col max-w-[500px] w-full mx-auto">
                         <div className="mb-6">
                             <h3 className="text-[24px] font-['Luxurious_Script'] text-[#5C4033] mb-2 flex items-center gap-2">
-                                La Clavé <span className="text-black font-['Gowun_Dodum'] text-base font-bold">La Clavé</span>
+                                La Clavé <span className="text-black text-base font-bold">La Clavé</span>
                             </h3>
                             <h1 className="text-[28px] font-bold text-[#000000] leading-tight">
                                 배색 리버시블 컴포트핏 다운패딩(블랙)

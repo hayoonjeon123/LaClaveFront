@@ -67,7 +67,7 @@ function ProductCard({ product }: { product: any }) {
 
 export default function MyPage() {
   return (
-    <div className="min-h-screen bg-white font-['Gowun_Dodum'] text-black pb-10">
+    <div className="min-h-screen bg-white text-black pb-10">
       {/* Title */}
       <div className="text-center py-6">
         <h2 className="text-[40px] font-bold text-[#5C4033] tracking-tight">My Page</h2>
@@ -84,10 +84,14 @@ export default function MyPage() {
               빛나는 초코님 VIP
             </span>
           </div>
-          <div className="flex gap-6 text-[#333]">
-            <ShoppingCart size={40} strokeWidth={1.5} className="cursor-pointer" />
+          <div className="flex gap-6 text-[#333] items-center">
+            <Link to="/cart" className="hover:opacity-70 transition">
+              <ShoppingCart size={40} strokeWidth={1.5} />
+            </Link>
             <Bell size={40} strokeWidth={1.5} className="cursor-pointer" />
-            <Settings size={40} strokeWidth={1.5} className="cursor-pointer" />
+            <Link to="/myMemberEdit" className="hover:opacity-70 transition">
+              <Settings size={40} strokeWidth={1.5} />
+            </Link>
           </div>
         </div>
 

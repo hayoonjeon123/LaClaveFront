@@ -24,7 +24,7 @@ export default function AddressList() {
                 <div className="flex justify-end mb-4">
                     <button
                         onClick={() => navigate("/addAddress")}
-                        className="px-3 py-1.5 border border-[#A8A9AD] rounded-[6px] font-bold text-[13px] text-black hover:bg-gray-50 transition"
+                        className="px-3 py-1.5 border border-[#A8A9AD] rounded-[6px] cursor-pointer font-bold text-[13px] text-black hover:bg-[#5C4033] hover:text-white transition cu"
                     >
                         배송지 추가
                     </button>
@@ -47,10 +47,10 @@ export default function AddressList() {
                     </div>
 
                     <div className="flex justify-end gap-2">
-                        <button className="px-4 py-1.5 bg-[#F5F5F5] border-[2px] border-[#A8A9AD] rounded-[6px] font-bold text-[13px] text-[#333] hover:bg-gray-200 transition">
+                        <button className="cursor-pointer px-4 py-1.5 bg-[#F5F5F5] border border-[#A8A9AD] rounded-[6px] font-bold text-[13px] text-[#333] transition">
                             수정
                         </button>
-                        <button className="px-4 py-1.5 bg-[#5C4033] text-white border-[2px] border-[#A8A9AD] rounded-[6px] font-bold text-[13px] hover:opacity-90 transition">
+                        <button className="cursor-pointer px-4 py-1.5 bg-[#5C4033] text-white border border-[#A8A9AD] rounded-[6px] font-bold text-[13px] transition">
                             삭제
                         </button>
                     </div>
@@ -58,7 +58,7 @@ export default function AddressList() {
 
                 {/* 저장하기 버튼 */}
                 <div className="flex justify-center mt-12">
-                    <button className="w-[140px] h-[44px] bg-white border border-[#A8A9AD] rounded-[6px] font-bold text-[15px] text-black hover:bg-gray-50 transition shadow-sm">
+                    <button className="w-[140px] h-[44px] border border-[#A8A9AD] rounded-[6px] font-bold text-[15px] text-black hover-[#5C4033] hover:border-[#5C4033] hover:text-white hover:bg-[#5C4033] transition shadow-sm cursor-pointer">
                         저장
                     </button>
                 </div>
