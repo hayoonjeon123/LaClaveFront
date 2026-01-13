@@ -23,6 +23,7 @@ import MyWishList from "./pages/mypage/myWishList";
 import WriteReview from "./pages/mypage/writeReview";
 import AddressList from "./pages/mypage/addressList";
 import AddAddress from "./pages/mypage/addAddress";
+import EditInquiry from "./pages/mypage/EditInquiry";
 import { AiSelect } from "./pages/member/AiSelect";
 import { AppLogin } from "./pages/member/AppLogin";
 import { ProductDetail } from "./pages/product/ProductDetail";
@@ -83,6 +84,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="writeInquiry" element={<WriteInquiry />} />
           <Route path="myPoint" element={<MyPoint />} />
           <Route path="myWishList" element={<MyWishList />} />
+          <Route path="editInquiry/:inquiryIdx" element={<EditInquiry />} />
           <Route path="aiselect" element={<AiSelect />} />
           <Route path="login" element={<AppLogin />} />
           <Route path="product/:productId" element={<ProductDetail />} />

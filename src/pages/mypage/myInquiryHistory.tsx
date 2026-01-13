@@ -1,7 +1,11 @@
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import {
+  getInquiryList,
+  deleteInquiry,
+  updateInquiry,
+} from "../../api/inquiryApi";
 
 export default function MyInquiryHistory() {
   const navigate = useNavigate();
@@ -11,19 +15,15 @@ export default function MyInquiryHistory() {
   const [inquiries, setInquiries] = useState<any[]>([]);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8080/api/inquiry/${memberIdx}`)
+    getInquiryList(memberIdx)
       .then((res) => {
-        console.log("🔥 inquiry response:", res.data);
+        console.log(" inquiry response:", res.data);
         setInquiries(res.data);
       })
       .catch((err) => {
-        console.error("문의 목록 조회 실패");
-        console.error("status:", err.response?.status);
-        console.error("data:", err.response?.data);
-        console.error("message:", err.message);
+        console.error("문의 목록 조회 실패", err);
       });
-  }, []);
+  }, [memberIdx]);
 
   return (
     <div className="pb-10">
@@ -68,10 +68,30 @@ export default function MyInquiryHistory() {
 
               {/* Action Buttons */}
               <div className="flex gap-1.5">
-                <button className="px-3 py-1 border border-[#A8A9AD] rounded-[6px] text-[12px] font-bold hover:bg-[#5C4033] hover:text-white transition cursor-pointer text-[#333]">
+                <button
+                  className="px-3 py-1 border border-[#A8A9AD] rounded-[6px] text-[12px] font-bold hover:bg-[#5C4033] hover:text-white transition cursor-pointer text-[#333]"
+                  onClick={() => navigate(`/editInquiry/${inquiry.inquiryIdx}`)}
+                >
                   수정
                 </button>
-                <button className="px-3 py-1 bg-[#5C4033] border border-[#A8A9AD] text-white rounded-[6px] text-[12px] font-bold hover:bg-[#4a3329] transition cursor-pointer">
+                <button
+                  className="px-3 py-1 bg-[#5C4033] border border-[#A8A9AD] text-white rounded-[6px] text-[12px] font-bold hover:bg-[#4a3329] transition cursor-pointer"
+                  onClick={async () => {
+                    if (!confirm("정말 삭제하시겠습니까?")) return;
+
+                    try {
+                      await deleteInquiry(inquiry.inquiryIdx);
+                      alert("문의가 삭제되었습니다.");
+
+                      // 삭제 후 목록 다시 조회
+                      const res = await getInquiryList(memberIdx);
+                      setInquiries(res.data);
+                    } catch (error) {
+                      console.error(error);
+                      alert("삭제에 실패했습니다.");
+                    }
+                  }}
+                >
                   삭제
                 </button>
               </div>
