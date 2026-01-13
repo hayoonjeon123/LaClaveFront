@@ -1,15 +1,17 @@
 import Logo from "@/assets/Logo_brown.png";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 const FindResult = () => {
   const { type } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const userData = {
-    name: "홍길동",
-    id: "gildong123",
-    email: "gildong@naver.com",
-    password: "password123!",
+  // FindAccount에서 넘겨준 데이터 (없을 경우 기본값 처리)
+  const userData = location.state || {
+    name: "정보 없음",
+    id: "정보 없음",
+    email: "정보 없음",
+    password: "정보 없음",
   };
 
   return (

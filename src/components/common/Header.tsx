@@ -1,6 +1,7 @@
 import Logo from "@/assets/Logo.png";
 import { SearchIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 // 사이드바 연결(하윤)
 interface HeaderProps {
@@ -8,6 +9,26 @@ interface HeaderProps {
 }
 
 function Header({ onMenuClick }: HeaderProps) {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // 로컬 스토리지에서 로그인 상태 확인
+    const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+    setIsLoggedIn(loggedIn);
+  }, []);
+
+  const handleLogout = () => {
+    if (window.confirm("로그아웃 하시겠습니까?")) {
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("memberId");
+      setIsLoggedIn(false);
+      alert("로그아웃 되었습니다.");
+      navigate("/");
+      window.location.reload(); // 상태 반영을 위해 새로고침
+    }
+  };
+
   return (
     <header className="w-[1420px] mx-auto bg-[#5C4033]">
       <div className="mx-auto max-w-[1280px] h-[100px] flex justify-between px-[24px] relative">
@@ -34,22 +55,45 @@ function Header({ onMenuClick }: HeaderProps) {
 
         {/* 오른쪽 */}
         <div className="ml-auto flex mt-[30px] gap-[20px]">
-          <Link to="/myPage">
-            <div className="text-white text-[14px] cursor-pointer ">
-              마이페이지
-            </div>
-          </Link>
-          <Link to="/myWishList">
-            <div className="text-white text-[14px] cursor-pointer">좋아요</div>
-          </Link>
-          <Link to="/cart">
-            <div className="text-white text-[14px] cursor-pointer">
-              장바구니
-            </div>
-          </Link>
-          <Link to="/login">
-            <div className="text-white text-[14px] cursor-pointer">로그인</div>
-          </Link>
+          {isLoggedIn ? (
+            <>
+              {/* 로그인 상태일 때 표시할 항목 */}
+              <Link to="/myPage">
+                <div className="text-white text-[14px] cursor-pointer">마이페이지</div>
+              </Link>
+              <Link to="/myWishList">
+                <div className="text-white text-[14px] cursor-pointer">좋아요</div>
+              </Link>
+              <Link to="/cart">
+                <div className="text-white text-[14px] cursor-pointer">장바구니</div>
+              </Link>
+              <div
+                onClick={handleLogout}
+                className="text-white text-[14px] cursor-pointer"
+              >
+                로그아웃
+              </div>
+            </>
+          ) : (
+            <>
+              {/* 비로그인 상태일 때 표시할 항목 */}
+              <Link to="/loginProc">
+                <div className="text-white text-[14px] cursor-pointer">로그인</div>
+              </Link>
+              <Link to="/signup">
+                <div className="text-white text-[14px] cursor-pointer">회원가입</div>
+              </Link>
+              <div
+                onClick={() => {
+                  alert("로그인이 필요한 서비스입니다.");
+                  navigate("/loginProc");
+                }}
+                className="text-white text-[14px] cursor-pointer"
+              >
+                장바구니
+              </div>
+            </>
+          )}
         </div>
       </div>
 

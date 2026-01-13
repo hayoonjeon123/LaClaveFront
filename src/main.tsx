@@ -85,8 +85,8 @@ createRoot(document.getElementById("root")!).render(
           <Route path="myPoint" element={<MyPoint />} />
           <Route path="myWishList" element={<MyWishList />} />
           <Route path="editInquiry/:inquiryIdx" element={<EditInquiry />} />
-          <Route path="aiselect" element={<AiSelect />} />
-          <Route path="login" element={<AppLogin />} />
+          <Route path="save-ai-info" element={<AiSelect />} />
+          <Route path="loginProc" element={<AppLogin />} />
           <Route path="product/:productId" element={<ProductDetail />} />
           <Route path="all" element={<All />} />
           <Route path="best" element={<Best />} />
@@ -97,8 +97,8 @@ createRoot(document.getElementById("root")!).render(
           <Route path="faq" element={<FAQ />} />
           <Route path="cart" element={<Cart />} />
           <Route path="order" element={<Order />} />
-          <Route path="findAccount" element={<FindAccount />} />
-          <Route path="findResult" element={<FindResult />} />
+          <Route path="findaccount" element={<FindAccount />} />
+          <Route path="find-result/:type" element={<FindResult />} />
           <Route path="faq" element={<FAQ />} />
           <Route path="termsofuse" element={<TermsOfUse />} />
           <Route path="privacypolicy" element={<PrivacyPolicy />} />

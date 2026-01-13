@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const AiSelect = () => {
-  // 선택된 스타일들을 관리하는 상태 (다중 선택)
+  const navigate = useNavigate();
+  /* ================= 상태 관리 ================= */
   const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
+  const [height, setHeight] = useState<string>("");
+  const [weight, setWeight] = useState<string>("");
 
   // 스타일 데이터 리스트
   const styles = [
@@ -57,10 +62,39 @@ const AiSelect = () => {
   ];
 
   // 스타일 클릭
-  const toggleStyle = (id: string) => {
+  const toggleStyle = (label: string) => {
     setSelectedStyles((prev) =>
-      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
+      prev.includes(label) ? prev.filter((s) => s !== label) : [...prev, label]
     );
+  };
+
+  /* ================= 가입/저장 핸들러 ================= */
+  const handleSignup = async () => {
+    // 실제 구현 시에는 SignUp 페이지에서 넘어온 회원 번호나 
+    // 가입 성공 후 반환된 memberIdx 등을 사용해야 합니다.
+    const memberIdx = 123; // 임시 ID
+
+    const data = {
+      memberIdx: memberIdx,
+      height: height ? parseFloat(height) : null,
+      weight: weight ? parseFloat(weight) : null,
+      styles: selectedStyles // ["데일리", "시크"] 형태
+    };
+
+    try {
+      // 1. (가정) 실제 회원가입 API 호출이 필요한 경우 여기서 먼저 진행
+      // await axios.post('http://localhost:8080/signup', signUpData);
+
+      // 2. AI 정보 저장
+      // (기존 /api/member/save-ai-info 가 404이므로 /member/save-ai-info 로 시도)
+      await axios.post('http://localhost:8080/save-ai-info', data);
+
+      alert("맞춤 정보 저장이 완료되었습니다!");
+      navigate("/"); // 메인 페이지로 이동
+    } catch (error) {
+      console.error("저장 중 에러 발생:", error);
+      alert("저장에 실패했습니다. 백엔드 엔드포인트를 확인해주세요.");
+    }
   };
 
   return (
@@ -96,6 +130,8 @@ const AiSelect = () => {
             <input
               type="text"
               placeholder="입력"
+              value={height || ""}
+              onChange={(e) => setHeight(e.target.value)}
               className="w-full h-[40px] px-[12px] pr-[36px] border border-[#5C4033] text-[14px] placeholder:text-[#A8A9AD] focus:outline-none focus:ring-1 focus:ring-[#5C4033]"
             />
             <span className="absolute right-[10px] top-1/2 -translate-y-1/2 text-[14px] text-[#A8A9AD]">
@@ -114,6 +150,8 @@ const AiSelect = () => {
             <input
               type="text"
               placeholder="입력"
+              value={weight || ""}
+              onChange={(e) => setWeight(e.target.value)}
               className="w-full h-[40px] px-[12px] pr-[36px] border border-[#5C4033] text-[14px] placeholder:text-[#A8A9AD] focus:outline-none focus:ring-1 focus:ring-[#5C4033]"
             />
             <span className="absolute right-[10px] top-1/2 -translate-y-1/2 text-[14px] text-[#A8A9AD]">
@@ -145,17 +183,17 @@ const AiSelect = () => {
           {styles.map((style) => (
             <button
               key={style.id}
-              onClick={() => toggleStyle(style.id)}
+              onClick={() => toggleStyle(style.label)}
               className={`
                 w-[320px] p-[16px] flex flex-col items-start border transition-all cursor-pointer
-                ${selectedStyles.includes(style.id)
+                ${selectedStyles.includes(style.label)
                   ? "border-[#5C4033] bg-[#F9F8F7]"
                   : "border-[#A8A9AD] hover:border-[#5C4033]"
                 }
               `}
             >
               <span
-                className={`text-[15px] font-bold ${selectedStyles.includes(style.id)
+                className={`text-[15px] font-bold ${selectedStyles.includes(style.label)
                   ? "text-[#5C4033]"
                   : "text-black"
                   }`}
@@ -175,6 +213,7 @@ const AiSelect = () => {
         <div className="w-full max-w-[1360px]">
           <button
             type="button"
+            onClick={handleSignup}
             className="w-full h-[52px] flex items-center justify-center border border-[#5C4033] text-[16px] font-medium hover:bg-[#5C4033] hover:text-white transition cursor-pointer"
           >
             회원가입

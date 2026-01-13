@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import {
@@ -9,6 +10,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import AddressSearch from "@/components/AddressSearch/addressSearch";
+import type { SelectedAddress } from "@/components/AddressSearch/address";
+import { X } from "lucide-react";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -18,7 +22,18 @@ const SignUp = () => {
   const [agreePrivacy, setAgreePrivacy] = useState(false); // 필수
   const [agreeMarketing, setAgreeMarketing] = useState(false); // 선택
   const [gender, setGender] = useState<string | null>(null);
+
+  /* ================= 입력 상태 ================= */
+  const [emailId, setEmailId] = useState<string>("");
   const [emailDomain, setEmailDomain] = useState<string>("");
+  const [authCode, setAuthCode] = useState<string>("");
+  const [isEmailVerified, setIsEmailVerified] = useState<boolean>(true); // 개발용: true로 설정하여 이메일 인증 건너뛰기
+
+  /* ================= 주소 상태 ================= */
+  const [postcode, setPostcode] = useState("");
+  const [address, setAddress] = useState("");
+  const [detailAddress, setDetailAddress] = useState("");
+  const [isAddressSearchOpen, setIsAddressSearchOpen] = useState(false);
 
   /* 전체 동의 클릭 */
   const handleAgreeAll = (checked: boolean) => {
@@ -39,6 +54,57 @@ const SignUp = () => {
 
   /* 필수 약관 체크 여부 */
   const isRequiredAgreed = agreeTerms && agreePrivacy;
+
+  /* ================= 이메일 인증 핸들러 ================= */
+  const handleSendEmail = async () => {
+    const fullEmail = `${emailId}@${emailDomain}`;
+    if (!emailId || !emailDomain) {
+      alert("이메일 주소를 완성해주세요.");
+      return;
+    }
+    try {
+      // Backend expects MemberDTO with 'email'
+      await axios.post("http://localhost:8080/email-send", { email: fullEmail }, {
+        withCredentials: true
+      });
+      alert("인증번호가 발송되었습니다.");
+    } catch (error) {
+      console.error("이메일 발송 실패:", error);
+      alert("인증번호 발송에 실패했습니다.");
+    }
+  };
+
+  const handleVerifyEmail = async () => {
+    const fullEmail = `${emailId}@${emailDomain}`;
+    if (!authCode) {
+      alert("인증번호를 입력해주세요.");
+      return;
+    }
+    try {
+      // Backend expects Map with 'email' and 'authCode'
+      const response = await axios.post("http://localhost:8080/email-verify", {
+        email: fullEmail,
+        authCode: authCode
+      }, {
+        withCredentials: true
+      });
+
+      if (response.status === 200) {
+        alert("이메일 인증에 성공했습니다.");
+        setIsEmailVerified(true);
+      }
+    } catch (error: any) {
+      console.error("인증 확인 실패:", error);
+      alert(error.response?.data || "인증번호가 틀렸습니다.");
+    }
+  };
+
+  /* ================= 주소 핸들러 ================= */
+  const handleAddressComplete = (data: SelectedAddress) => {
+    setPostcode(data.postCode);
+    setAddress(data.address);
+    setIsAddressSearchOpen(false);
+  };
 
   return (
     <div className="w-full flex flex-col items-center">
@@ -83,12 +149,10 @@ const SignUp = () => {
 
       {/* 비밀번호 확인 */}
       <div className="w-full max-w-md mt-[30px] flex items-center">
-        {/* 라벨 */}
         <label className="w-[120px] text-[16px] font-medium text-[#000000]">
           비밀번호 확인
         </label>
 
-        {/* 인풋 */}
         <input
           type="password"
           className="flex-1 h-[40px] px-[12px] text-[14px]
@@ -99,12 +163,9 @@ const SignUp = () => {
 
       {/* 이름 입력 */}
       <div className="w-full max-w-md mt-[30px] flex items-center">
-        {/* 라벨 */}
         <label className="w-[120px] text-[16px] font-medium text-[#000000]">
           이름
         </label>
-
-        {/* 인풋 */}
         <input
           type="text"
           className="flex-1 h-[40px] px-[12px] text-[14px]
@@ -119,7 +180,6 @@ const SignUp = () => {
           성별
         </label>
 
-        {/* 라디오 그룹 대신 체크박스 */}
         <div className="w-full flex max-w-md justify-center mt-[4px] gap-[20px]">
           <div className="flex items-center gap-[6px]">
             <Checkbox
@@ -149,12 +209,10 @@ const SignUp = () => {
 
       {/* 생년월일 */}
       <div className="w-full max-w-md mt-[30px] flex items-center">
-        {/* 라벨 */}
         <label className="w-[120px] text-[16px] font-medium text-[#000000]">
           생년월일
         </label>
 
-        {/* 인풋 */}
         <input
           type="date"
           className="flex-1 h-[40px] px-[12px] text-[14px]
@@ -174,13 +232,16 @@ const SignUp = () => {
           <input
             type="text"
             placeholder="우편번호"
+            value={postcode}
+            readOnly
             className="flex-1 h-[44px] px-[12px] text-[14px]
-                 border border-[#5C4033] 
+                 border border-[#5C4033] bg-gray-50
                  focus:outline-none"
           />
 
           <button
             type="button"
+            onClick={() => setIsAddressSearchOpen(true)}
             className="h-[44px] px-[16px] text-[14px] 
                  border border-[#5C4033] cursor-pointer
                  font-medium hover:bg-[#5C4033] hover:text-[#fff]"
@@ -190,31 +251,64 @@ const SignUp = () => {
         </div>
       </div>
 
-      {/* 주소 */}
+      {/* 기본주소 */}
       <div className="w-full max-w-md mt-[10px] flex items-center">
         <div className="w-[120px]" />
         {/* 인풋 */}
         <input
           type="text"
           placeholder="기본주소"
+          value={address}
+          readOnly
           className="flex-1 h-[40px] px-[12px] text-[14px]
-                     border border-[#5C4033] placeholder:text-[#A8A9AD]
+                     border border-[#5C4033] placeholder:text-[#A8A9AD] bg-gray-50
                      focus:outline-none focus:ring-1 focus:ring-[#5C4033]"
         />
       </div>
 
-      {/* 주소 */}
+      {/* 상세주소 */}
       <div className="w-full max-w-md mt-[10px] flex items-center">
         <div className="w-[120px]" />
         {/* 인풋 */}
         <input
           type="text"
           placeholder="상세주소"
+          value={detailAddress}
+          onChange={(e) => setDetailAddress(e.target.value)}
           className="flex-1 h-[40px] px-[12px] text-[14px] 
                      border border-[#5C4033] placeholder:text-[#A8A9AD]
                      focus:outline-none focus:ring-1 focus:ring-[#5C4033]"
         />
       </div>
+
+      {/* 주소 검색 모달 */}
+      {isAddressSearchOpen && (
+        <div
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4"
+          onClick={() => setIsAddressSearchOpen(false)}
+        >
+          <div
+            className="relative w-full max-w-[500px] bg-white p-6 shadow-2xl rounded-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4 border-b border-gray-100 pb-3">
+              <h3 className="text-xl font-bold text-[#5C4033]">주소 검색</h3>
+              <button
+                onClick={() => setIsAddressSearchOpen(false)}
+                className="text-gray-400 hover:text-black transition-colors"
+              >
+                <X size={24} />
+              </button>
+            </div>
+            <div className="w-full">
+              <AddressSearch
+                onComplete={handleAddressComplete}
+                onClose={() => setIsAddressSearchOpen(false)}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 이메일 입력 */}
       <div className="w-full max-w-md mt-[40px] flex items-center relative">
@@ -226,14 +320,17 @@ const SignUp = () => {
         <input
           type="email"
           placeholder="이메일"
+          // value={emailId}
+          // onChange={(e) => setEmailId(e.target.value)}
+          // disabled={isEmailVerified}
           className="flex-1 h-[40px] px-[12px] text-[14px]
                  border border-[#5C4033]
-                 focus:outline-none focus:ring-1 focus:ring-[#5C4033]"
+                 focus:outline-none focus:ring-1 focus:ring-[#5C4033] disabled:bg-gray-100"
         />
         <span className="text-[14px] mx-[5px]">@</span>
         {/* 도메인 선택 */}
-        <Select value={emailDomain} onValueChange={setEmailDomain}>
-          <SelectTrigger className="w-[150px] h-[40px] px-[8px] text-[14px] border border-[#5C4033] focus:ring-1 focus:ring-[#5C4033] rounded-none">
+        <Select value={emailDomain} onValueChange={setEmailDomain} disabled={isEmailVerified}>
+          <SelectTrigger className="w-[150px] h-[40px] px-[8px] text-[14px] border border-[#5C4033] focus:ring-1 focus:ring-[#5C4033] rounded-none disabled:bg-gray-100">
             <SelectValue placeholder="선택" />
           </SelectTrigger>
           <SelectContent>
@@ -247,17 +344,21 @@ const SignUp = () => {
         <div className="absolute right-[-102px] top-0 flex flex-col gap-[12px]">
           <button
             type="button"
+            onClick={handleSendEmail}
+            disabled={isEmailVerified}
             className="w-[90px] h-[40px] cursor-pointer
                border border-[#5C4033] hover:bg-[#5C4033] hover:text-[#fff]
-               text-[14px] font-medium"
+               text-[14px] font-medium disabled:bg-gray-100 disabled:text-gray-400"
           >
             인증번호
           </button>
           <button
             type="button"
+            onClick={handleVerifyEmail}
+            disabled={isEmailVerified}
             className="w-[90px] h-[40px] mt-[-2px]
                border border-[#5C4033] cursor-pointer
-               text-[14px] font-medium hover:bg-[#5C4033] hover:text-[#fff]"
+               text-[14px] font-medium hover:bg-[#5C4033] hover:text-[#fff] disabled:bg-gray-100 disabled:text-gray-400"
           >
             확인
           </button>
@@ -270,11 +371,21 @@ const SignUp = () => {
         <input
           type="text"
           placeholder="인증번호"
+          value={authCode}
+          onChange={(e) => setAuthCode(e.target.value)}
+          disabled={isEmailVerified}
           className="flex-1 h-[40px] px-[12px] text-[14px]
                      border border-[#5C4033] placeholder:text-[#A8A9AD]
-                     focus:outline-none focus:ring-1 focus:ring-[#5C4033]"
+                     focus:outline-none focus:ring-1 focus:ring-[#5C4033] disabled:bg-gray-100"
         />
       </div>
+      {isEmailVerified && (
+        <div className="w-full max-w-md mt-[10px] flex items-center">
+          <div className="w-[120px]" />
+          <p className="text-blue-600 text-[13px] font-bold">✓ 이메일 인증이 완료되었습니다.</p>
+        </div>
+      )}
+
       {/* ================= 약관 동의 영역 ================= */}
       <div className="w-full flex justify-center mt-[40px]">
         <div className="w-full max-w-[1000px]">
@@ -445,7 +556,11 @@ const SignUp = () => {
                   alert("필수 약관에 동의하셔야 가입이 가능합니다.");
                   return;
                 }
-                navigate("/aiselect");
+                if (!isEmailVerified) {
+                  alert("이메일 인증을 완료해주세요.");
+                  return;
+                }
+                navigate("/save-ai-info");
               }}
               className={`
     w-full h-[52px]
@@ -469,6 +584,7 @@ const SignUp = () => {
       </div>
     </div>
   );
+
 };
 
 export { SignUp };

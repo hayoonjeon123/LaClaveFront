@@ -2,12 +2,47 @@ import { useState } from "react";
 import Logo from "@/assets/Logo_brown.png";
 import Naver from "@/assets/Naver_login.png";
 import Kakao from "@/assets/Kakao_login.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import axios from "axios";
 
 const AppLogin = () => {
   const [rememberMe, setRememberMe] = useState(false);
+  const [memberId, setMemberId] = useState("");
+  const [memberPw, setMemberPw] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    if (!memberId || !memberPw) {
+      alert("아이디와 비밀번호를 입력해주세요.");
+      return;
+    }
+
+    try {
+      // 1. Spring Security의 formLogin은 기본적으로 FormData 형식을 사용함
+      const formData = new FormData();
+      formData.append("memberId", memberId);
+      formData.append("memberPw", memberPw);
+
+      // 2. 백엔드의 SecurityConfig에서 설정한 loginProcessingUrl("/loginProc")로 전송
+      const response = await axios.post("http://localhost:8080/loginProc", formData, {
+        withCredentials: true, // 세션/쿠키 정보 포함
+      });
+
+      if (response.status === 200) {
+        alert("로그인 성공!");
+        localStorage.setItem("isLoggedIn", "true"); // 로그인 상태 저장
+        localStorage.setItem("memberId", memberId); // 필요시 아이디도 저장
+        navigate("/"); // 로그인 성공 시 메인으로 이동
+        window.location.reload(); // 헤더 상태 갱신을 위해 새로고침 (간단한 방법)
+      }
+    } catch (error) {
+      console.error("로그인 에러:", error);
+      alert("로그인 실패! 아이디 혹은 비밀번호를 확인해주세요.");
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center py-16">
       {/* 컨테이너 너비 설정 */}
@@ -28,6 +63,8 @@ const AppLogin = () => {
               type="text"
               className="w-full outline-none text-sm py-1"
               autoComplete="off"
+              value={memberId}
+              onChange={(e) => setMemberId(e.target.value)}
             />
           </div>
 
@@ -37,11 +74,17 @@ const AppLogin = () => {
             <input
               type="password"
               className="w-full outline-none text-sm py-1"
+              value={memberPw}
+              onChange={(e) => setMemberPw(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleLogin();
+              }}
             />
           </div>
 
           {/* 로그인 버튼 */}
           <button
+            onClick={handleLogin}
             className="w-full h-[52px] flex items-center justify-center
         border border-[#5C4033] cursor-pointer
         text-[16px] font-medium
