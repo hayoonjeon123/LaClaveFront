@@ -43,6 +43,16 @@ export function ProductPage() {
         try {
             // 프록시 설정(/api -> http://localhost:8080)에 맞춰 호출
             const response = await axios.get(`/api/category/${productCategoryIdx}`);
+            console.log("=== 서버 응답 전체 데이터 ===", response.data);
+
+            // 첫 번째 상품의 구조를 자세히 확인
+            if (response.data && response.data.length > 0) {
+                console.log("=== 첫 번째 상품 데이터 ===", response.data[0]);
+                console.log("mainImageUrl:", response.data[0].mainImageUrl);
+                console.log("colors:", response.data[0].colors);
+                console.log("전체 키 목록:", Object.keys(response.data[0]));
+            }
+
             setProducts(Array.isArray(response.data) ? response.data : []);
         } catch (error) {
             console.error("데이터 로딩 실패:", error);
@@ -96,11 +106,12 @@ export function ProductPage() {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-x-20 gap-y-16 mb-16">
                 {products && products.length > 0 ? (
                     products.map((product: any) => (
-                        <Link to={`/product/${product.productIdx}`} key={product.productIdx} className="group block">
+                        <Link to={`/product/${product.itemId}`} key={product.productName} className="group block">
                             <div className="bg-gray-200 mb-4 overflow-hidden relative aspect-[3/4]">
-                                {product.image ? (
+                                {/* DTO에서 mainImageUrl로 보내주고 있으니 하나만 써도 됩니다 */}
+                                {product.mainImageUrl ? (
                                     <img
-                                        src={product.image}
+                                        src={product.mainImageUrl}
                                         alt={product.productName}
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                     />
@@ -124,9 +135,9 @@ export function ProductPage() {
                                     product.colors.map((color: string, index: number) => (
                                         <div
                                             key={index}
-                                            title={color} // 마우스 올리면 색상명 표시
+                                            title={product.colors}
                                             className="w-3 h-3 border border-gray-300 "
-                                            style={{ backgroundColor: color }} // 여기서 실제 색상이 적용됩니다
+                                            style={{ backgroundColor: color }}
                                         />
                                     ))
                                 ) : (
