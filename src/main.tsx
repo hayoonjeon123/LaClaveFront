@@ -31,10 +31,7 @@ import { Cart } from "./pages/payment/CartPage";
 import { Order } from "./pages/payment/Order";
 import { FindAccount } from "./pages/member/FindAccount";
 import { FindResult } from "./pages/member/FindResult";
-import { Outer } from "./pages/product/Outer";
-import { Top } from "./pages/product/Top";
-import { Bottom } from "./pages/product/Bottom";
-import { Acc } from "./pages/product/Acc";
+import { ProductPage } from "./pages/product/ProductPage";
 import { FAQ } from "./pages/board/FAQ";
 import { MemberManagement } from "./pages/admin/MemberManagement";
 import { AdminHome } from "./pages/admin/AdminHome";
@@ -55,11 +52,11 @@ import { ProductStock } from "./pages/admin/ProductStock";
 import { DeliveryReady } from "./pages/admin/DeliveryReady";
 import { DeliveryList } from "./pages/admin/DeliveryList";
 import { InquiryList } from "./pages/admin/InquiryList";
-import { Best } from "./pages/product/Best";
-import { All } from "./pages/product/All";
 import TermsOfUse from "./pages/policy/TermsOfUse";
 import PrivacyPolicy from "./pages/policy/PrivacyPolicy";
 import ErrorPage from "./pages/error/ErrorPage";
+import { JoinComplete } from "./pages/member/JoinComplete";
+import { Best } from "./pages/product/Best";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -88,12 +85,8 @@ createRoot(document.getElementById("root")!).render(
           <Route path="save-ai-info" element={<AiSelect />} />
           <Route path="loginProc" element={<AppLogin />} />
           <Route path="product/:productId" element={<ProductDetail />} />
-          <Route path="all" element={<All />} />
+          <Route path="category/:categoryName" element={<ProductPage />} />
           <Route path="best" element={<Best />} />
-          <Route path="outer" element={<Outer />} />
-          <Route path="top" element={<Top />} />
-          <Route path="bottom" element={<Bottom />} />
-          <Route path="acc" element={<Acc />} />
           <Route path="faq" element={<FAQ />} />
           <Route path="cart" element={<Cart />} />
           <Route path="order" element={<Order />} />
@@ -102,6 +95,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="faq" element={<FAQ />} />
           <Route path="termsofuse" element={<TermsOfUse />} />
           <Route path="privacypolicy" element={<PrivacyPolicy />} />
+          <Route path="JoinComplete" element={<JoinComplete />} />
           <Route path="*" element={<ErrorPage />} />
         </Route>
 

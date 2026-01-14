@@ -73,6 +73,8 @@ function AppSidebar({ open, onOpenChange }: AppSidebarProps) {
                                             if (menu.subItems) {
                                                 // 서브메뉴가 있으면 토글
                                                 toggleMenu(menu.id);
+                                                // 대분류를 눌렀을 때 해당 카테고리 전체보기로 이동 (예: 105번)
+                                                navigate(`/${menu.path}`);
                                             } else {
                                                 // 서브메뉴가 없으면(전체, 베스트, 고객센터 등) 바로 이동
                                                 navigate(menu.path);
@@ -94,14 +96,14 @@ function AppSidebar({ open, onOpenChange }: AppSidebarProps) {
                                     {/* 서브메뉴 - Link 컴포넌트 활용 */}
                                     {menu.subItems && openMenuId === menu.id && (
                                         <div className="ml-8 mt-2 flex flex-col gap-1 animate-in slide-in-from-top-2 duration-200">
-                                            {menu.subItems.map((subItem, index) => (
+                                            {menu.subItems.map((subItem: any, idx) => (
                                                 <Link
-                                                    key={index}
-                                                    to={menu.path} // 미리 정의된 path 사용
+                                                    key={idx}
+                                                    to={`/${menu.path}?subIdx=${subItem.id}`} // 하위 카테고리 ID 전달 (108, 109 등)
                                                     className="text-xs text-gray-200 hover:text-white hover:bg-white/5 py-1.5 px-2 rounded-md transition-colors text-left"
                                                     onClick={() => onOpenChange?.(false)}
                                                 >
-                                                    {subItem}
+                                                    {subItem.label}
                                                 </Link>
                                             ))}
                                         </div>

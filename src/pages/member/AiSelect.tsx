@@ -1,9 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const AiSelect = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const signUpData = location.state || {}; // SignUp 페이지에서 넘어온 데이터
+
   /* ================= 상태 관리 ================= */
   const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
   const [height, setHeight] = useState<string>("");
@@ -70,30 +73,34 @@ const AiSelect = () => {
 
   /* ================= 가입/저장 핸들러 ================= */
   const handleSignup = async () => {
-    // 실제 구현 시에는 SignUp 페이지에서 넘어온 회원 번호나 
-    // 가입 성공 후 반환된 memberIdx 등을 사용해야 합니다.
-    const memberIdx = 123; // 임시 ID
+    if (!signUpData || !signUpData.memberId) {
+      alert("회원가입 정보가 누락되었습니다. 다시 시도해주세요.");
+      navigate("/signup");
+      return;
+    }
 
+    // 백엔드 MemberDTO 구조 및 AI 정보를 합쳐서 전송
     const data = {
-      memberIdx: memberIdx,
+      ...signUpData, // memberId, memberPw, memberName, email, gender, birth, postCode, address, addressDetail 등
       height: height ? parseFloat(height) : null,
       weight: weight ? parseFloat(weight) : null,
-      styles: selectedStyles // ["데일리", "시크"] 형태
+      prefStyles: selectedStyles, // 백엔드 필드명에 맞춰 selectedStyles로 전달 (필요 시 수정)
     };
 
+    console.log("전송할 데이터:", data);
+
     try {
-      // 1. (가정) 실제 회원가입 API 호출이 필요한 경우 여기서 먼저 진행
-      // await axios.post('http://localhost:8080/signup', signUpData);
+      // Vite 프록시를 통해 백엔드 엔드포인트 호출 (/api 가 http://localhost:8080 으로 연결됨)
+      const response = await axios.post('/api/signup', data, {
+        withCredentials: true
+      });
 
-      // 2. AI 정보 저장
-      // (기존 /api/member/save-ai-info 가 404이므로 /member/save-ai-info 로 시도)
-      await axios.post('http://localhost:8080/save-ai-info', data);
-
-      alert("맞춤 정보 저장이 완료되었습니다!");
-      navigate("/"); // 메인 페이지로 이동
-    } catch (error) {
+      if (response.status === 200 || response.status === 201) {
+        navigate("/JoinComplete"); // 알림 없이 바로 가입 완료 페이지로 이동
+      }
+    } catch (error: any) {
       console.error("저장 중 에러 발생:", error);
-      alert("저장에 실패했습니다. 백엔드 엔드포인트를 확인해주세요.");
+      alert(error.response?.data?.message || "저장에 실패했습니다. 백엔드 서버 상태를 확인해주세요.");
     }
   };
 

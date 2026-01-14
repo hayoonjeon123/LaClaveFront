@@ -1,6 +1,9 @@
 import Logo from "@/assets/Logo_brown.png";
+import { useNavigate } from "react-router-dom";
 
 const JoinComplete = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="w-full max-w-[800px] mx-auto py-12 px-6 font-sans text-[#000]">
       <div className="flex justify-center mb-2">
@@ -35,14 +38,14 @@ const JoinComplete = () => {
       {/* 하단 버튼 영역 */}
       <div className="flex gap-4 max-w-[540px] mx-auto">
         <button
-          className="flex-1 h-14 border border-gray-400 rounded-[10px] text-[18px] font-bold hover:bg-gray-50 transition-colors cursor-pointer"
-          onClick={() => (window.location.href = "/")}
+          className="flex-1 h-14 border border-[#A8A9AD] rounded-[10px] text-[18px] font-bold hover:bg-gray-50 transition-colors cursor-pointer"
+          onClick={() => navigate("/")}
         >
           메인화면으로 이동
         </button>
         <button
-          className="flex-1 h-14 bg-[#634b41] text-white text-[18px] rounded-[10px] font-bold hover:bg-[#4d3a32] transition-colors cursor-pointer shadow-md"
-          onClick={() => (window.location.href = "/login")}
+          className="flex-1 h-14 bg-[#634b41] border-2 border-[#A8A9AD] text-white text-[18px] rounded-[10px] font-bold hover:bg-[#4d3a32] transition-colors cursor-pointer shadow-md"
+          onClick={() => navigate("/loginProc")}
         >
           로그인
         </button>

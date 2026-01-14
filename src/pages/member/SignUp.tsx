@@ -14,6 +14,8 @@ import AddressSearch from "@/components/AddressSearch/addressSearch";
 import type { SelectedAddress } from "@/components/AddressSearch/address";
 import { X } from "lucide-react";
 
+const ID_REGEX = /^(?=.*\d)[A-Za-z\d@$!%*#?&]{4,20}$/;
+const PW_REGEX = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,16}$/;
 const SignUp = () => {
   const navigate = useNavigate();
   /* ================= 약관 상태 ================= */
@@ -21,19 +23,29 @@ const SignUp = () => {
   const [agreeTerms, setAgreeTerms] = useState(false); // 필수
   const [agreePrivacy, setAgreePrivacy] = useState(false); // 필수
   const [agreeMarketing, setAgreeMarketing] = useState(false); // 선택
-  const [gender, setGender] = useState<string | null>(null);
+  const [gender, setGender] = useState<number | null>(null); // Integer 대응 (1:남, 2:여)
 
   /* ================= 입력 상태 ================= */
+  const [memberId, setMemberId] = useState("");
+  const [memberPw, setMemberPw] = useState("");
+  const [confirmPw, setConfirmPw] = useState("");
+  const [memberName, setMemberName] = useState("");
+  const [birth, setBirth] = useState("");
   const [emailId, setEmailId] = useState<string>("");
   const [emailDomain, setEmailDomain] = useState<string>("");
   const [authCode, setAuthCode] = useState<string>("");
-  const [isEmailVerified, setIsEmailVerified] = useState<boolean>(true); // 개발용: true로 설정하여 이메일 인증 건너뛰기
+  const [isEmailVerified, setIsEmailVerified] = useState<boolean>(false); // 개발용: true로 설정하여 이메일 인증 건너뛰기
 
   /* ================= 주소 상태 ================= */
-  const [postcode, setPostcode] = useState("");
+  const [postCode, setPostCode] = useState("");
   const [address, setAddress] = useState("");
-  const [detailAddress, setDetailAddress] = useState("");
+  const [addressDetail, setAddressDetail] = useState("");
   const [isAddressSearchOpen, setIsAddressSearchOpen] = useState(false);
+
+  /* ================= 에러 메시지 상태 (실시간 유효성 검사) ================= */
+  const [idError, setIdError] = useState("");
+  const [pwError, setPwError] = useState("");
+  const [confirmPwError, setConfirmPwError] = useState("");
 
   /* 전체 동의 클릭 */
   const handleAgreeAll = (checked: boolean) => {
@@ -51,6 +63,34 @@ const SignUp = () => {
       setAgreeAll(false);
     }
   }, [agreeTerms, agreePrivacy, agreeMarketing]);
+
+  /* ================= 실시간 유효성 검사 로직 ================= */
+  // 아이디 검증
+  useEffect(() => {
+    if (memberId.length > 0 && !ID_REGEX.test(memberId)) {
+      setIdError("아이디는 영문, 숫자, 특수문자 포함 4~20자여야 합니다.");
+    } else {
+      setIdError("");
+    }
+  }, [memberId]);
+
+  // 비밀번호 검증
+  useEffect(() => {
+    if (memberPw.length > 0 && !PW_REGEX.test(memberPw)) {
+      setPwError("비밀번호는 8자 이상, 영문, 숫자, 특수문자를 모두 포함해야 합니다.");
+    } else {
+      setPwError("");
+    }
+  }, [memberPw]);
+
+  // 비밀번호 확인 검증
+  useEffect(() => {
+    if (confirmPw.length > 0 && memberPw !== confirmPw) {
+      setConfirmPwError("비밀번호가 일치하지 않습니다.");
+    } else {
+      setConfirmPwError("");
+    }
+  }, [memberPw, confirmPw]);
 
   /* 필수 약관 체크 여부 */
   const isRequiredAgreed = agreeTerms && agreePrivacy;
@@ -101,10 +141,13 @@ const SignUp = () => {
 
   /* ================= 주소 핸들러 ================= */
   const handleAddressComplete = (data: SelectedAddress) => {
-    setPostcode(data.postCode);
+    setPostCode(data.postCode);
     setAddress(data.address);
     setIsAddressSearchOpen(false);
   };
+
+  /* ================= 개발 모드 설정 ================= */
+  const IS_DEV_MODE = true; // true일 때 유효성 검사를 건너뜁니다.
 
   return (
     <div className="w-full flex flex-col items-center">
@@ -114,51 +157,72 @@ const SignUp = () => {
       </div>
 
       {/* 아이디 입력 */}
-      <div className="w-full max-w-md mt-[40px] flex items-center">
-        {/* 라벨 */}
-        <label className="w-[120px] text-[16px] font-medium text-[#000000]">
-          아이디
-        </label>
+      <div className="w-full max-w-md mt-[40px] flex flex-col">
+        <div className="flex items-center">
+          {/* 라벨 */}
+          <label className="w-[120px] text-[16px] font-medium text-[#000000]">
+            아이디
+          </label>
 
-        {/* 인풋 */}
-        <input
-          type="text"
-          placeholder="영문, 숫자, 특수문자 / 4~20자리"
-          className="flex-1 h-[40px] px-[12px] text-[14px] 
-                     border border-[#5C4033] placeholder:text-[#A8A9AD]
-                     focus:outline-none focus:ring-1 focus:ring-[#5C4033]"
-        />
+          {/* 인풋 */}
+          <input
+            type="text"
+            placeholder="영문, 숫자, 특수문자 / 4~20자리"
+            value={memberId}
+            onChange={(e) => setMemberId(e.target.value)}
+            className={`flex-1 h-[40px] px-[12px] text-[14px] 
+                       border ${idError ? "border-red-500" : "border-[#5C4033]"} placeholder:text-[#A8A9AD]
+                       focus:outline-none focus:ring-1 ${idError ? "focus:ring-red-500" : "focus:ring-[#5C4033]"}`}
+          />
+        </div>
+        {idError && (
+          <span className="ml-[120px] text-red-500 text-[12px] mt-[4px]">{idError}</span>
+        )}
       </div>
 
       {/* 비밀번호 입력 */}
-      <div className="w-full max-w-md mt-[30px] flex items-center">
-        {/* 라벨 */}
-        <label className="w-[120px] text-[16px] font-medium text-[#000000]">
-          비밀번호
-        </label>
+      <div className="w-full max-w-md mt-[30px] flex flex-col">
+        <div className="flex items-center">
+          {/* 라벨 */}
+          <label className="w-[120px] text-[16px] font-medium text-[#000000]">
+            비밀번호
+          </label>
 
-        {/* 인풋 */}
-        <input
-          type="password"
-          placeholder="영문 대소문자, 숫자, 특수문자 조합 / 8~16자리"
-          className="flex-1 h-[40px] px-[12px] text-[14px]
-                     border border-[#5C4033] placeholder:text-[#A8A9AD]
-                     focus:outline-none focus:ring-1 focus:ring-[#5C4033]"
-        />
+          {/* 인풋 */}
+          <input
+            type="password"
+            placeholder="영문 대소문자, 숫자, 특수문자 조합 / 8~16자리"
+            value={memberPw}
+            onChange={(e) => setMemberPw(e.target.value)}
+            className={`flex-1 h-[40px] px-[12px] text-[14px]
+                       border ${pwError ? "border-red-500" : "border-[#5C4033]"} placeholder:text-[#A8A9AD]
+                       focus:outline-none focus:ring-1 ${pwError ? "focus:ring-red-500" : "focus:ring-[#5C4033]"}`}
+          />
+        </div>
+        {pwError && (
+          <span className="ml-[120px] text-red-500 text-[12px] mt-[4px]">{pwError}</span>
+        )}
       </div>
 
       {/* 비밀번호 확인 */}
-      <div className="w-full max-w-md mt-[30px] flex items-center">
-        <label className="w-[120px] text-[16px] font-medium text-[#000000]">
-          비밀번호 확인
-        </label>
+      <div className="w-full max-w-md mt-[30px] flex flex-col">
+        <div className="flex items-center">
+          <label className="w-[120px] text-[16px] font-medium text-[#000000]">
+            비밀번호 확인
+          </label>
 
-        <input
-          type="password"
-          className="flex-1 h-[40px] px-[12px] text-[14px]
-                     border border-[#5C4033]
-                     focus:outline-none focus:ring-1 focus:ring-[#5C4033]"
-        />
+          <input
+            type="password"
+            value={confirmPw}
+            onChange={(e) => setConfirmPw(e.target.value)}
+            className={`flex-1 h-[40px] px-[12px] text-[14px]
+                       border ${confirmPwError ? "border-red-500" : "border-[#5C4033]"}
+                       focus:outline-none focus:ring-1 ${confirmPwError ? "focus:ring-red-500" : "focus:ring-[#5C4033]"}`}
+          />
+        </div>
+        {confirmPwError && (
+          <span className="ml-[120px] text-red-500 text-[12px] mt-[4px]">{confirmPwError}</span>
+        )}
       </div>
 
       {/* 이름 입력 */}
@@ -168,6 +232,8 @@ const SignUp = () => {
         </label>
         <input
           type="text"
+          value={memberName}
+          onChange={(e) => setMemberName(e.target.value)}
           className="flex-1 h-[40px] px-[12px] text-[14px]
                      border border-[#5C4033]
                      focus:outline-none focus:ring-1 focus:ring-[#5C4033]"
@@ -184,8 +250,8 @@ const SignUp = () => {
           <div className="flex items-center gap-[6px]">
             <Checkbox
               id="gender-man"
-              checked={gender === "M"}
-              onCheckedChange={(checked) => checked && setGender("M")}
+              checked={gender === 1}
+              onCheckedChange={(checked) => checked && setGender(1)}
               className="data-[state=checked]:border border-[#5C4033] data-[state=checked]:bg-[#5C4033] data-[state=checked]:text-white"
             />
             <Label htmlFor="gender-man" className="text-[14px] cursor-pointer">
@@ -196,8 +262,8 @@ const SignUp = () => {
           <div className="flex items-center gap-[6px]">
             <Checkbox
               id="gender-woman"
-              checked={gender === "F"}
-              onCheckedChange={(checked) => checked && setGender("F")}
+              checked={gender === 2}
+              onCheckedChange={(checked) => checked && setGender(2)}
               className="data-[state=checked]:border border-[#5C4033] data-[state=checked]:bg-[#5C4033] data-[state=checked]:text-white"
             />
             <Label htmlFor="gender-woman" className="text-[14px] cursor-pointer">
@@ -215,6 +281,8 @@ const SignUp = () => {
 
         <input
           type="date"
+          value={birth}
+          onChange={(e) => setBirth(e.target.value)}
           className="flex-1 h-[40px] px-[12px] text-[14px]
                      border border-[#5C4033]
                      focus:outline-none focus:ring-1 focus:ring-[#5C4033]"
@@ -232,7 +300,7 @@ const SignUp = () => {
           <input
             type="text"
             placeholder="우편번호"
-            value={postcode}
+            value={postCode}
             readOnly
             className="flex-1 h-[44px] px-[12px] text-[14px]
                  border border-[#5C4033] bg-gray-50
@@ -273,8 +341,8 @@ const SignUp = () => {
         <input
           type="text"
           placeholder="상세주소"
-          value={detailAddress}
-          onChange={(e) => setDetailAddress(e.target.value)}
+          value={addressDetail}
+          onChange={(e) => setAddressDetail(e.target.value)}
           className="flex-1 h-[40px] px-[12px] text-[14px] 
                      border border-[#5C4033] placeholder:text-[#A8A9AD]
                      focus:outline-none focus:ring-1 focus:ring-[#5C4033]"
@@ -320,9 +388,9 @@ const SignUp = () => {
         <input
           type="email"
           placeholder="이메일"
-          // value={emailId}
-          // onChange={(e) => setEmailId(e.target.value)}
-          // disabled={isEmailVerified}
+          value={emailId}
+          onChange={(e) => setEmailId(e.target.value)}
+          disabled={isEmailVerified}
           className="flex-1 h-[40px] px-[12px] text-[14px]
                  border border-[#5C4033]
                  focus:outline-none focus:ring-1 focus:ring-[#5C4033] disabled:bg-gray-100"
@@ -528,48 +596,90 @@ const SignUp = () => {
               </div>
             </div>
           </div>
-          {/* 이전 버튼 */}
-          <div className="mt-[40px] mb-[10px]">
-            <button
-              type="button"
-              onClick={() => {
-                navigate(-1);
-              }}
-              className={`
-    w-full h-[52px]
-    flex items-center justify-center
-    border border-[#5C4033]
-    text-[16px] font-medium
-    hover:bg-[#5C4033] hover:text-white
-    transition
-  `}
-            >
-              이전
-            </button>
-          </div>
+
           {/* 다음 버튼 */}
-          <div className="mb-[60px]">
+          <div className="mt-[40px] mb-[60px]">
             <button
               type="button"
               onClick={() => {
+                console.log("Next button clicked!");
+
+                // 개발 모드일 때는 모든 검사를 건너뛰고 바로 이동
+                if (IS_DEV_MODE) {
+                  navigate("/save-ai-info", {
+                    state: {
+                      memberId,
+                      memberPw,
+                      memberName,
+                      email: `${emailId}@${emailDomain}`,
+                      gender,
+                      birth,
+                      postCode,
+                      address,
+                      addressDetail,
+                    },
+                  });
+                  return;
+                }
+
+                // 최종 유효성 검사 (입력값이 없거나 에러가 있는 경우)
+                if (!memberId || idError) {
+                  window.alert("아이디를 올바르게 입력해주세요.");
+                  return;
+                }
+                if (!memberPw || pwError) {
+                  window.alert("비밀번호를 올바르게 입력해주세요.");
+                  return;
+                }
+                if (memberPw !== confirmPw) {
+                  window.alert("비밀번호가 일치하지 않습니다.");
+                  return;
+                }
+                if (!memberName.trim()) {
+                  window.alert("이름을 입력해주세요.");
+                  return;
+                }
+                if (!gender) {
+                  window.alert("성별을 선택해주세요.");
+                  return;
+                }
+                if (!birth) {
+                  window.alert("생년월일을 입력해주세요.");
+                  return;
+                }
+                if (!postCode || !address) {
+                  window.alert("주소를 입력해주세요.");
+                  return;
+                }
+                if (!emailId || !emailDomain) {
+                  window.alert("이메일을 입력해주세요.");
+                  return;
+                }
                 if (!isRequiredAgreed) {
-                  alert("필수 약관에 동의하셔야 가입이 가능합니다.");
+                  window.alert("필수 약관에 동의하셔야 가입이 가능합니다.");
                   return;
                 }
                 if (!isEmailVerified) {
-                  alert("이메일 인증을 완료해주세요.");
+                  window.alert("이메일 인증을 완료해주세요.");
                   return;
                 }
-                navigate("/save-ai-info");
+
+                // 모든 검사가 끝나면 다음 페이지로 데이터와 함께 이동
+                navigate("/save-ai-info", {
+                  state: {
+                    memberId,
+                    memberPw,
+                    memberName,
+                    email: `${emailId}@${emailDomain}`,
+                    gender,
+                    birth,
+                    postCode,
+                    address,
+                    addressDetail,
+                  },
+                });
               }}
-              className={`
-    w-full h-[52px]
-    flex items-center justify-center
-    border border-[#5C4033]
-    text-[16px] font-medium
-    hover:bg-[#5C4033] hover:text-white
-    transition
-  `}
+              className={`w-full h-[52px] flex items-center justify-center border border-[#5C4033] text-[16px] font-medium hover:bg-[#5C4033] hover:text-white transition cursor-pointer`}
             >
               다음
             </button>

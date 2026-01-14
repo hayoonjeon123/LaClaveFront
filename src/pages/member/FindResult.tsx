@@ -15,7 +15,7 @@ const FindResult = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center py-14 bg-white">
+    <div className="flex flex-col items-center justify-center py-14">
       <div className="w-full max-w-[800px] px-6">
         {/* 로고 영역 */}
         <div className="flex justify-center mb-6">
@@ -89,8 +89,8 @@ const FindResult = () => {
         <div className="flex justify-center gap-6">
           {/* 로그인 버튼: 로그인 페이지로 이동 */}
           <button
-            onClick={() => navigate("/login")}
-            className="w-[280px] h-16 border-2 border-[#5C4033] text-[#5C4033] text-[22px] font-semibold cursor-pointer rounded-[15px] hover:bg-gray-50 transition-colors"
+            onClick={() => navigate("/loginProc")}
+            className="w-[280px] h-16 border-2 border-[#A8A9AD] text-[#5C4033] text-[22px] font-semibold cursor-pointer rounded-[15px] hover:bg-gray-50 transition-colors"
           >
             로그인
           </button>
@@ -99,13 +99,13 @@ const FindResult = () => {
           {type === "id" ? (
             <button
               onClick={() => navigate("/findaccount")}
-              className="w-[280px] h-16 bg-[#5C4033] text-white text-[22px] font-semibold cursor-pointer rounded-[15px] hover:bg-[#4a3329] transition-colors shadow-md"
+              className="w-[280px] h-16 bg-[#5C4033] border-2 border-[#A8A9AD] text-white text-[22px] font-semibold cursor-pointer rounded-[15px] hover:bg-[#4a3329] transition-colors shadow-md"
             >
               비밀번호 찾기
             </button>
           ) : (
             <button
-              onClick={() => navigate("/login")}
+              onClick={() => navigate("/loginProc")}
               className="w-[280px] h-16 bg-[#5C4033] text-white text-[22px] font-semibold cursor-pointer rounded-[15px] hover:bg-[#4a3329] transition-colors shadow-md"
             >
               확인

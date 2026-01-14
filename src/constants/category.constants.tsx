@@ -1,13 +1,56 @@
 
 export const CLASS_CATEGORY = [
-    { id: 1, label: "전체", path: "all" },
-    { id: 2, label: "베스트", path: "best" },
-    { id: 3, label: "상의", path: "top", subItems: ['맨투맨/후드', '셔츠', '니트', '티셔츠'] },
-    { id: 4, label: "하의", path: "bottom", subItems: ['슬랙스', '데님', '숏팬츠', '트레이닝', '팬츠'] },
-    { id: 5, label: "아우터", path: "outer", subItems: ['패딩', '자켓', '코트', '가디건'] },
-    { id: 6, label: "악세서리", path: "acc", subItems: ['모자', '머플러/장갑', '가방', '벨트', '쥬얼리', '양말', '신발'] },
+    { id: 1, label: "베스트", path: "best" },
+    {
+        id: 86,
+        label: "상의",
+        path: "category/top",
+        subItems: [
+            { id: 108, label: '맨투맨/후드' },
+            { id: 109, label: '셔츠' },
+            { id: 110, label: '니트' },
+            { id: 111, label: '티셔츠' }
+        ]
+    },
+    {
+        id: 87,
+        label: "하의",
+        path: "category/bottom",
+        subItems: [
+            { id: 112, label: '슬랙스' },
+            { id: 113, label: '데님' },
+            { id: 114, label: '숏팬츠' },
+            { id: 131, label: '트레이닝' },
+            { id: 132, label: '팬츠' }
+        ]
+    },
+    {
+        id: 88,
+        label: "아우터",
+        path: "category/outer",
+        subItems: [
+            { id: 133, label: '패딩' },
+            { id: 134, label: '자켓' },
+            { id: 135, label: '코트' },
+            { id: 136, label: '가디건' }
+        ]
+    },
+    {
+        id: 90,
+        label: "악세서리",
+        path: "category/acc",
+        subItems: [
+            { id: 137, label: '모자' },
+            { id: 138, label: '머플러/장갑' },
+            { id: 139, label: '가방' },
+            { id: 140, label: '벨트' },
+            { id: 141, label: '쥬얼리' },
+            { id: 142, label: '양말' }
+        ]
+    },
     { id: 7, label: "고객센터", path: "faq" },
 ]
+
 
 export const ADMIN_CATEGORY = [
     { id: 1, label: "홈", path: "/admin" },
