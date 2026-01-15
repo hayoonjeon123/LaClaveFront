@@ -10,6 +10,27 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
+const COLOR_MAP: Record<string, string> = {
+    "black": "#000000",
+    "white": "#FFFFFF",
+    "gray": "#808080",
+    "grey": "#808080",
+    "red": "#FF0000",
+    "blue": "#0000FF",
+    "navy": "#000080",
+    "beige": "#F5F5DC",
+    "ivory": "#FFFFF0",
+    "brown": "#A52A2A",
+
+};
+
+const getSafeColor = (colorName: any) => {
+    if (!colorName || typeof colorName !== "string") return "transparent";
+    const cleanName = colorName.replace("색상", "").toLowerCase().trim();
+    return COLOR_MAP[cleanName] || cleanName;
+};
+
+
 export function ProductPage() {
     const { categoryName } = useParams<{ categoryName: string }>();
     const [searchParams] = useSearchParams();
@@ -106,7 +127,7 @@ export function ProductPage() {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-x-20 gap-y-16 mb-16">
                 {products && products.length > 0 ? (
                     products.map((product: any) => (
-                        <Link to={`/product/${product.itemId}`} key={product.productName} className="group block">
+                        <Link to={`/product/${product.productIdx}`} key={product.productName} className="group block">
                             <div className="bg-gray-200 mb-4 overflow-hidden relative aspect-[3/4]">
                                 {/* DTO에서 mainImageUrl로 보내주고 있으니 하나만 써도 됩니다 */}
                                 {product.mainImageUrl ? (
@@ -135,15 +156,17 @@ export function ProductPage() {
                                     product.colors.map((color: string, index: number) => (
                                         <div
                                             key={index}
-                                            title={product.colors}
-                                            className="w-3 h-3 border border-gray-300 "
-                                            style={{ backgroundColor: color }}
+                                            title={color}
+                                            className="w-4 h-4 border border-gray-300 shadow-sm"
+                                            style={{ backgroundColor: getSafeColor(color) }}
                                         />
                                     ))
                                 ) : (
                                     <span className="text-[10px] text-gray-400">옵션 없음</span>
                                 )}
                             </div>
+
+
                         </Link>
                     ))
                 ) : (

@@ -84,7 +84,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="editInquiry/:inquiryIdx" element={<EditInquiry />} />
           <Route path="save-ai-info" element={<AiSelect />} />
           <Route path="loginProc" element={<AppLogin />} />
-          <Route path="product/:productId" element={<ProductDetail />} />
+          <Route path="product/:productIdx" element={<ProductDetail />} />
           <Route path="category/:categoryName" element={<ProductPage />} />
           <Route path="best" element={<Best />} />
           <Route path="faq" element={<FAQ />} />

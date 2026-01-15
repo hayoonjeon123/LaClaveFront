@@ -617,6 +617,7 @@ const SignUp = () => {
                       postCode,
                       address,
                       addressDetail,
+                      marketingAgree: agreeMarketing,
                     },
                   });
                   return;
@@ -676,6 +677,7 @@ const SignUp = () => {
                     postCode,
                     address,
                     addressDetail,
+                    marketingAgree: agreeMarketing,
                   },
                 });
               }}

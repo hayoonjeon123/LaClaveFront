@@ -81,10 +81,11 @@ const AiSelect = () => {
 
     // 백엔드 MemberDTO 구조 및 AI 정보를 합쳐서 전송
     const data = {
-      ...signUpData, // memberId, memberPw, memberName, email, gender, birth, postCode, address, addressDetail 등
-      height: height ? parseFloat(height) : null,
-      weight: weight ? parseFloat(weight) : null,
-      prefStyles: selectedStyles, // 백엔드 필드명에 맞춰 selectedStyles로 전달 (필요 시 수정)
+      ...signUpData, // memberId, memberPw, memberName, email, gender, birth, postCode, address, addressDetail, marketingAgree 등
+      marketingAgree: signUpData.marketingAgree ? 1 : 0,
+      height: height ? parseFloat(height) : 0,
+      weight: weight ? parseFloat(weight) : 0,
+      prefStyles: selectedStyles,
     };
 
     console.log("전송할 데이터:", data);
