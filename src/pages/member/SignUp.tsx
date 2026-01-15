@@ -19,6 +19,9 @@ const PW_REGEX =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,16}$/;
 const SignUp = () => {
   const navigate = useNavigate();
+  /* ================= 개발 모드 설정 ================= */
+  const IS_DEV_MODE = true; // true일 때 유효성 검사를 건너뜁니다.
+
   /* ================= 약관 상태 ================= */
   const [agreeAll, setAgreeAll] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false); // 필수
@@ -68,15 +71,23 @@ const SignUp = () => {
   /* ================= 실시간 유효성 검사 로직 ================= */
   // 아이디 검증
   useEffect(() => {
+    if (IS_DEV_MODE) {
+      setIdError("");
+      return;
+    }
     if (memberId.length > 0 && !ID_REGEX.test(memberId)) {
       setIdError("아이디는 영문, 숫자, 특수문자 포함 4~20자여야 합니다.");
     } else {
       setIdError("");
     }
-  }, [memberId]);
+  }, [memberId, IS_DEV_MODE]);
 
   // 비밀번호 검증
   useEffect(() => {
+    if (IS_DEV_MODE) {
+      setPwError("");
+      return;
+    }
     if (memberPw.length > 0 && !PW_REGEX.test(memberPw)) {
       setPwError(
         "비밀번호는 8자 이상, 영문, 숫자, 특수문자를 모두 포함해야 합니다."
@@ -84,16 +95,20 @@ const SignUp = () => {
     } else {
       setPwError("");
     }
-  }, [memberPw]);
+  }, [memberPw, IS_DEV_MODE]);
 
   // 비밀번호 확인 검증
   useEffect(() => {
+    if (IS_DEV_MODE) {
+      setConfirmPwError("");
+      return;
+    }
     if (confirmPw.length > 0 && memberPw !== confirmPw) {
       setConfirmPwError("비밀번호가 일치하지 않습니다.");
     } else {
       setConfirmPwError("");
     }
-  }, [memberPw, confirmPw]);
+  }, [memberPw, confirmPw, IS_DEV_MODE]);
 
   /* 필수 약관 체크 여부 */
   const isRequiredAgreed = agreeTerms && agreePrivacy;
@@ -157,8 +172,6 @@ const SignUp = () => {
     setIsAddressSearchOpen(false);
   };
 
-  /* ================= 개발 모드 설정 ================= */
-  const IS_DEV_MODE = true; // true일 때 유효성 검사를 건너뜁니다.
 
   return (
     <div className="w-full flex flex-col items-center">
@@ -182,12 +195,10 @@ const SignUp = () => {
             value={memberId}
             onChange={(e) => setMemberId(e.target.value)}
             className={`flex-1 h-[40px] px-[12px] text-[14px] 
-                       border ${
-                         idError ? "border-red-500" : "border-[#5C4033]"
-                       } placeholder:text-[#A8A9AD]
-                       focus:outline-none focus:ring-1 ${
-                         idError ? "focus:ring-red-500" : "focus:ring-[#5C4033]"
-                       }`}
+                       border ${idError ? "border-red-500" : "border-[#5C4033]"
+              } placeholder:text-[#A8A9AD]
+                       focus:outline-none focus:ring-1 ${idError ? "focus:ring-red-500" : "focus:ring-[#5C4033]"
+              }`}
           />
         </div>
         {idError && (
@@ -212,12 +223,10 @@ const SignUp = () => {
             value={memberPw}
             onChange={(e) => setMemberPw(e.target.value)}
             className={`flex-1 h-[40px] px-[12px] text-[14px]
-                       border ${
-                         pwError ? "border-red-500" : "border-[#5C4033]"
-                       } placeholder:text-[#A8A9AD]
-                       focus:outline-none focus:ring-1 ${
-                         pwError ? "focus:ring-red-500" : "focus:ring-[#5C4033]"
-                       }`}
+                       border ${pwError ? "border-red-500" : "border-[#5C4033]"
+              } placeholder:text-[#A8A9AD]
+                       focus:outline-none focus:ring-1 ${pwError ? "focus:ring-red-500" : "focus:ring-[#5C4033]"
+              }`}
           />
         </div>
         {pwError && (
@@ -239,14 +248,12 @@ const SignUp = () => {
             value={confirmPw}
             onChange={(e) => setConfirmPw(e.target.value)}
             className={`flex-1 h-[40px] px-[12px] text-[14px]
-                       border ${
-                         confirmPwError ? "border-red-500" : "border-[#5C4033]"
-                       }
-                       focus:outline-none focus:ring-1 ${
-                         confirmPwError
-                           ? "focus:ring-red-500"
-                           : "focus:ring-[#5C4033]"
-                       }`}
+                       border ${confirmPwError ? "border-red-500" : "border-[#5C4033]"
+              }
+                       focus:outline-none focus:ring-1 ${confirmPwError
+                ? "focus:ring-red-500"
+                : "focus:ring-[#5C4033]"
+              }`}
           />
         </div>
         {confirmPwError && (
@@ -667,15 +674,18 @@ const SignUp = () => {
                 if (IS_DEV_MODE) {
                   navigate("/save-ai-info", {
                     state: {
-                      memberId,
-                      memberPw,
-                      memberName,
-                      email: `${emailId}@${emailDomain}`,
-                      gender,
-                      birth,
-                      postCode,
-                      address,
-                      addressDetail,
+                      memberId: memberId || "devuser_" + Date.now(),
+                      memberPw: memberPw || "Dev1234!", // 특수문자 규칙 대응
+                      memberName: memberName || "테스터",
+                      email:
+                        emailId && emailDomain
+                          ? `${emailId}@${emailDomain}`
+                          : `dev_${Date.now()}@naver.com`,
+                      gender: gender || 1,
+                      birth: birth || "1995-01-01",
+                      postCode: postCode || "06159",
+                      address: address || "서울 강남구 테헤란로 427",
+                      addressDetail: addressDetail || "트레이드타워",
                       marketingAgree: agreeMarketing,
                     },
                   });

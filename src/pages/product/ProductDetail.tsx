@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Heart, Star } from "lucide-react";
 import axios from "axios";
 import {
@@ -65,11 +65,12 @@ function ProductDetail() {
         setSelectedColor("");
     }, [productIdx]);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         const fetchProductDetail = async () => {
             try {
                 setIsLoading(true);
-                // 백엔드 API 호출 (프록시 설정 /api -> http://localhost:8080 가정)
                 const response = await axios.get(`/api/product/${productIdx}`);
                 console.log("=== 상품 상세 데이터 ===", response.data);
                 setProductData(response.data);
@@ -84,6 +85,41 @@ function ProductDetail() {
             fetchProductDetail();
         }
     }, [productIdx]);
+
+    const handleAddToCart = async () => {
+        if (!selectedSize || !selectedColor) {
+            alert("사이즈와 색상을 선택해 주세요.");
+            return;
+        }
+
+        try {
+            const cartData = {
+                productIdx: Number(productIdx),
+                size: selectedSize,
+                color: selectedColor,
+                quantity: 1, // 기본 수량 1
+                price: productData.productPrice
+            };
+
+            const response = await axios.post("/api/cart/add", cartData, {
+                withCredentials: true
+            });
+
+            if (response.status === 200 || response.status === 201) {
+                if (window.confirm("장바구니에 담겼습니다. 장바구니 페이지로 이동하시겠습니까?")) {
+                    navigate("/cart");
+                }
+            }
+        } catch (error: any) {
+            console.error("장바구니 추가 실패:", error);
+            if (error.response?.status === 401) {
+                alert("로그인이 필요한 서비스입니다.");
+                navigate("/loginProc");
+            } else {
+                alert("장바구니 추가 중 오류가 발생했습니다.");
+            }
+        }
+    };
 
     useEffect(() => {
         if (!productData) return;
@@ -238,9 +274,13 @@ function ProductDetail() {
                                     <span className="text-[12px] font-bold mt-1 text-gray-600">0</span>
                                 </div>
                             </button>
-                            <button className="flex-1 h-[60px] border border-[#A8A9AD] rounded-lg border-2 text-lg font-bold hover:bg-gray-50 transition-colors cursor-pointer">
+                            <button
+                                onClick={handleAddToCart}
+                                className="flex-1 h-[60px] border border-[#A8A9AD] rounded-lg border-2 text-lg font-bold hover:bg-gray-50 transition-colors cursor-pointer"
+                            >
                                 장바구니
                             </button>
+
                             <button className="flex-1 h-[60px] bg-[#5C4033] border-[#A8A9AD] border-2 text-white rounded-lg text-lg font-bold hover:bg-[#4a332a] transition-colors cursor-pointer">
                                 결제하기
                             </button>
