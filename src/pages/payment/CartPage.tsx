@@ -1,41 +1,91 @@
-import { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+interface CartItem {
+    id: number;
+    cartItemIdx: number;
+    name: string;
+    option: string;
+    price: number;
+    originalPrice?: number;
+    quantity: number;
+    image: string;
+    checked: boolean;
+}
 
 const Cart = () => {
-    // 샘플 데이터
-    const [cartItems, setCartItems] = useState([
-        {
-            id: 1,
-            name: "플러피 부클 (2 color)",
-            option: "ivory / M",
-            price: 150000,
-            quantity: 2,
-            image: "/path/to/image1.jpg",
-            checked: true,
-        },
-        {
-            id: 2,
-            name: "니트 머플러 (5 color)",
-            option: "black / Free",
-            price: 19900,
-            originalPrice: 25000,
-            quantity: 1,
-            image: "/path/to/image2.jpg",
-            checked: true,
-        },
-    ]);
+    const [cartItems, setCartItems] = useState<CartItem[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [allChecked, setAllChecked] = useState(true);
+    const navigate = useNavigate();
 
-    // 총 상품 금액 계산
+    useEffect(() => {
+        const fetchCartItems = async () => {
+            try {
+                const response = await axios.get("/api/cart/list", {
+                    withCredentials: true,
+                });
+
+                // 응답이 배열인지 확인
+                if (Array.isArray(response.data)) {
+                    const data = response.data.map((item: any) => ({
+                        id: item.cartItemIdx,
+                        cartItemIdx: item.cartItemIdx,
+                        name: item.productName,
+                        option: `${item.colorName} / ${item.sizeName}`,
+                        price: item.price,
+                        quantity: item.quantity,
+                        image: item.imageUrl,
+                        checked: true,
+                    }));
+                    setCartItems(data);
+                }
+            } catch (error: any) {
+                console.error("장바구니 조회 실패:", error);
+
+                // 401 에러면 로그인 페이지로 리다이렉트
+                if (error.response?.status === 401) {
+                    alert("로그인이 필요한 서비스입니다.");
+                    navigate("/loginProc");
+                }
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchCartItems();
+    }, []);
+
+    const handleDelete = async (cartItemIdx: number) => {
+        if (!window.confirm("정말 삭제하시겠습니까?")) return;
+
+        try {
+            await axios.post(
+                "/api/cart/delete",
+                { cartItemIdx },
+                { withCredentials: true }
+            );
+            setCartItems((items) => items.filter((i) => i.id !== cartItemIdx));
+        } catch (error) {
+            console.error("삭제 실패:", error);
+            alert("삭제에 실패했습니다.");
+        }
+    };
+
     const totalProductAmount = cartItems
         .filter((item) => item.checked)
         .reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-    const deliveryFee = totalProductAmount >= 100000 ? 0 : 3000;
+    const deliveryFee = totalProductAmount >= 100000 || totalProductAmount === 0 ? 0 : 3000;
     const finalAmount = totalProductAmount + deliveryFee;
 
-    const [allChecked, setAllChecked] = useState(true);
-
-    const navigate = useNavigate();
+    if (loading) {
+        return (
+            <div className="w-full h-[60vh] flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+            </div>
+        );
+    }
 
     return (
         <div className="w-full max-w-[1200px] mx-auto py-20 px-6 font-sans">
@@ -160,11 +210,7 @@ const Cart = () => {
                             {/* 삭제 버튼 */}
                             <div>
                                 <button
-                                    onClick={() => {
-                                        setCartItems((items) =>
-                                            items.filter((i) => i.id !== item.id)
-                                        );
-                                    }}
+                                    onClick={() => handleDelete(item.id)}
                                     className="border border-gray-300 px-4 py-1 text-[13px] rounded hover:bg-gray-50 cursor-pointer"
                                 >
                                     삭제
@@ -178,6 +224,11 @@ const Cart = () => {
                         )}
                     </div>
                 ))}
+                {cartItems.length === 0 && (
+                    <div className="py-20 text-center text-gray-400">
+                        장바구니가 비어 있습니다.
+                    </div>
+                )}
             </div>
 
             {/* 결제 요약 박스 */}
@@ -231,11 +282,16 @@ const Cart = () => {
             <div className="flex justify-center">
                 <button
                     onClick={() => {
-                        navigate("/order");
+                        const selectedItems = cartItems.filter((item) => item.checked);
+                        if (selectedItems.length === 0) {
+                            alert("주문할 상품을 선택해주세요.");
+                            return;
+                        }
+                        navigate("/order", { state: { selectedItems } });
                     }}
-                    className="w-full max-w-[1200px] h-16 border border-[#000000] rounded-lg text-[20px] font-bold hover:bg-[#5C4033] hover:text-white cursor-pointer transition-colors shadow-sm"
+                    className="w-full h-16 border border-[#000000] rounded-lg text-[20px] font-bold hover:bg-[#5C4033] hover:text-white cursor-pointer transition-colors shadow-sm"
                 >
-                    주문 하기
+                    {cartItems.filter((item) => item.checked).length}개 상품 주문 하기
                 </button>
             </div>
         </div>

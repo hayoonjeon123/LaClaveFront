@@ -1,5 +1,6 @@
-@ -1, 246 + 0, 0 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 import {
     Select,
     SelectContent,
@@ -8,26 +9,58 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
+interface OrderItem {
+    id: number;
+    name: string;
+    option: string;
+    quantity: number;
+    price: number;
+    image: string;
+}
+
+interface MemberInfo {
+    memberName: string;
+    memberId: string;
+    email: string;
+    postCode: string;
+    address: string;
+    addressDetail: string;
+    point: number;
+}
+
 const Order = () => {
-    const [orderItems, setOrderItems] = useState([
-        {
-            id: 1,
-            name: "플러피 부클 (2 color)",
-            option: "ivory / M",
-            quantity: 2,
-            price: 300000,
-            image: "/path/to/image.jpg",
-        },
-    ]);
+    const location = useLocation();
+    const navigate = useNavigate();
 
-    const [points, setPoints] = useState(0);
-    const availablePoints = 5000; // 보유 적립금 현황
-    const deliveryFee = 0;
-    const couponDiscount = 20000;
+    // CartPage에서 넘겨준 선택 상품들
+    const selectedItemsFromCart = location.state?.selectedItems || [];
 
+    const [orderItems, setOrderItems] = useState<OrderItem[]>(selectedItemsFromCart);
+    const [memberInfo, setMemberInfo] = useState<MemberInfo | null>(null);
+    const [pointsToUse, setPointsToUse] = useState(0);
     const [deliveryMessage, setDeliveryMessage] = useState("집 앞에 배송해주세요");
-    const [selectedCoupon, setSelectedCoupon] = useState("아우터 5% 할인 쿠폰");
+    const [selectedCoupon, setSelectedCoupon] = useState("선택 안함");
     const [paymentMethod, setPaymentMethod] = useState("카드 결제");
+
+    useEffect(() => {
+        // 상품이 없으면 장바구니로 리다이렉트
+        if (orderItems.length === 0) {
+            alert("주문할 상품이 없습니다.");
+            navigate("/cart");
+            return;
+        }
+
+        // 회원 정보 가져오기
+        const fetchMemberInfo = async () => {
+            try {
+                const response = await axios.get("/api/info", { withCredentials: true });
+                setMemberInfo(response.data);
+            } catch (error) {
+                console.error("회원 정보 조회 실패:", error);
+            }
+        };
+        fetchMemberInfo();
+    }, [orderItems, navigate]);
 
     const removeItem = (id: number) => {
         if (window.confirm("상품을 주문 목록에서 삭제하시겠습니까?")) {
@@ -36,12 +69,22 @@ const Order = () => {
     };
 
     const totalProductAmount = orderItems.reduce(
-        (acc, item) => acc + item.price,
+        (acc, item) => acc + item.price * item.quantity,
         0
     );
-    const appliedPoints = points >= 1000 ? points : 0;
-    const finalAmount =
-        totalProductAmount + deliveryFee - couponDiscount - appliedPoints;
+
+    const deliveryFee = totalProductAmount >= 100000 || totalProductAmount === 0 ? 0 : 3000;
+    const couponDiscount = 0;
+    const appliedPoints = pointsToUse >= 1000 ? pointsToUse : 0;
+    const finalAmount = totalProductAmount + deliveryFee - couponDiscount - appliedPoints;
+
+    if (!memberInfo) {
+        return (
+            <div className="w-full h-[60vh] flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+            </div>
+        );
+    }
 
     return (
         <div className="w-full max-w-[800px] mx-auto py-20 px-6 font-sans text-[#000]">
@@ -58,11 +101,11 @@ const Order = () => {
                     </button>
                 </div>
                 <div className="text-[14px] leading-relaxed space-y-1">
-                    <p className="font-bold">| 기본 | ooo</p>
+                    <p className="font-bold">| 기본 | {memberInfo.memberName}</p>
                     <p className="text-gray-600">
-                        [ 16859 ] 부산광역시 수영구 망미동 000아파트, 501동 1702호
+                        [ {memberInfo.postCode} ] {memberInfo.address} {memberInfo.addressDetail}
                     </p>
-                    <p className="text-gray-600">연락처 : 010 - 0000 - 0000</p>
+                    <p className="text-gray-600">이메일 : {memberInfo.email}</p>
                     <Select value={deliveryMessage} onValueChange={setDeliveryMessage}>
                         <SelectTrigger className="!w-full !mt-4 !border !border-[#000000] !rounded !px-4 !h-[45px] !text-[14px] !justify-between focus:!ring-0 !outline-none">
                             <SelectValue placeholder="배송 메시지 선택" />
@@ -70,6 +113,7 @@ const Order = () => {
                         <SelectContent>
                             <SelectItem value="집 앞에 배송해주세요">집 앞에 배송해주세요</SelectItem>
                             <SelectItem value="직접 수령하겠습니다">직접 수령하겠습니다</SelectItem>
+                            <SelectItem value="경비실에 맡겨주세요">경비실에 맡겨주세요</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -102,7 +146,7 @@ const Order = () => {
                                     수량 : {item.quantity}개
                                 </p>
                                 <p className="font-bold text-[16px]">
-                                    {item.price.toLocaleString()}원
+                                    {(item.price * item.quantity).toLocaleString()}원
                                 </p>
                             </div>
                             <button
@@ -133,23 +177,23 @@ const Order = () => {
                                 <p className="text-[12px] text-gray-500 ml-1">
                                     보유 적립금{" "}
                                     <strong className="text-black ml-1">
-                                        {availablePoints.toLocaleString()}원
+                                        {memberInfo.point.toLocaleString()}원
                                     </strong>
                                 </p>
                                 <div className="flex border border-[#000000] rounded overflow-hidden h-[45px]">
                                     <input
                                         type="number"
                                         className="flex-1 px-4 text-right outline-none text-[14px] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                        value={points}
+                                        value={pointsToUse}
                                         onChange={(e) => {
                                             const value = Number(e.target.value);
-                                            if (value <= availablePoints) setPoints(value);
+                                            if (value <= memberInfo.point) setPointsToUse(value);
                                         }}
                                         placeholder="0"
                                     />
                                     <button
                                         type="button"
-                                        onClick={() => setPoints(availablePoints)}
+                                        onClick={() => setPointsToUse(memberInfo.point)}
                                         className="bg-[#f8f8f8] border-l border-[#000000] px-6 text-[13px] font-bold hover:bg-gray-100 transition-colors whitespace-nowrap cursor-pointer"
                                     >
                                         전액 사용
@@ -157,7 +201,7 @@ const Order = () => {
                                 </div>
                             </div>
                         </div>
-                        {points > 0 && points < 1000 && (
+                        {pointsToUse > 0 && pointsToUse < 1000 && (
                             <p className="text-red-500 text-[11px] ml-[104px] mt-1">
                                 * 적립금은 1,000원부터 사용 가능합니다.
                             </p>
@@ -172,21 +216,13 @@ const Order = () => {
                                     <SelectValue placeholder="쿠폰 선택" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="아우터 5% 할인 쿠폰">아우터 5% 할인 쿠폰</SelectItem>
+                                    <SelectItem value="선택 안함">선택 안함</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
                     </div>
                 </div>
             </section>
-
-            {/* 적용 금액 요약 바 */}
-            <div className="bg-[#5C4033] text-white p-5 flex justify-between items-center rounded-sm mb-12">
-                <span className="font-semibold">적용 금액</span>
-                <span className="text-[20px] font-semibold">
-                    -{(couponDiscount + appliedPoints).toLocaleString()}원
-                </span>
-            </div>
 
             {/* 결제 정보 섹션 */}
             <section className="mb-12">
@@ -205,7 +241,7 @@ const Order = () => {
                         <span className="font-bold">+{deliveryFee.toLocaleString()}원</span>
                     </div>
                     <div className="flex justify-between border-b border-gray-100 pb-4">
-                        <span className="text-gray-500">할인 / 쿠폰</span>
+                        <span className="text-gray-500">할인 / 적립금</span>
                         <span className="font-bold text-red-500">
                             -{(couponDiscount + appliedPoints).toLocaleString()}원
                         </span>

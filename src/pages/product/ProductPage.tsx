@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 
 const COLOR_MAP: Record<string, string> = {
+    // 영문 색상명
     "black": "#000000",
     "white": "#FFFFFF",
     "gray": "#808080",
@@ -22,12 +23,29 @@ const COLOR_MAP: Record<string, string> = {
     "ivory": "#FFFFF0",
     "brown": "#A52A2A",
 
+    // 한글 색상명
+    "블랙": "#000000",
+    "화이트": "#FFFFFF",
+    "그레이": "#808080",
+    "레드": "#FF0000",
+    "블루": "#0000FF",
+    "네이비": "#000080",
+    "베이지": "#F5F5DC",
+    "아이보리": "#FFFFF0",
+    "브라운": "#A52A2A",
 };
 
 const getSafeColor = (colorName: any) => {
     if (!colorName || typeof colorName !== "string") return "transparent";
+
+    // 이미 hex 코드면 그대로 반환
+    if (colorName.startsWith("#")) {
+        return colorName;
+    }
+
+    // 한글 색상명이나 영문 색상명을 hex로 변환
     const cleanName = colorName.replace("색상", "").toLowerCase().trim();
-    return COLOR_MAP[cleanName] || cleanName;
+    return COLOR_MAP[cleanName] || colorName;
 };
 
 

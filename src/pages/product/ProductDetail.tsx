@@ -162,7 +162,22 @@ function ProductDetail() {
 
     // 탭 설정 (서버 데이터 기반)
     const tabConfig = [
-        { id: "info", label: "정보", type: "image", content: detailImages },
+        {
+            id: "info",
+            label: "정보",
+            type: "content",
+            content: (
+                <div className="flex flex-col items-center gap-4">
+                    {detailImages.length > 0 && detailImages.map((img: string, idx: number) => (
+                        <img key={idx} src={img} alt={`Detail ${idx}`} className="w-full object-cover" />
+                    ))}
+                    {productData.productDetailDesc && (
+                        <div className="w-full py-10 px-4 text-gray-800 leading-relaxed whitespace-pre-wrap border-t border-gray-100 mt-8"
+                            dangerouslySetInnerHTML={{ __html: productData.productDetailDesc }} />
+                    )}
+                </div>
+            )
+        },
         { id: "size", label: "사이즈", type: "content", content: <div className="p-8 text-center text-gray-400">준비된 사이즈 표가 없습니다.</div> },
         { id: "review", label: "리뷰", type: "component", content: <ProductReviews /> },
         { id: "inquiry", label: "문의", type: "component", content: <ProductInquiries /> },
@@ -238,7 +253,7 @@ function ProductDetail() {
                                     <SelectValue placeholder="사이즈 선택" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {sortSizes(productData.sizes).map((size: string) => (
+                                    {sortSizes(productData.sizes || []).map((size: string) => (
                                         <SelectItem key={size} value={size.toLowerCase()}>{size.toUpperCase()}</SelectItem>
                                     ))}
                                 </SelectContent>
@@ -251,7 +266,7 @@ function ProductDetail() {
                                     <SelectValue placeholder="색상 선택" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {productData.colors?.map((color: string) => (
+                                    {(productData.colors || []).map((color: string) => (
                                         <SelectItem key={color} value={color.toLowerCase()}>
                                             {getDisplayColor(color)}
                                         </SelectItem>
