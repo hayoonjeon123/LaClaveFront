@@ -1,0 +1,44 @@
+import axios from "axios";
+
+// === 주문 상세 타입 ===
+export interface OrderDetail {
+  productIdx: number;
+  quantity: number;
+  price?: number;
+  discountPrice?: number;
+  totalPrice: number;
+  colorCode?: number;
+  sizeCode?: number;
+  productName?: string; // 필요 시
+  option?: string; // 필요 시
+}
+
+// === 주문 타입 ===
+export interface Order {
+  ordersIdx: number;
+  ordersDate: string; // ISO 문자열
+  ordersStatus: number;
+  totalPrice: number;
+  details: OrderDetail[];
+  delivery?: {
+    recipientName: string;
+    phone: string;
+    address: string;
+    addressDetail: string;
+  };
+}
+
+const API_BASE_URL = "http://localhost:8080/api/my";
+
+// === 마이페이지 주문 조회 API ===
+export const getMyOrders = async (): Promise<Order[]> => {
+  try {
+    const response = await axios.get<Order[]>(`${API_BASE_URL}/orders`, {
+      withCredentials: true, // 세션 인증 포함
+    });
+    return response.data;
+  } catch (error) {
+    console.error("마이페이지 주문 조회 실패:", error);
+    throw error;
+  }
+};

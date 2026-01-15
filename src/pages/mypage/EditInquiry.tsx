@@ -29,7 +29,7 @@ export default function EditInquiry() {
 
   useEffect(() => {
     // 기존 문의 내용 불러오기
-    getInquiryList(1) // 임시 memberIdx=1
+    getInquiryList() // 임시 memberIdx=1
       .then((res) => {
         const inquiry = res.data.find(
           (i: any) => i.inquiryIdx === Number(inquiryIdx)

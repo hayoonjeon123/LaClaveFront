@@ -15,7 +15,8 @@ import type { SelectedAddress } from "@/components/AddressSearch/address";
 import { X } from "lucide-react";
 
 const ID_REGEX = /^(?=.*\d)[A-Za-z\d@$!%*#?&]{4,20}$/;
-const PW_REGEX = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,16}$/;
+const PW_REGEX =
+  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,16}$/;
 const SignUp = () => {
   const navigate = useNavigate();
   /* ================= 약관 상태 ================= */
@@ -77,7 +78,9 @@ const SignUp = () => {
   // 비밀번호 검증
   useEffect(() => {
     if (memberPw.length > 0 && !PW_REGEX.test(memberPw)) {
-      setPwError("비밀번호는 8자 이상, 영문, 숫자, 특수문자를 모두 포함해야 합니다.");
+      setPwError(
+        "비밀번호는 8자 이상, 영문, 숫자, 특수문자를 모두 포함해야 합니다."
+      );
     } else {
       setPwError("");
     }
@@ -104,9 +107,13 @@ const SignUp = () => {
     }
     try {
       // Backend expects MemberDTO with 'email'
-      await axios.post("http://localhost:8080/email-send", { email: fullEmail }, {
-        withCredentials: true
-      });
+      await axios.post(
+        "http://localhost:8080/email-send",
+        { email: fullEmail },
+        {
+          withCredentials: true,
+        }
+      );
       alert("인증번호가 발송되었습니다.");
     } catch (error) {
       console.error("이메일 발송 실패:", error);
@@ -122,12 +129,16 @@ const SignUp = () => {
     }
     try {
       // Backend expects Map with 'email' and 'authCode'
-      const response = await axios.post("http://localhost:8080/email-verify", {
-        email: fullEmail,
-        authCode: authCode
-      }, {
-        withCredentials: true
-      });
+      const response = await axios.post(
+        "http://localhost:8080/email-verify",
+        {
+          email: fullEmail,
+          authCode: authCode,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
       if (response.status === 200) {
         alert("이메일 인증에 성공했습니다.");
@@ -171,12 +182,18 @@ const SignUp = () => {
             value={memberId}
             onChange={(e) => setMemberId(e.target.value)}
             className={`flex-1 h-[40px] px-[12px] text-[14px] 
-                       border ${idError ? "border-red-500" : "border-[#5C4033]"} placeholder:text-[#A8A9AD]
-                       focus:outline-none focus:ring-1 ${idError ? "focus:ring-red-500" : "focus:ring-[#5C4033]"}`}
+                       border ${
+                         idError ? "border-red-500" : "border-[#5C4033]"
+                       } placeholder:text-[#A8A9AD]
+                       focus:outline-none focus:ring-1 ${
+                         idError ? "focus:ring-red-500" : "focus:ring-[#5C4033]"
+                       }`}
           />
         </div>
         {idError && (
-          <span className="ml-[120px] text-red-500 text-[12px] mt-[4px]">{idError}</span>
+          <span className="ml-[120px] text-red-500 text-[12px] mt-[4px]">
+            {idError}
+          </span>
         )}
       </div>
 
@@ -195,12 +212,18 @@ const SignUp = () => {
             value={memberPw}
             onChange={(e) => setMemberPw(e.target.value)}
             className={`flex-1 h-[40px] px-[12px] text-[14px]
-                       border ${pwError ? "border-red-500" : "border-[#5C4033]"} placeholder:text-[#A8A9AD]
-                       focus:outline-none focus:ring-1 ${pwError ? "focus:ring-red-500" : "focus:ring-[#5C4033]"}`}
+                       border ${
+                         pwError ? "border-red-500" : "border-[#5C4033]"
+                       } placeholder:text-[#A8A9AD]
+                       focus:outline-none focus:ring-1 ${
+                         pwError ? "focus:ring-red-500" : "focus:ring-[#5C4033]"
+                       }`}
           />
         </div>
         {pwError && (
-          <span className="ml-[120px] text-red-500 text-[12px] mt-[4px]">{pwError}</span>
+          <span className="ml-[120px] text-red-500 text-[12px] mt-[4px]">
+            {pwError}
+          </span>
         )}
       </div>
 
@@ -216,12 +239,20 @@ const SignUp = () => {
             value={confirmPw}
             onChange={(e) => setConfirmPw(e.target.value)}
             className={`flex-1 h-[40px] px-[12px] text-[14px]
-                       border ${confirmPwError ? "border-red-500" : "border-[#5C4033]"}
-                       focus:outline-none focus:ring-1 ${confirmPwError ? "focus:ring-red-500" : "focus:ring-[#5C4033]"}`}
+                       border ${
+                         confirmPwError ? "border-red-500" : "border-[#5C4033]"
+                       }
+                       focus:outline-none focus:ring-1 ${
+                         confirmPwError
+                           ? "focus:ring-red-500"
+                           : "focus:ring-[#5C4033]"
+                       }`}
           />
         </div>
         {confirmPwError && (
-          <span className="ml-[120px] text-red-500 text-[12px] mt-[4px]">{confirmPwError}</span>
+          <span className="ml-[120px] text-red-500 text-[12px] mt-[4px]">
+            {confirmPwError}
+          </span>
         )}
       </div>
 
@@ -266,7 +297,10 @@ const SignUp = () => {
               onCheckedChange={(checked) => checked && setGender(2)}
               className="data-[state=checked]:border border-[#5C4033] data-[state=checked]:bg-[#5C4033] data-[state=checked]:text-white"
             />
-            <Label htmlFor="gender-woman" className="text-[14px] cursor-pointer">
+            <Label
+              htmlFor="gender-woman"
+              className="text-[14px] cursor-pointer"
+            >
               Woman
             </Label>
           </div>
@@ -397,7 +431,11 @@ const SignUp = () => {
         />
         <span className="text-[14px] mx-[5px]">@</span>
         {/* 도메인 선택 */}
-        <Select value={emailDomain} onValueChange={setEmailDomain} disabled={isEmailVerified}>
+        <Select
+          value={emailDomain}
+          onValueChange={setEmailDomain}
+          disabled={isEmailVerified}
+        >
           <SelectTrigger className="w-[150px] h-[40px] px-[8px] text-[14px] border border-[#5C4033] focus:ring-1 focus:ring-[#5C4033] rounded-none disabled:bg-gray-100">
             <SelectValue placeholder="선택" />
           </SelectTrigger>
@@ -450,7 +488,9 @@ const SignUp = () => {
       {isEmailVerified && (
         <div className="w-full max-w-md mt-[10px] flex items-center">
           <div className="w-[120px]" />
-          <p className="text-blue-600 text-[13px] font-bold">✓ 이메일 인증이 완료되었습니다.</p>
+          <p className="text-blue-600 text-[13px] font-bold">
+            ✓ 이메일 인증이 완료되었습니다.
+          </p>
         </div>
       )}
 
@@ -507,7 +547,12 @@ const SignUp = () => {
               </div>
 
               <div className="flex justify-end items-center gap-2 px-3 py-2 border-t border-[#5C4033]">
-                <Label htmlFor="agree-terms" className="text-[13px] cursor-pointer">동의함</Label>
+                <Label
+                  htmlFor="agree-terms"
+                  className="text-[13px] cursor-pointer"
+                >
+                  동의함
+                </Label>
                 <Checkbox
                   id="agree-terms"
                   checked={agreeTerms}
@@ -548,11 +593,18 @@ const SignUp = () => {
               </div>
 
               <div className="flex justify-end items-center gap-2 px-3 py-2 border-t border-[#5C4033]">
-                <Label htmlFor="agree-privacy" className="text-[13px] cursor-pointer">동의함</Label>
+                <Label
+                  htmlFor="agree-privacy"
+                  className="text-[13px] cursor-pointer"
+                >
+                  동의함
+                </Label>
                 <Checkbox
                   id="agree-privacy"
                   checked={agreePrivacy}
-                  onCheckedChange={(checked: boolean) => setAgreePrivacy(checked)}
+                  onCheckedChange={(checked: boolean) =>
+                    setAgreePrivacy(checked)
+                  }
                   className="data-[state=checked]:border border-[#5C4033] data-[state=checked]:bg-[#5C4033] data-[state=checked]:text-white"
                 />
               </div>
@@ -586,11 +638,18 @@ const SignUp = () => {
 
               {/* 하단 동의 */}
               <div className="flex justify-end items-center gap-2 px-3 py-2 border-t border-[#5C4033]">
-                <Label htmlFor="agree-marketing" className="text-[13px] cursor-pointer">동의함</Label>
+                <Label
+                  htmlFor="agree-marketing"
+                  className="text-[13px] cursor-pointer"
+                >
+                  동의함
+                </Label>
                 <Checkbox
                   id="agree-marketing"
                   checked={agreeMarketing}
-                  onCheckedChange={(checked: boolean) => setAgreeMarketing(checked)}
+                  onCheckedChange={(checked: boolean) =>
+                    setAgreeMarketing(checked)
+                  }
                   className="data-[state=checked]:border border-[#5C4033] data-[state=checked]:bg-[#5C4033] data-[state=checked]:text-white"
                 />
               </div>
@@ -696,7 +755,6 @@ const SignUp = () => {
       </div>
     </div>
   );
-
 };
 
 export { SignUp };

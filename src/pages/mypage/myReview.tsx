@@ -1,13 +1,40 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import sampleImg from "../../assets/sample-product.jpg";
+import { useEffect, useState } from "react";
+import { getMyReviews, deleteReview } from "../../api/reviewApi";
+import type { Review } from "../../api/reviewApi";
 
 export default function MyReview() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<"writable" | "written">(
     "writable"
   );
+  const [reviews, setReviews] = useState<Review[]>([]);
+
+  // 회원 리뷰 불러오기
+  useEffect(() => {
+    getMyReviews()
+      .then((data) => {
+        console.log("API Response:", data);
+        setReviews(data);
+      })
+      .catch(console.error);
+  }, []);
+
+  const handleDelete = async (reviewIdx: number) => {
+    try {
+      await deleteReview(reviewIdx);
+      setReviews((prev) => prev.filter((r) => r.reviewIdx !== reviewIdx));
+      alert("삭제되었습니다.");
+    } catch (error) {
+      console.error(error);
+      alert("삭제 실패");
+    }
+  };
+
+  // 작성 완료 리뷰만 필터링
+  const writtenReviews = reviews.filter((r) => r.status === "ACTIVE");
 
   return (
     <div className="max-w-[700px] mx-auto pb-10">
@@ -20,30 +47,31 @@ export default function MyReview() {
           <ArrowLeft size={28} strokeWidth={1.5} />
         </button>
         <div className="flex-1 text-center">
-          <h2 className="text-[24px] font-bold text-[#5C4033] tracking-tight">리뷰 관리</h2>
+          <h2 className="text-[24px] font-bold text-[#5C4033] tracking-tight">
+            리뷰 관리
+          </h2>
         </div>
       </div>
 
-      {/* 리뷰 상단 탭*/}
+      {/* 리뷰 상단 탭 */}
       <div className="grid grid-cols-2 border-b mb-6 border-[#A8A9AD] max-w-[650px] mx-auto">
         <button
           onClick={() => setActiveTab("writable")}
-          className={`w-full pb-2 font-bold text-[18px] transition cursor-pointer text-center
-            ${activeTab === "writable"
+          className={`w-full pb-2 font-bold text-[18px] transition cursor-pointer text-center ${
+            activeTab === "writable"
               ? "text-[#5C4033] border-b-2 border-[#5C4033]"
               : "text-[#A8A9AD] hover:text-[#5C4033]"
-            }`}
+          }`}
         >
           작성 가능 리뷰
         </button>
-
         <button
           onClick={() => setActiveTab("written")}
-          className={`w-full pb-2 font-bold text-[18px] transition cursor-pointer text-center
-            ${activeTab === "written"
+          className={`w-full pb-2 font-bold text-[18px] transition cursor-pointer text-center ${
+            activeTab === "written"
               ? "text-[#5C4033] border-b-2 border-[#5C4033]"
               : "text-[#A8A9AD] hover:text-[#5C4033]"
-            }`}
+          }`}
         >
           작성 완료 리뷰
         </button>
@@ -58,51 +86,65 @@ export default function MyReview() {
 
       {activeTab === "written" && (
         <div className="space-y-4 px-6">
-          {/* 리뷰 카드 (Final Redesigned Layout) */}
-          <div className="border border-[#EEEEEE] rounded-[10px] shadow-sm overflow-hidden">
-            {/* 상단: 상품 정보 및 액션 버튼 */}
-            <div className="p-4 py-3 flex items-center gap-4">
-              <div className="w-[52px] h-[52px] flex-shrink-0 overflow-hidden rounded-[8px]">
-                <img
-                  src={sampleImg}
-                  alt="상품 이미지"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-bold text-[14px] text-[#333] truncate">
-                  배색 리버시블 컴포트핏 다운패딩(블랙)
-                </p>
-                <div className="flex items-center gap-1 text-[12px] text-[#A8A9AD] font-medium mt-0.5">
-                  <span>블랙/FREE</span>
+          {writtenReviews.length === 0 && (
+            <div className="text-center font-medium text-[#A8A9AD] py-10 text-[16px]">
+              작성 완료된 리뷰가 없습니다.
+            </div>
+          )}
+          {writtenReviews.map((review) => (
+            <div
+              key={review.reviewIdx}
+              className="border border-[#EEEEEE] rounded-[10px] shadow-sm overflow-hidden"
+            >
+              {/* 상단: 상품 정보 및 액션 버튼 */}
+              <div className="p-4 py-3 flex items-center gap-4">
+                <div className="w-[52px] h-[52px] flex-shrink-0 overflow-hidden rounded-[8px]">
+                  <img
+                    src={sampleImg} // 추후 review.productImg로 교체 가능
+                    alt="상품 이미지"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold text-[14px] text-[#333] truncate">
+                    {review.productName || "상품 이름 없음"}
+                  </p>
+                  <div className="flex items-center gap-1 text-[12px] text-[#A8A9AD] font-medium mt-0.5">
+                    <span>{review.option || "옵션 정보 없음"}</span>
+                  </div>
+                </div>
+                <div className="flex gap-1.5 min-w-fit">
+                  <button className="border border-[#A8A9AD] px-3 h-7 py-0.5 rounded-[5px] text-[11px] font-bold transition cursor-pointer text-[#333]">
+                    수정
+                  </button>
+                  <button
+                    onClick={() => handleDelete(review.reviewIdx)}
+                    className="border border-[#A8A9AD] bg-[#5C4033] text-white px-3 h-7 py-0.5 rounded-[5px] text-[11px] font-bold transition cursor-pointer"
+                  >
+                    삭제
+                  </button>
                 </div>
               </div>
-              <div className="flex gap-1.5 min-w-fit">
-                <button className="border border-[#A8A9AD] px-3 h-7 py-0.5 rounded-[5px] text-[11px] font-bold transition cursor-pointer text-[#333]">
-                  수정
-                </button>
-                <button className="border border-[#A8A9AD] bg-[#5C4033] text-white px-3 h-7 py-0.5 rounded-[5px] text-[11px] font-bold transition cursor-pointer">
-                  삭제
-                </button>
+
+              <hr className="border-[#F5F5F5] mx-4" />
+
+              {/* 하단: 리뷰 내용 및 별점 */}
+              <div className="p-4 pt-3">
+                <div className="mb-2.5">
+                  <div className="text-yellow-400 text-sm mb-0.5">
+                    {"★".repeat(Math.round(review.score)) +
+                      "☆".repeat(5 - Math.round(review.score))}
+                  </div>
+                  <p className="text-[12px] text-[#A8A9AD] font-medium">
+                    작성일 {review.createdAt?.split("T")[0]}
+                  </p>
+                </div>
+                <p className="text-[14px] text-[#333] font-medium leading-relaxed">
+                  {review.content}
+                </p>
               </div>
             </div>
-
-            {/* 구분선 */}
-            <hr className="border-[#F5F5F5] mx-4" />
-
-            {/* 하단: 리뷰 내용 및 별점 */}
-            <div className="p-4 pt-3">
-              <div className="mb-2.5">
-                <div className="text-yellow-400 text-sm mb-0.5">★★★★☆</div>
-                <p className="text-[12px] text-[#A8A9AD] font-medium">작성일 2024.07.08</p>
-              </div>
-
-              {/* 리뷰 텍스트 */}
-              <p className="text-[14px] text-[#333] font-medium leading-relaxed">
-                완전 보들보들 따뜻하고 진짜 가벼워요! 색감도 화면이랑 똑같고 배송도 빨랐어요.
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
       )}
     </div>

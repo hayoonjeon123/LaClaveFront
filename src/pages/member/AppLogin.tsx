@@ -26,9 +26,13 @@ const AppLogin = () => {
       formData.append("memberPw", memberPw);
 
       // 2. 백엔드의 SecurityConfig에서 설정한 loginProcessingUrl("/loginProc")로 전송
-      const response = await axios.post("http://localhost:8080/loginProc", formData, {
-        withCredentials: true, // 세션/쿠키 정보 포함
-      });
+      const response = await axios.post(
+        "http://localhost:8080/loginProc",
+        formData,
+        {
+          withCredentials: true, // 세션/쿠키 정보 포함
+        }
+      );
 
       if (response.status === 200) {
         alert("로그인 성공!");

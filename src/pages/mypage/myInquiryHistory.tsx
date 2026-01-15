@@ -15,7 +15,7 @@ export default function MyInquiryHistory() {
   const [inquiries, setInquiries] = useState<any[]>([]);
 
   useEffect(() => {
-    getInquiryList(memberIdx)
+    getInquiryList()
       .then((res) => {
         console.log(" inquiry response:", res.data);
         setInquiries(res.data);
@@ -23,7 +23,7 @@ export default function MyInquiryHistory() {
       .catch((err) => {
         console.error("문의 목록 조회 실패", err);
       });
-  }, [memberIdx]);
+  }, []);
 
   return (
     <div className="pb-10">
@@ -84,7 +84,7 @@ export default function MyInquiryHistory() {
                       alert("문의가 삭제되었습니다.");
 
                       // 삭제 후 목록 다시 조회
-                      const res = await getInquiryList(memberIdx);
+                      const res = await getInquiryList();
                       setInquiries(res.data);
                     } catch (error) {
                       console.error(error);
