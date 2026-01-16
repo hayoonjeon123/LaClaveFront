@@ -98,9 +98,9 @@ export function Best() {
                             )}
 
                             <div className="bg-gray-200 mb-4 overflow-hidden relative aspect-[3/4]">
-                                {product.image ? (
+                                {product.mainImageUrl ? (
                                     <img
-                                        src={product.image}
+                                        src={product.mainImageUrl}
                                         alt={product.productName}
                                         className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
                                     />

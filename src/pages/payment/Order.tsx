@@ -16,6 +16,8 @@ interface OrderItem {
     quantity: number;
     price: number;
     image: string;
+    colorCommonIdx: number;
+    sizeCommonIdx: number;
 }
 
 interface MemberInfo {
@@ -57,6 +59,16 @@ const Order = () => {
                 setMemberInfo(response.data);
             } catch (error) {
                 console.error("회원 정보 조회 실패:", error);
+                // 임시 더미 데이터 사용 (개발용)
+                setMemberInfo({
+                    memberName: "홍길동",
+                    memberId: "test123",
+                    email: "test@example.com",
+                    postCode: "12345",
+                    address: "서울시 강남구",
+                    addressDetail: "테헤란로 123",
+                    point: 5000
+                });
             }
         };
         fetchMemberInfo();
@@ -270,6 +282,57 @@ const Order = () => {
                     </SelectContent>
                 </Select>
                 <button
+                    onClick={async () => {
+                        if (orderItems.length === 0) {
+                            alert("주문할 상품이 없습니다.");
+                            return;
+                        }
+
+                        try {
+                            // 주문 데이터 생성
+                            const orderData = {
+                                addrIdx: 1, // 임시로 1번 배송지 사용 (나중에 실제 배송지 선택 기능 추가 필요)
+                                usedPoint: appliedPoints,
+                                totalPrice: finalAmount,
+                                deliveryMsg: deliveryMessage,
+                                orderItems: orderItems.map(item => {
+                                    // option 문자열에서 색상과 사이즈 추출 (예: "khaki / XL")
+                                    const [color, size] = item.option.split(' / ').map(s => s.trim());
+                                    console.log(`상품: ${item.name}, 색상PK: ${item.colorCommonIdx}`);
+                                    return {
+                                        productIdx: item.id,
+                                        productName: item.name,
+                                        colorCode: item.colorCommonIdx,
+                                        sizeCode: item.sizeCommonIdx,
+                                        quantity: item.quantity,
+                                        price: item.price,
+                                        discountPrice: 0 // 할인 없음 (나중에 쿠폰/할인 기능 추가 시 수정)
+                                    };
+                                })
+                            };
+
+                            console.log("=== 주문 생성 요청 ===", orderData);
+
+                            const response = await axios.post("/api/orders/create", orderData, {
+                                withCredentials: true
+                            });
+
+                            console.log("=== 주문 생성 응답 ===", response.data);
+
+                            // 주문 번호를 받아서 결제 완료 페이지로 이동
+                            const orderNo = response.data;
+                            alert(`주문이 완료되었습니다! 주문번호: ${orderNo}`);
+                            navigate("/order-complete", { state: { orderNo } });
+
+                        } catch (error: any) {
+                            console.error("주문 생성 실패:", error);
+                            if (error.response?.data) {
+                                alert(`주문 실패: ${error.response.data}`);
+                            } else {
+                                alert("주문 처리 중 오류가 발생했습니다.");
+                            }
+                        }
+                    }}
                     className="w-full h-16 border border-[#000000] rounded-[10px] text-[18px] font-semibold hover:bg-[#5C4033] hover:text-white transition-all cursor-pointer shadow-sm"
                     disabled={orderItems.length === 0}
                 >

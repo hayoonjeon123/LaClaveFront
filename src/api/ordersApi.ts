@@ -28,7 +28,7 @@ export interface Order {
   };
 }
 
-const API_BASE_URL = "http://localhost:8080/api/my";
+const API_BASE_URL = "/api/my"; // 프록시를 통해 백엔드로 전달
 
 // === 마이페이지 주문 조회 API ===
 export const getMyOrders = async (): Promise<Order[]> => {

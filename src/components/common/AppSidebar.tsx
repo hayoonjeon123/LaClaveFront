@@ -7,9 +7,6 @@ import { ChevronDown } from "lucide-react"
 import {
     Sheet,
     SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
 } from "@/components/ui/sheet"
 import { useState, useEffect } from "react"
 
@@ -65,18 +62,16 @@ function AppSidebar({ open, onOpenChange }: AppSidebarProps) {
                     {/* 카테고리 + 서브메뉴 */}
                     <div className="flex-1 mt-4 px-5 py-2">
                         <div className="w-full flex flex-col gap-5">
-                            {CLASS_CATEGORY.map((menu, index) => (
+                            {CLASS_CATEGORY.map((menu) => (
                                 <div key={menu.id} className="w-full">
                                     {/* 메인 메뉴 버튼 */}
                                     <button
                                         onClick={() => {
                                             if (menu.subItems) {
-                                                // 서브메뉴가 있으면 토글
+                                                // 서브메뉴가 있으면 토글만 (페이지 이동 없음)
                                                 toggleMenu(menu.id);
-                                                // 대분류를 눌렀을 때 해당 카테고리 전체보기로 이동 (예: 105번)
-                                                navigate(`/${menu.path}`);
                                             } else {
-                                                // 서브메뉴가 없으면(전체, 베스트, 고객센터 등) 바로 이동
+                                                // 서브메뉴가 없으면(베스트, 고객센터 등) 바로 이동
                                                 navigate(menu.path);
                                                 onOpenChange?.(false);
                                             }

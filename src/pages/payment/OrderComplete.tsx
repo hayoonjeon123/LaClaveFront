@@ -54,16 +54,16 @@ const OrderComplete = () => {
       {/* 4. 하단 버튼 영역 */}
       <div className="flex gap-4">
         <button
-          className="flex-1 h-16 border border-gray-400 text-[16px] font-medium hover:bg-[#5C4033] hover:text-white transition-colors cursor-pointer"
+          className="flex-1 h-14 border border-[#A8A9AD] rounded-[10px] text-[18px] font-bold hover:bg-gray-50 transition-colors cursor-pointer"
           onClick={() => (window.location.href = "/")}
         >
           홈으로
         </button>
         <button
-          className="flex-1 h-16 border border-gray-400  text-[16px] font-medium hover:bg-[#5C4033] hover:text-white transition-colors cursor-pointer"
-          onClick={() => (window.location.href = "")}
+          className="flex-1 h-14 bg-[#634b41] border-2 border-[#A8A9AD] text-white text-[18px] rounded-[10px] font-bold hover:bg-[#4d3a32] transition-colors cursor-pointer shadow-md"
+          onClick={() => (window.location.href = "/myPage/orders")}
         >
-          쇼핑 더하기
+          주문내역
         </button>
       </div>
     </div>

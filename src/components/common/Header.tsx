@@ -2,6 +2,7 @@ import Logo from "@/assets/Logo.png";
 import { SearchIcon } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 // 사이드바 연결(하윤)
 interface HeaderProps {
@@ -18,14 +19,22 @@ function Header({ onMenuClick }: HeaderProps) {
     setIsLoggedIn(loggedIn);
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     if (window.confirm("로그아웃 하시겠습니까?")) {
+      try {
+        // 백엔드 로그아웃 API 호출
+        await axios.post("/api/logout", {}, { withCredentials: true });
+      } catch (error) {
+        console.error("로그아웃 API 호출 실패:", error);
+      }
+
+      // localStorage 정리
       localStorage.removeItem("isLoggedIn");
       localStorage.removeItem("memberId");
       setIsLoggedIn(false);
       alert("로그아웃 되었습니다.");
       navigate("/");
-      window.location.reload(); // 상태 반영을 위해 새로고침
+      window.location.reload();
     }
   };
 

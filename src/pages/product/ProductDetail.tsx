@@ -98,8 +98,11 @@ function ProductDetail() {
                 size: selectedSize,
                 color: selectedColor,
                 quantity: 1, // 기본 수량 1
-                price: productData.productPrice
+                price: productData.productPrice,
+                discountPrice: productData.discount > 0 ? Math.floor(productData.productPrice * (productData.discount / 100)) : 0
             };
+
+            console.log("=== 장바구니 추가 요청 데이터 ===", cartData);
 
             const response = await axios.post("/api/cart/add", cartData, {
                 withCredentials: true
@@ -254,7 +257,7 @@ function ProductDetail() {
                                 </SelectTrigger>
                                 <SelectContent>
                                     {sortSizes(productData.sizes || []).map((size: string) => (
-                                        <SelectItem key={size} value={size.toLowerCase()}>{size.toUpperCase()}</SelectItem>
+                                        <SelectItem key={size} value={size}>{size.toUpperCase()}</SelectItem>
                                     ))}
                                 </SelectContent>
 
@@ -267,7 +270,7 @@ function ProductDetail() {
                                 </SelectTrigger>
                                 <SelectContent>
                                     {(productData.colors || []).map((color: string) => (
-                                        <SelectItem key={color} value={color.toLowerCase()}>
+                                        <SelectItem key={color} value={color}>
                                             {getDisplayColor(color)}
                                         </SelectItem>
                                     ))}

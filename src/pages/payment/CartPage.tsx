@@ -12,6 +12,8 @@ interface CartItem {
     quantity: number;
     image: string;
     checked: boolean;
+    colorCommonIdx: number;
+    sizeCommonIdx: number;
 }
 
 const Cart = () => {
@@ -27,19 +29,34 @@ const Cart = () => {
                     withCredentials: true,
                 });
 
+                console.log("=== 장바구니 조회 응답 ===", response.data);
+
+                // HTML 응답인 경우 (로그인 페이지로 리다이렉트된 경우)
+                if (typeof response.data === 'string' && response.data.includes('<!DOCTYPE html>')) {
+                    console.error("로그인이 필요합니다 (HTML 응답 감지)");
+                    alert("로그인이 필요한 서비스입니다.");
+                    navigate("/loginProc");
+                    return;
+                }
+
                 // 응답이 배열인지 확인
                 if (Array.isArray(response.data)) {
                     const data = response.data.map((item: any) => ({
                         id: item.cartItemIdx,
                         cartItemIdx: item.cartItemIdx,
                         name: item.productName,
-                        option: `${item.colorName} / ${item.sizeName}`,
+                        option: `${item.color?.codeName} / ${item.size?.codeName}`,
                         price: item.price,
                         quantity: item.quantity,
                         image: item.imageUrl,
                         checked: true,
+                        colorCommonIdx: item.color?.commonIdx,
+                        sizeCommonIdx: item.size?.commonIdx,
                     }));
+                    console.log("=== 변환된 장바구니 데이터 ===", data);
                     setCartItems(data);
+                } else {
+                    console.error("장바구니 응답이 배열이 아닙니다:", response.data);
                 }
             } catch (error: any) {
                 console.error("장바구니 조회 실패:", error);

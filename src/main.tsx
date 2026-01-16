@@ -29,6 +29,7 @@ import { AppLogin } from "./pages/member/AppLogin";
 import { ProductDetail } from "./pages/product/ProductDetail";
 import { Cart } from "./pages/payment/CartPage";
 import { Order } from "./pages/payment/Order";
+import { OrderComplete } from "./pages/payment/OrderComplete";
 import { FindAccount } from "./pages/member/FindAccount";
 import { FindResult } from "./pages/member/FindResult";
 import { ProductPage } from "./pages/product/ProductPage";
@@ -90,6 +91,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="faq" element={<FAQ />} />
           <Route path="cart" element={<Cart />} />
           <Route path="order" element={<Order />} />
+          <Route path="order-complete" element={<OrderComplete />} />
           <Route path="findaccount" element={<FindAccount />} />
           <Route path="find-result/:type" element={<FindResult />} />
           <Route path="faq" element={<FAQ />} />
