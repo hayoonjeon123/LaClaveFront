@@ -88,6 +88,26 @@ export default function MyOrders() {
                       <p>사이즈 : {detail.sizeCode || "-"}</p>
                       <p>수량 : {detail.quantity}개</p>
                     </div>
+
+                    {/* ✅ 리뷰쓰기 버튼 (detail 기준) */}
+                    <button
+                      onClick={() =>
+                        navigate("/writeReview", {
+                          state: {
+                            ordersIdx: order.ordersIdx,
+                            productIdx: detail.productIdx,
+                            productName: detail.productName,
+
+                            optionInfo: `색상: ${detail.colorCode}, 사이즈: ${detail.sizeCode}`,
+                          },
+                        })
+                      }
+                      className="mt-3 h-[36px] px-4 border border-[#A8A9AD]
+                   rounded-[8px] text-[14px] font-bold
+                   hover:bg-[#5C4033] hover:text-white transition"
+                    >
+                      리뷰쓰기
+                    </button>
                   </div>
 
                   {/* Status & Price */}
@@ -101,25 +121,6 @@ export default function MyOrders() {
                   </div>
                 </div>
               ))}
-
-              {/* Action Buttons */}
-              <div className="grid grid-cols-3 gap-3 mb-3">
-                <button className="h-[48px] border border-[#A8A9AD] text-black rounded-[10px] text-[16px] font-bold hover:bg-[#5C4033] hover:text-white transition cursor-pointer">
-                  취소
-                </button>
-                <button
-                  onClick={() => navigate("/writeReview")}
-                  className="h-[48px] border border-[#A8A9AD] text-black rounded-[10px] text-[16px] font-bold hover:bg-[#5C4033] hover:text-white transition cursor-pointer"
-                >
-                  리뷰쓰기
-                </button>
-                <button
-                  onClick={() => navigate("/myInquiryHistory")}
-                  className="h-[48px] border border-[#A8A9AD] text-black rounded-[10px] text-[16px] font-bold hover:bg-[#5C4033] hover:text-white transition cursor-pointer"
-                >
-                  문의하기
-                </button>
-              </div>
 
               {/* Collapsible Delivery & Payment Info */}
               {order.delivery && (
