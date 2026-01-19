@@ -11,10 +11,12 @@ import {
 declare global {
     interface Window {
         INIStdPay: any;
+        IMP: any;
     }
 }
 interface OrderItem {
     id: number;
+    cartItemIdx?: number;
     name: string;
     option: string;
     quantity: number;
@@ -58,26 +60,44 @@ const Order = () => {
 
         // 이니시스 스크립트 동적 로드
         const loadInicisScript = () => {
-            // 이미 로드되어 있으면 스킵
-            if (window.INIStdPay) {
-                console.log("이니시스 스크립트 이미 로드됨");
-                return;
-            }
+            return new Promise((resolve, reject) => {
+                // 이미 로드되어 있으면 즉시 resolve
+                if (window.INIStdPay) {
+                    console.log("이니시스 스크립트 이미 로드됨");
+                    resolve(true);
+                    return;
+                }
 
-            const script = document.createElement('script');
-            script.src = 'https://stgstdpay.inicis.com/stdjs/INIStdPay.js';
-            script.type = 'text/javascript';
-            script.charset = 'UTF-8';
-            script.onload = () => {
-                console.log("이니시스 스크립트 로드 완료");
-            };
-            script.onerror = () => {
-                console.error("이니시스 스크립트 로드 실패");
-            };
-            document.body.appendChild(script);
+                // 이미 스크립트 태그가 있는지 확인
+                const existingScript = document.querySelector('script[src*="INIStdPay.js"]');
+                if (existingScript) {
+                    console.log("이니시스 스크립트 로딩 중...");
+                    // 스크립트가 로드될 때까지 대기
+                    existingScript.addEventListener('load', () => resolve(true));
+                    existingScript.addEventListener('error', () => reject(new Error("스크립트 로드 실패")));
+                    return;
+                }
+
+                // 새로운 스크립트 태그 생성
+                const script = document.createElement('script');
+                script.src = 'https://stgstdpay.inicis.com/stdjs/INIStdPay.js';
+                script.type = 'text/javascript';
+                script.charset = 'UTF-8';
+                script.onload = () => {
+                    console.log("이니시스 스크립트 로드 완료");
+                    resolve(true);
+                };
+                script.onerror = () => {
+                    console.error("이니시스 스크립트 로드 실패");
+                    reject(new Error("스크립트 로드 실패"));
+                };
+                document.body.appendChild(script);
+            });
         };
 
-        loadInicisScript();
+        loadInicisScript().catch(error => {
+            console.error("이니시스 초기화 실패:", error);
+        });
 
         // 회원 정보 가져오기
         const fetchMemberInfo = async () => {
@@ -86,16 +106,8 @@ const Order = () => {
                 setMemberInfo(response.data);
             } catch (error) {
                 console.error("회원 정보 조회 실패:", error);
-                // 임시 더미 데이터 사용 (개발용)
-                setMemberInfo({
-                    memberName: "홍길동",
-                    memberId: "test123",
-                    email: "test@example.com",
-                    postCode: "12345",
-                    address: "서울시 강남구",
-                    addressDetail: "테헤란로 123",
-                    point: 5000
-                });
+                alert("로그인 정보가 없거나 세션이 만료되었습니다.");
+                navigate("/login");
             }
         };
         fetchMemberInfo();
@@ -114,7 +126,7 @@ const Order = () => {
         }
 
         try {
-            // [STEP 1] 백엔드 주문 생성 (기존 코드)
+            // [STEP 1] 주문 생성
             const orderData = {
                 addrIdx: 1,
                 usedPoint: appliedPoints,
@@ -133,60 +145,85 @@ const Order = () => {
 
             console.log("=== 주문 생성 요청 ===", orderData);
             const response = await axios.post("/api/orders/create", orderData, { withCredentials: true });
-            const orderNo = response.data; // 예: "20260116-2530142d"
+            const orderNo = response.data;
             console.log("=== 주문 생성 성공, 번호:", orderNo);
 
-            // [STEP 2] 백엔드에서 이니시스 결제 데이터 가져오기 (추가되는 부분)
-            // 주의: 백엔드에 이 API가 만들어져 있어야 합니다!
-            const payInfoRes = await axios.get(`/api/orders/payment/ini-request/${orderNo}`);
-            const data = payInfoRes.data;
-
-            console.log("=== 이니시스 결제 데이터 ===", data);
-
-            // [STEP 3] 이니시스 결제창 호출
-            if (window.INIStdPay) {
-                // 기존 폼 삭제 (중복 방지)
-                const oldForm = document.getElementById('SendPayForm_id');
-                if (oldForm) oldForm.remove();
-
-                const form = document.createElement('form');
-                form.id = 'SendPayForm_id';
-                form.method = 'POST';
-                form.style.display = 'none';
-
-                const params: any = {
-                    version: "1.0",
-                    mid: data.mid || "",
-                    oid: data.orderNo || "",
-                    price: String(data.price || "0"),
-                    timestamp: data.timestamp || "",
-                    signature: data.signature || "",
-                    mKey: data.mKey || "",
-                    currency: "WON",
-                    goodname: data.productName || "상품",
-                    buyername: data.buyerName || "",
-                    buyertel: data.buyerTel || "01000000000",
-                    buyeremail: data.buyerEmail || "",
-                    acceptmethod: "HPP(1):below1000:va_receipt",
-                    payMethod: "Card",
-                    returnUrl: "http://localhost:8080/api/payment/callback",
-                };
-
-                console.log("=== 이니시스 파라미터 ===", params);
-
-                Object.keys(params).forEach(key => {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = key;
-                    input.value = String(params[key] || ""); // 명시적으로 문자열 변환
-                    form.appendChild(input);
-                });
-
-                document.body.appendChild(form);
-                window.INIStdPay.pay('SendPayForm_id'); // 🚀 팝업창 실행!
-            } else {
-                alert("결제 모듈을 불러오지 못했습니다. 페이지를 새로고침 해주세요.");
+            // [STEP 2] 포트원 결제 요청
+            if (!window.IMP) {
+                alert("포트원 SDK를 불러오지 못했습니다. 페이지를 새로고침 해주세요.");
+                return;
             }
+
+            // 포트원 가맹점 식별코드 (테스트용)
+            const IMP = window.IMP;
+            IMP.init("imp67574350"); // 포트원 공식 테스트 가맹점 식별코드
+
+            // 결제 요청
+            IMP.request_pay({
+                pg: "html5_inicis",  // 이니시스 웹표준 (가장 안정적)
+                pay_method: "card",             // 결제 수단
+                merchant_uid: orderNo,          // 주문 번호
+                name: orderItems[0].name + (orderItems.length > 1 ? ` 외 ${orderItems.length - 1}건` : ""),
+                amount: 1,                    // ⚠️ 테스트용 100원 (실제 금액: finalAmount)
+                buyer_email: memberInfo?.email || "test@test.com",
+                buyer_name: memberInfo?.memberName || "구매자",
+                buyer_tel: "01000000000",
+                buyer_addr: memberInfo?.address || "",
+                buyer_postcode: memberInfo?.postCode || "",
+            }, async (rsp: any) => {
+                // 결제 완료 콜백
+                if (rsp.success) {
+                    console.log("✅ 결제 성공 - 전체 응답:", rsp);
+                    console.log("✅ imp_uid (externalTransaction):", rsp.imp_uid);
+                    console.log("✅ merchant_uid:", rsp.merchant_uid);
+
+                    try {
+                        // [STEP 3] 백엔드 결제 승인 처리 (DB 저장)
+                        const approveData = {
+                            orderNo: orderNo,
+                            externalTransaction: rsp.imp_uid,
+                            payWay: rsp.pay_method,
+                            amount: rsp.paid_amount
+                        };
+
+                        console.log("=== 결제 승인 요청 ===", approveData);
+                        await axios.post("/api/orders/approve", approveData, { withCredentials: true });
+                        console.log("=== DB 저장 완료 ===");
+
+                        // [STEP 4] 장바구니 아이템 삭제 (장바구니에서 온 경우)
+                        const deletePromises = orderItems
+                            .filter(item => item.cartItemIdx)
+                            .map(item =>
+                                axios.post(
+                                    "/api/cart/delete",
+                                    { cartItemIdx: item.cartItemIdx },
+                                    { withCredentials: true }
+                                ).catch(err => console.warn(`장바구니 삭제 실패 (ID ${item.cartItemIdx})`))
+                            );
+
+                        if (deletePromises.length > 0) {
+                            await Promise.all(deletePromises);
+                            console.log("=== 장바구니 아이템 삭제 완료 ===");
+                        }
+
+                        // [STEP 5] 결제 완료 페이지로 이동
+                        navigate("/order-complete", {
+                            state: {
+                                orderNo: orderNo,
+                                impUid: rsp.imp_uid,
+                                merchantUid: rsp.merchant_uid
+                            }
+                        });
+                    } catch (error) {
+                        console.error("DB 저장 실패:", error);
+                        alert("결제는 완료되었으나 주문 정보 저장 중 오류가 발생했습니다. 고객센터에 문의해주세요.");
+                    }
+
+                } else {
+                    console.error("❌ 결제 실패:", rsp);
+                    alert(`결제에 실패했습니다.\n${rsp.error_msg}`);
+                }
+            });
 
         } catch (error: any) {
             console.error("결제 프로세스 에러:", error);
@@ -303,7 +340,7 @@ const Order = () => {
                                 <p className="text-[12px] text-gray-500 ml-1">
                                     보유 적립금{" "}
                                     <strong className="text-black ml-1">
-                                        {memberInfo.point.toLocaleString()}원
+                                        {(memberInfo?.point || 0).toLocaleString()}원
                                     </strong>
                                 </p>
                                 <div className="flex border border-[#000000] rounded overflow-hidden h-[45px]">
@@ -395,7 +432,7 @@ const Order = () => {
                         <SelectItem value="무통장 입금">무통장 입금</SelectItem>
                     </SelectContent>
                 </Select>
-                <button
+                <button type="button"
                     onClick={handlePaymentSubmit}
                     className="w-full h-16 border border-[#000000] rounded-[10px] text-[18px] font-semibold hover:bg-[#5C4033] hover:text-white transition-all cursor-pointer shadow-sm"
                     disabled={orderItems.length === 0}

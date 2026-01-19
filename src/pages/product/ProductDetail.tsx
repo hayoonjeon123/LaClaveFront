@@ -102,8 +102,8 @@ function ProductDetail() {
         discountPrice:
           productData.discount > 0
             ? Math.floor(
-                productData.productPrice * (productData.discount / 100)
-              )
+              productData.productPrice * (productData.discount / 100)
+            )
             : 0,
       };
 
@@ -137,13 +137,14 @@ function ProductDetail() {
     if (!productData) return;
 
     const handleScroll = () => {
-      if (
-        window.innerHeight + window.scrollY >=
-        document.body.offsetHeight - 50
-      ) {
-        setActiveTab("inquiry");
-        return;
-      }
+      // 페이지 하단 강제 전환 로직 삭제
+      // if (
+      //   window.innerHeight + window.scrollY >=
+      //   document.body.offsetHeight - 50
+      // ) {
+      //   setActiveTab("inquiry");
+      //   return;
+      // }
 
       const headerOffset = 100;
       const currentScrollPos = window.scrollY + headerOffset;
@@ -359,11 +360,10 @@ function ProductDetail() {
               >
                 <div className="flex flex-col items-center">
                   <Heart
-                    className={`w-8 h-8 transition-colors ${
-                      isLiked
+                    className={`w-8 h-8 transition-colors ${isLiked
                         ? "fill-red-500 text-red-500"
                         : "text-[#5C4033] group-hover:text-red-400"
-                    }`}
+                      }`}
                   />
                   <span className="text-[12px] font-bold mt-1 text-gray-600">
                     0
@@ -405,16 +405,14 @@ function ProductDetail() {
                 }
               }}
               className={`flex-1 h-full text-[16px] font-bold transition-all 
-                                ${
-                                  index !== tabConfig.length - 1
-                                    ? "border-r border-[#A8A9AD]"
-                                    : ""
-                                }
-                                ${
-                                  activeTab === tab.id
-                                    ? "bg-[#5C4033] text-white"
-                                    : "bg-white text-black hover:bg-gray-50"
-                                }`}
+                                ${index !== tabConfig.length - 1
+                  ? "border-r border-[#A8A9AD]"
+                  : ""
+                }
+                                ${activeTab === tab.id
+                  ? "bg-[#5C4033] text-white"
+                  : "bg-white text-black hover:bg-gray-50"
+                }`}
             >
               {tab.label}
             </button>
@@ -426,8 +424,8 @@ function ProductDetail() {
           {tabConfig.map((tab) => (
             <div key={tab.id} id={tab.id} className="scroll-mt-[100px]">
               {tab.type === "image" &&
-              Array.isArray(tab.content) &&
-              tab.content.length > 0 ? (
+                Array.isArray(tab.content) &&
+                tab.content.length > 0 ? (
                 <div className="flex flex-col items-center gap-0 w-full">
                   {tab.content.map((img, index) => (
                     <img

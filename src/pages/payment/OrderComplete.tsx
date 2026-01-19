@@ -1,6 +1,9 @@
 import Logo from "@/assets/Logo_brown.png";
+import { useNavigate } from "react-router-dom";
 
 const OrderComplete = () => {
+  const navigate = useNavigate();
+
   const orderInfo = {
     orderNumber: "20251603947",
     date: "2025.06.13 오후 15:33",
@@ -55,13 +58,13 @@ const OrderComplete = () => {
       <div className="flex gap-4">
         <button
           className="flex-1 h-14 border border-[#A8A9AD] rounded-[10px] text-[18px] font-bold hover:bg-gray-50 transition-colors cursor-pointer"
-          onClick={() => (window.location.href = "/")}
+          onClick={() => navigate("/")}
         >
           홈으로
         </button>
         <button
           className="flex-1 h-14 bg-[#634b41] border-2 border-[#A8A9AD] text-white text-[18px] rounded-[10px] font-bold hover:bg-[#4d3a32] transition-colors cursor-pointer shadow-md"
-          onClick={() => (window.location.href = "/myPage/orders")}
+          onClick={() => navigate("/myOrders")}
         >
           주문내역
         </button>
@@ -71,3 +74,4 @@ const OrderComplete = () => {
 };
 
 export { OrderComplete };
+
