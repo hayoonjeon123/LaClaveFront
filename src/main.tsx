@@ -1,4 +1,5 @@
 import { StrictMode } from "react";
+import { SearchResult } from "./pages/product/SearchResult";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
@@ -89,6 +90,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="product/:productIdx" element={<ProductDetail />} />
           <Route path="category/:categoryName" element={<ProductPage />} />
           <Route path="best" element={<Best />} />
+          <Route path="search" element={<SearchResult />} />
           <Route path="myAi" element={<MyAi />} />
           <Route path="faq" element={<FAQ />} />
           <Route path="cart" element={<Cart />} />

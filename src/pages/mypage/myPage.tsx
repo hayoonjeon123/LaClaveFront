@@ -41,13 +41,15 @@ function ProductCard({ product }: { product: any }) {
   }
 
   // 가격 포맷팅 처리
-  const priceDisplay = typeof product.price === 'number'
-    ? product.price.toLocaleString() + "원"
-    : product.price;
+  const actualPrice = product.productPrice !== undefined ? product.productPrice : product.price;
+  const priceDisplay = typeof actualPrice === 'number'
+    ? actualPrice.toLocaleString() + "원"
+    : actualPrice;
 
-  const discountDisplay = typeof product.productDiscountRate === 'number' && product.productDiscountRate > 0
-    ? product.productDiscountRate + "%"
-    : product.discount; // 기존 더미 데이터 호환을 위해
+  const actualDiscount = product.productDiscountRate !== undefined ? product.productDiscountRate : product.discount;
+  const discountDisplay = typeof actualDiscount === 'number' && actualDiscount > 0
+    ? actualDiscount + "%"
+    : (typeof actualDiscount === 'string' ? actualDiscount : null);
 
   const nameDisplay = product.productName || product.name;
 
@@ -61,9 +63,9 @@ function ProductCard({ product }: { product: any }) {
             <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-200 text-xs">No Image</div>
           )}
         </div>
-        <div className="space-y-1">
-          <p className="text-[12px] font-medium line-clamp-2 h-[32px]">{nameDisplay}</p>
-          <div className="flex gap-2 items-center">
+        <div className="space-y-0">
+          <p className="text-[12px] font-medium line-clamp-2 leading-tight">{nameDisplay}</p>
+          <div className="flex gap-2 items-center mt-0.5">
             {discountDisplay && (
               <span className="text-red-500 font-bold text-[13px]">{discountDisplay}</span>
             )}

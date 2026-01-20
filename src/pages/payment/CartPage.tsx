@@ -105,7 +105,7 @@ const Cart = () => {
     }
 
     return (
-        <div className="w-full max-w-[1200px] mx-auto py-20 px-6 font-sans">
+        <div className="w-full max-w-[1200px] mx-auto py-20 px-6">
             <h2 className="text-center text-[32px] font-bold mb-16 tracking-tight">
                 장바구니
             </h2>

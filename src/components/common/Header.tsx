@@ -1,6 +1,6 @@
 import Logo from "@/assets/Logo.png";
 import { SearchIcon } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axiosInstance from "@/api/axiosInstance";
 
@@ -12,6 +12,23 @@ interface HeaderProps {
 function Header({ onMenuClick }: HeaderProps) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // 페이지 이동 시 검색어 초기화 (검색 결과 페이지가 아닐 경우)
+  useEffect(() => {
+    if (location.pathname !== "/search") {
+      setSearchTerm("");
+    }
+  }, [location.pathname]);
+
+  const handleSearch = () => {
+    if (!searchTerm.trim()) {
+      alert("검색어를 입력해주세요.");
+      return;
+    }
+    navigate(`/search?keyword=${encodeURIComponent(searchTerm)}`);
+  };
 
   useEffect(() => {
     const checkLoginStatus = async () => {
@@ -145,9 +162,20 @@ function Header({ onMenuClick }: HeaderProps) {
         <input
           type="text"
           placeholder="검색어를 입력하세요"
-          className="flex-2 text-[14px] outline-none bg-transparent"
+          className="flex-2 text-[14px] outline-none bg-transparent w-full"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSearch();
+            }
+          }}
         />
-        <SearchIcon size={17} />
+        <SearchIcon
+          size={17}
+          className="cursor-pointer"
+          onClick={handleSearch}
+        />
       </div>
     </header>
   );

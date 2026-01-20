@@ -250,7 +250,7 @@ const Order = () => {
     }
 
     return (
-        <div className="w-full max-w-[800px] mx-auto py-20 px-6 font-sans text-[#000]">
+        <div className="w-full max-w-[800px] mx-auto py-20 px-6 text-[#000]">
             <h2 className="text-center text-[24px] font-bold mb-12 tracking-widest">
                 ORDER
             </h2>
