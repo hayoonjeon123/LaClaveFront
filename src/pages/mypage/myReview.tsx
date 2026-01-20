@@ -1,11 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-// sampleImg는 서버 이미지가 없을 때를 위한 기본 이미지(Fallback)로 사용합니다.
 import sampleImg from "../../assets/sample-product.jpg";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"; // ⭐ 중요
 import { getMyReviews, deleteReview } from "../../api/reviewApi";
 import type { Review } from "../../api/reviewApi";
-
 export default function MyReview() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<"writable" | "written">(
@@ -135,7 +133,22 @@ export default function MyReview() {
                     </div>
                   </div>
                   <div className="flex gap-1.5 min-w-fit">
-                    <button className="border border-[#A8A9AD] px-3 h-7 py-0.5 rounded-[5px] text-[11px] font-bold transition cursor-pointer text-[#333] hover:bg-gray-50">
+                    <button
+                      onClick={() =>
+                        navigate("/review/write", {
+                          state: {
+                            mode: "edit",
+                            reviewIdx: review.reviewIdx,
+                            score: review.score,
+                            content: review.content,
+                            productName: review.productName,
+                          },
+                        })
+                      }
+                      className="border border-[#A8A9AD] px-3 h-7 py-0.5 rounded-[5px]
+             text-[11px] font-bold transition cursor-pointer text-[#333]
+             hover:bg-gray-50"
+                    >
                       수정
                     </button>
                     <button

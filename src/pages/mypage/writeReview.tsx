@@ -6,11 +6,16 @@ import { createReview, updateReview } from "../../api/reviewApi";
 
 export default function WriteReview() {
   const navigate = useNavigate();
-  const { state } = useLocation();
+  const location = useLocation();
+  const state = location.state as any;
 
-  if (!state) {
-    navigate(-1);
-    return null;
+  // 🔒 잘못된 접근 방어
+  if (
+    !state ||
+    (state.mode === "edit" && !state.reviewIdx) ||
+    (state.mode !== "edit" && (!state.ordersIdx || !state.productIdx))
+  ) {
+    return <div className="text-center py-20">잘못된 접근입니다.</div>;
   }
 
   const isEdit = state.mode === "edit";
@@ -32,18 +37,19 @@ export default function WriteReview() {
 
     const formData = new FormData();
 
-    // ✅ DTO 하나로 묶어서 JSON Blob
-    const reviewPayload: any = {
-      score: rating,
-      content,
-    };
-
-    if (isEdit) {
-      reviewPayload.reviewIdx = state.reviewIdx;
-    } else {
-      reviewPayload.productIdx = state.productIdx;
-      reviewPayload.ordersIdx = state.ordersIdx;
-    }
+    // ⭐ 수정/작성 분기 명확히
+    const reviewPayload = isEdit
+      ? {
+          reviewIdx: state.reviewIdx,
+          score: rating,
+          content,
+        }
+      : {
+          ordersIdx: state.ordersIdx,
+          productIdx: state.productIdx,
+          score: rating,
+          content,
+        };
 
     formData.append(
       "review",
@@ -75,92 +81,67 @@ export default function WriteReview() {
   return (
     <div className="max-w-[700px] mx-auto pb-10">
       {/* Header */}
-      <div className="max-w-[700px] mx-auto px-6 pt-6 flex items-center relative mb-4">
-        <button
-          onClick={() => navigate(-1)}
-          className="absolute left-[-40px] p-1.5 rounded-full hover:bg-gray-100 transition"
-        >
-          <ArrowLeft size={28} strokeWidth={1.5} />
+      <div className="px-6 pt-6 flex items-center relative mb-4">
+        <button onClick={() => navigate(-1)} className="absolute left-[-40px]">
+          <ArrowLeft size={28} />
         </button>
-        <div className="flex-1 text-center">
-          <h2 className="text-[20px] font-bold text-black tracking-tight">
-            {isEdit ? "리뷰 수정" : "리뷰 작성"}
-          </h2>
-        </div>
+        <h2 className="flex-1 text-center font-bold">
+          {isEdit ? "리뷰 수정" : "리뷰 작성"}
+        </h2>
       </div>
 
       <div className="px-6 space-y-6">
-        {/* 별점 */}
-        <section>
-          <h3 className="text-[15px] font-bold mb-2">
-            별점을 입력해주세요 <span className="text-[#A8A9AD]">(필수)</span>
-          </h3>
-          <div className="flex gap-1">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <button
-                key={star}
-                onClick={() => setRating(star)}
-                className="hover:scale-110 transition"
-              >
-                <Star
-                  size={30}
-                  fill={star <= rating ? "#FACC15" : "none"}
-                  stroke={star <= rating ? "#FACC15" : "#D1D5DB"}
-                />
-              </button>
-            ))}
+        {/* ⭐ 이미 작성한 리뷰 안내 */}
+        {isEdit && (
+          <div className="p-3 text-sm rounded bg-yellow-50 text-yellow-800 border border-yellow-200">
+            이미 작성한 리뷰가 있습니다. 수정만 가능합니다.
           </div>
-        </section>
+        )}
+
+        {/* 별점 */}
+        <div className="flex gap-1">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <button key={star} onClick={() => setRating(star)}>
+              <Star
+                size={30}
+                fill={star <= rating ? "#FACC15" : "none"}
+                stroke={star <= rating ? "#FACC15" : "#D1D5DB"}
+              />
+            </button>
+          ))}
+        </div>
 
         <Separator />
 
         {/* 내용 */}
-        <section>
-          <h3 className="text-[15px] font-bold mb-2">
-            상품에 대해 남겨주세요{" "}
-            <span className="text-[#A8A9AD]">(필수)</span>
-          </h3>
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="20자 이상 작성해주세요."
-            className="w-full h-[140px] p-2 border rounded-[8px] resize-none"
-          />
-        </section>
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          placeholder="상품에 대한 후기를 10자 이상 작성해주세요."
+          className="w-full h-[140px] border rounded p-2 resize-none"
+        />
 
         <Separator />
 
-        {/* 사진 */}
-        <section>
-          <h3 className="text-[15px] font-bold mb-2">
-            사진 첨부 <span className="text-[#A8A9AD]">(선택)</span>
-          </h3>
-
-          <input
-            type="file"
-            accept="image/*"
-            hidden
-            id="reviewImage"
-            onChange={(e) => {
-              if (e.target.files) {
-                setImageFile(e.target.files[0]);
-              }
-            }}
-          />
-
-          <label
-            htmlFor="reviewImage"
-            className="w-[80px] h-[80px] border rounded-[8px]
-                       flex items-center justify-center cursor-pointer"
-          >
-            <Plus size={20} />
-          </label>
-        </section>
+        {/* 이미지 */}
+        <input
+          type="file"
+          hidden
+          id="reviewImage"
+          accept="image/*"
+          onChange={(e) => e.target.files && setImageFile(e.target.files[0])}
+        />
+        <label
+          htmlFor="reviewImage"
+          className="w-[80px] h-[80px] border rounded flex items-center justify-center cursor-pointer"
+        >
+          <Plus />
+        </label>
 
         {/* 버튼 */}
         <button
           onClick={handleSubmit}
-          className="w-full h-[46px] border rounded-[8px] font-bold"
+          className="w-full h-[46px] border rounded font-bold"
         >
           {isEdit ? "리뷰 수정하기" : "리뷰 등록하기"}
         </button>
