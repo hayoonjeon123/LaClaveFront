@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from "./axiosInstance";
 
 // === 주문 상세 타입 ===
 export interface OrderDetail {
@@ -33,9 +33,7 @@ const API_BASE_URL = "/api/my"; // 프록시를 통해 백엔드로 전달
 // === 마이페이지 주문 조회 API ===
 export const getMyOrders = async (): Promise<Order[]> => {
   try {
-    const response = await axios.get<Order[]>(`${API_BASE_URL}/orders`, {
-      withCredentials: true, // 세션 인증 포함
-    });
+    const response = await axiosInstance.get<Order[]>(`${API_BASE_URL}/orders`);
     return response.data;
   } catch (error) {
     console.error("마이페이지 주문 조회 실패:", error);

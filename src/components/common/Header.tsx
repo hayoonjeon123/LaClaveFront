@@ -2,7 +2,7 @@ import Logo from "@/assets/Logo.png";
 import { SearchIcon } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "@/api/axiosInstance";
 
 // 사이드바 연결(하윤)
 interface HeaderProps {
@@ -14,16 +14,51 @@ function Header({ onMenuClick }: HeaderProps) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 로컬 스토리지에서 로그인 상태 확인
-    const loggedIn = localStorage.getItem("isLoggedIn") === "true";
-    setIsLoggedIn(loggedIn);
+    const checkLoginStatus = async () => {
+      // 로컬 스토리지에서 먼저 확인
+      const localLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
+      if (localLoggedIn) {
+        // 서버 세션 유효성 검증 (401 발생 시 인터셉터 리다이렉트 방지: skipRedirect)
+        try {
+          // @ts-ignore
+          const response = await axiosInstance.get("/api/info", { skipRedirect: true });
+
+          // 응답이 객체인지 확인 (HTML 스트링이 넘어오면 백엔드 재시작이 안되어 리다이렉트 된 것임)
+          if (response.data && typeof response.data === 'object') {
+            setIsLoggedIn(true);
+          } else {
+            console.log("세션 만료됨 (응답이 JSON이 아님)");
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("memberId");
+            setIsLoggedIn(false);
+          }
+        } catch (error: any) {
+          // 세션이 만료된 경우 (401)
+          if (error.response && error.response.status === 401) {
+            console.log("세션 만료됨 (초기 확인)");
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("memberId");
+            setIsLoggedIn(false);
+          } else {
+            // 다른 에러지만 일단 로컬 스토리지 믿고 유지 (혹은 안전하게 로그아웃 처리?)
+            // 서버 다운 등이면 로그아웃 처리가 나을 수도 있음
+            setIsLoggedIn(true);
+          }
+        }
+      } else {
+        setIsLoggedIn(false);
+      }
+    };
+
+    checkLoginStatus();
   }, []);
 
   const handleLogout = async () => {
     if (window.confirm("로그아웃 하시겠습니까?")) {
       try {
         // 백엔드 로그아웃 API 호출
-        await axios.post("/api/logout", {}, { withCredentials: true });
+        await axiosInstance.post("/api/logout");
       } catch (error) {
         console.error("로그아웃 API 호출 실패:", error);
       }

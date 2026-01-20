@@ -1,4 +1,4 @@
-import axios, { type AxiosResponse } from "axios";
+import axiosInstance from "./axiosInstance";
 import type { Order } from "./ordersApi";
 
 const API_BASE_URL = "http://localhost:8080/api/inquiry";
@@ -9,30 +9,22 @@ export const createInquiry = (data: {
   inquiryContent: string;
   inquiryTypeCommonIdx: number;
 }) => {
-  return axios.post(`${API_BASE_URL}/create`, data, {
-    withCredentials: true,
-  });
+  return axiosInstance.post(`${API_BASE_URL}/create`, data);
 };
 
 export const getMyOrders = async (): Promise<Order[]> => {
-  const response = await axios.get<Order[]>(`${API_BASE_URL}/orders`, {
-    withCredentials: true,
-  });
+  const response = await axiosInstance.get<Order[]>(`${API_BASE_URL}/orders`);
   return response.data; // 이제 호출하는 쪽에서 바로 Order[]
 };
 
 // 문의 목록 조회 (로그인 사용자 기준)
 export const getInquiryList = () => {
-  return axios.get(`${API_BASE_URL}/my`, {
-    withCredentials: true,
-  });
+  return axiosInstance.get(`${API_BASE_URL}/my`);
 };
 
 // 문의 삭제
 export const deleteInquiry = (inquiryIdx: number) => {
-  return axios.delete(`${API_BASE_URL}/${inquiryIdx}`, {
-    withCredentials: true,
-  });
+  return axiosInstance.delete(`${API_BASE_URL}/${inquiryIdx}`);
 };
 
 // 문의 수정
@@ -44,7 +36,5 @@ export const updateInquiry = (
     inquiryTypeCommonIdx: number;
   }
 ) => {
-  return axios.put(`${API_BASE_URL}/${inquiryIdx}`, data, {
-    withCredentials: true,
-  });
+  return axiosInstance.put(`${API_BASE_URL}/${inquiryIdx}`, data);
 };
