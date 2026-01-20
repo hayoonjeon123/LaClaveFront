@@ -1,4 +1,4 @@
-import axiosInstance from "./axiosInstance";
+import axios from "axios";
 
 const API_URL = "http://localhost:8080";
 
@@ -20,22 +20,38 @@ export interface Review {
 }
 // 리뷰 등록
 export const createReview = (reviewData: any) => {
-  return axiosInstance.post(`${API_URL}/api/review`, reviewData);
+  return axios.post(`${API_URL}/api/review`, reviewData, {
+    withCredentials: true,
+  });
 };
 
 // 리뷰 수정
 export const updateReview = (reviewData: any) => {
-  return axiosInstance.put(`${API_URL}/api/review`, reviewData);
+  return axios.put(`${API_URL}/api/review`, reviewData, {
+    withCredentials: true,
+  });
 };
 
 // 리뷰 삭제
 export const deleteReview = (reviewIdx: number) => {
-  return axiosInstance.delete(`${API_URL}/api/review/${reviewIdx}`);
+  return axios.delete(`${API_URL}/api/review/${reviewIdx}`, {
+    withCredentials: true,
+  });
 };
 
 // [마이페이지] 회원별 리뷰 조회
 export const getMyReviews = async (): Promise<Review[]> => {
-  const res = await axiosInstance.get<Review[]>(`${API_URL}/api/review/my`);
+  const res = await axios.get<Review[]>(`${API_URL}/api/review/my`, {
+    withCredentials: true,
+  });
+  return res.data;
+};
+
+// [마이페이지] 작성 가능 리뷰 조회
+export const getWritableReviews = async (): Promise<Review[]> => {
+  const res = await axios.get<Review[]>(`${API_URL}/api/review/writable`, {
+    withCredentials: true,
+  });
   return res.data;
 };
 
@@ -44,7 +60,7 @@ export const getReviewsByProduct = async (
   productIdx: number,
   status: string = "ACTIVE"
 ): Promise<Review[]> => {
-  const res = await axiosInstance.get<Review[]>(
+  const res = await axios.get<Review[]>(
     `${API_URL}/api/review/product/${productIdx}?status=${status}`
   );
   return res.data;
@@ -54,7 +70,7 @@ export const getReviewsByProduct = async (
 export const getProductAverageScore = async (
   productIdx: number
 ): Promise<number> => {
-  const res = await axiosInstance.get<number>(
+  const res = await axios.get<number>(
     `${API_URL}/api/review/average/${productIdx}`
   );
   return res.data;

@@ -4,6 +4,8 @@ import sampleImg from "../../assets/sample-product.jpg";
 import { useEffect, useState } from "react"; // ⭐ 중요
 import { getMyReviews, deleteReview } from "../../api/reviewApi";
 import type { Review } from "../../api/reviewApi";
+import axios from "axios";
+
 export default function MyReview() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<"writable" | "written">(
@@ -12,13 +14,29 @@ export default function MyReview() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [writableReviews, setWritableReviews] = useState<Review[]>([]);
+
+  const getWritableReviews = async () => {
+    const res = await axios.get("http://localhost:8080/api/review/writable", {
+      withCredentials: true,
+    });
+    return res.data;
+  };
   // 회원 리뷰 불러오기
   useEffect(() => {
     setLoading(true);
+
+    // 작성 완료 리뷰 가져오기
     getMyReviews()
       .then((data) => {
-        console.log("서버에서 받은 리뷰 데이터:", data);
         setReviews(data);
+      })
+      .catch(console.error);
+
+    // 작성 가능 리뷰 가져오기 (예: 아직 리뷰 안 쓴 주문)
+    getWritableReviews()
+      .then((data) => {
+        setWritableReviews(data);
       })
       .catch(console.error)
       .finally(() => setLoading(false));
@@ -90,10 +108,53 @@ export default function MyReview() {
         <div className="text-center py-10 text-gray-400">불러오는 중...</div>
       )}
 
-      {/* 작성 가능 리뷰 (추후 주문 목록 API 연결 필요) */}
+      {/* 작성 가능 리뷰 */}
       {!loading && activeTab === "writable" && (
-        <div className="text-center font-medium text-[#A8A9AD] py-10 text-[16px]">
-          작성 가능한 리뷰가 없습니다.
+        <div className="space-y-4 px-6">
+          {writableReviews.length === 0 ? (
+            <div className="text-center font-medium text-[#A8A9AD] py-10 text-[16px]">
+              작성 가능한 리뷰가 없습니다.
+            </div>
+          ) : (
+            writableReviews.map((review) => (
+              <div
+                key={review.ordersIdx} // 혹은 productIdx
+                className="border border-[#EEEEEE] rounded-[10px] shadow-sm overflow-hidden bg-white"
+              >
+                <div className="p-4 py-3 flex items-center gap-4">
+                  <div className="w-[52px] h-[52px] flex-shrink-0 overflow-hidden rounded-[8px] bg-gray-50">
+                    <img
+                      src={review.imageUrl || sampleImg}
+                      alt={review.productName}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-[14px] text-[#333] truncate">
+                      {review.productName}
+                    </p>
+                    <div className="flex items-center gap-1 text-[12px] text-[#A8A9AD] font-medium mt-0.5">
+                      <span>{review.optionInfo}</span>
+                    </div>
+                  </div>
+                  <div className="flex gap-1.5 min-w-fit">
+                    <button
+                      onClick={() =>
+                        navigate("/review/write", {
+                          state: { mode: "write", ...review },
+                        })
+                      }
+                      className="border border-[#A8A9AD] px-3 h-7 py-0.5 rounded-[5px]
+             text-[11px] font-bold transition cursor-pointer text-[#333]
+             hover:bg-gray-50"
+                    >
+                      작성
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       )}
 
@@ -134,7 +195,12 @@ export default function MyReview() {
                   </div>
                   <div className="flex gap-1.5 min-w-fit">
                     <button
-                      onClick={() =>
+                      onClick={() => {
+                        if (!review || !review.reviewIdx) {
+                          alert("리뷰 정보를 불러오는 데 실패했습니다.");
+                          return;
+                        }
+
                         navigate("/review/write", {
                           state: {
                             mode: "edit",
@@ -143,8 +209,8 @@ export default function MyReview() {
                             content: review.content,
                             productName: review.productName,
                           },
-                        })
-                      }
+                        });
+                      }}
                       className="border border-[#A8A9AD] px-3 h-7 py-0.5 rounded-[5px]
              text-[11px] font-bold transition cursor-pointer text-[#333]
              hover:bg-gray-50"

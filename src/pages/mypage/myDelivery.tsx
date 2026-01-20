@@ -1,41 +1,63 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Search, ShoppingCart } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import sampleImg from "../../assets/sample-product.jpg";
+import { getMyDeliveryListByMember } from "@/api/myDeliveryApi";
+import type { MyDelivery } from "@/api/myDeliveryApi";
 
-export default function MyDelivery() {
+interface DeliveryLog {
+  id: number;
+  date: string;
+  time: string;
+  status: string;
+  location: string;
+  active: boolean;
+}
+
+export default function MyDeliveryPage() {
   const navigate = useNavigate();
+  const [deliveryLogs, setDeliveryLogs] = useState<DeliveryLog[]>([]);
 
-  const deliveryLogs = [
-    {
-      id: 1,
-      date: "2022-09-25",
-      time: "11:40:03",
-      status: "배송 완료",
-      location: "서울 강남구",
-      active: true,
-    },
-    {
-      id: 2,
-      date: "2022-09-25",
-      time: "10:58:22",
-      status: "배송 출발",
-      location: "서울 강남구",
-      active: false,
-    },
-    {
-      id: 3,
-      date: "2022-09-25",
-      time: "09:12:45",
-      status: "배송 진행중",
-      location: "서울 강남구",
-      active: false,
-    },
-  ];
+  useEffect(() => {
+    const fetchDelivery = async () => {
+      try {
+        const data = await getMyDeliveryListByMember();
+        console.log(data); // 여기서 확인
+        // 화면용 deliveryLogs 변환
+        const logs: DeliveryLog[] = data.map((d, idx) => {
+          const dateObj = new Date(d.startDate);
+          const date = dateObj.toISOString().split("T")[0];
+          const time = dateObj.toTimeString().split(" ")[0];
+
+          const statusMap: { [key: number]: string } = {
+            79: "배송 준비",
+            80: "배송 중",
+            81: "배송 완료",
+          };
+
+          return {
+            id: d.deliveryIdx,
+            date,
+            time,
+            status: statusMap[d.deliveryStatusCommonIdx] || "배송 정보 없음",
+            location: "서울 강남구", // 실제 위치 데이터 있으면 대체 가능
+            active: idx === 0, // 최신 기록만 active 처리
+          };
+        });
+
+        setDeliveryLogs(logs);
+      } catch (err) {
+        console.error("배송 정보 조회 실패", err);
+      }
+    };
+
+    fetchDelivery();
+  }, []);
 
   return (
     <div className="pb-10">
-      {/* Header - Matching myOrders.tsx style */}
+      {/* Header */}
       <div className="max-w-[700px] mx-auto px-6 pt-6 flex items-center relative mb-4">
         <button
           onClick={() => navigate(-1)}
@@ -58,12 +80,9 @@ export default function MyDelivery() {
           </h3>
 
           <div className="px-5">
-            {/* Progress Bar */}
             <div className="relative h-[14px] bg-[#EEEEEE] rounded-full mb-4 overflow-hidden">
               <div className="absolute top-0 left-0 h-full w-full bg-[#5C4033] rounded-full"></div>
             </div>
-
-            {/* Progress Labels */}
             <div className="flex justify-between px-1">
               {["발송", "집하", "배송중", "도착"].map((step, idx) => (
                 <span
@@ -101,7 +120,6 @@ export default function MyDelivery() {
         {/* Delivery Logs Section */}
         <div className="p-3">
           <h3 className="text-[18px] font-bold text-black mb-6">배송 기록</h3>
-
           <div className="space-y-6">
             {deliveryLogs.map((log) => (
               <div key={log.id} className="flex items-start gap-6">

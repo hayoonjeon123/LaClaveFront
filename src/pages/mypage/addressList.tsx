@@ -1,8 +1,45 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
+import { getMyAddressList, removeAddress } from "@/api/memberAddressApi"; // API import
+import type { MemberAddressDto } from "@/api/memberAddressApi";
+
 export default function AddressList() {
   const navigate = useNavigate();
+  const [addresses, setAddresses] = useState<MemberAddressDto[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // 🔹 주소 목록 조회
+  const fetchAddresses = async () => {
+    setLoading(true);
+    const list = await getMyAddressList();
+    setAddresses(list);
+    setLoading(false);
+  };
+
+  // 최초 로딩 시 목록 불러오기
+  useEffect(() => {
+    fetchAddresses();
+  }, []);
+
+  // 🔹 삭제
+  const handleRemove = async (addressIdx: number) => {
+    if (!confirm("정말로 삭제하시겠습니까?")) return;
+    const success = await removeAddress(addressIdx);
+    if (success) {
+      setAddresses((prev) => prev.filter((a) => a.addressIdx !== addressIdx));
+      alert("주소가 삭제되었습니다.");
+    } else {
+      alert("삭제에 실패했습니다.");
+    }
+  };
+
+  // 🔹 수정
+  const handleModify = (addressIdx: number) => {
+    navigate(`/editAddress/${addressIdx}`);
+    navigate("/addressList", { state: { message: "주소가 수정되었습니다." } });
+  };
 
   return (
     <div className="max-w-[700px] mx-auto pb-20">
@@ -33,32 +70,51 @@ export default function AddressList() {
         </div>
 
         {/* 배송지 카드 */}
-        <div className="border border-[#A8A9AD] rounded-[10px] p-5 mb-2 shadow-sm bg-[#F5F5F5]">
-          <div className="space-y-1.5 mb-2 text-left">
-            <div className="text-[16px] font-bold text-[#5C4033]">집</div>
-            <div className="flex items-center gap-2">
-              <span className="text-[18px] font-bold">송은경</span>
-              <span className="px-2 py-0.5 border border-[#A8A9AD] rounded-full text-[10px] text-[#5C4033] font-medium">
-                기본 배송지
-              </span>
-            </div>
-            <div className="text-[14px] font-medium text-[#333]">
-              부산광역시 수영구 광안대로 560-3
-            </div>
-            <div className="text-[14px] font-medium text-[#333]">
-              010-1234-5678
-            </div>
-          </div>
+        {loading ? (
+          <div>주소를 불러오는 중...</div>
+        ) : addresses.length === 0 ? (
+          <div>등록된 주소가 없습니다.</div>
+        ) : (
+          addresses.map((addr) => (
+            <div
+              key={addr.addressIdx}
+              className="border border-[#A8A9AD] rounded-[10px] p-5 mb-2 shadow-sm bg-[#F5F5F5]"
+            >
+              <div className="space-y-1.5 mb-2 text-left">
+                <div className="text-[16px] font-bold text-[#5C4033]">
+                  {addr.addressName}
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[18px] font-bold">
+                    {addr.recipientName}
+                  </span>
+                  {/* 기본 배송지 표시, 필요하면 조건 추가 */}
+                </div>
+                <div className="text-[14px] font-medium text-[#333]">
+                  {addr.address}
+                </div>
+                <div className="text-[14px] font-medium text-[#333]">
+                  {addr.phone}
+                </div>
+              </div>
 
-          <div className="flex justify-end gap-2">
-            <button className="cursor-pointer px-4 py-1.5 bg-[#F5F5F5] border border-[#A8A9AD] rounded-[6px] font-bold text-[13px] text-[#333] transition">
-              수정
-            </button>
-            <button className="cursor-pointer px-4 py-1.5 bg-[#5C4033] text-white border border-[#A8A9AD] rounded-[6px] font-bold text-[13px] transition">
-              삭제
-            </button>
-          </div>
-        </div>
+              <div className="flex justify-end gap-2">
+                <button
+                  onClick={() => handleModify(addr.addressIdx)}
+                  className="cursor-pointer px-4 py-1.5 bg-[#F5F5F5] border border-[#A8A9AD] rounded-[6px] font-bold text-[13px] text-[#333] transition"
+                >
+                  수정
+                </button>
+                <button
+                  onClick={() => handleRemove(addr.addressIdx)}
+                  className="cursor-pointer px-4 py-1.5 bg-[#5C4033] text-white border border-[#5C4033] rounded-[6px] font-bold text-[13px] transition"
+                >
+                  삭제
+                </button>
+              </div>
+            </div>
+          ))
+        )}
 
         {/* 저장하기 버튼 */}
         <div className="flex justify-center mt-12">
