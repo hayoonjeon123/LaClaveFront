@@ -13,6 +13,8 @@ import {
   Package,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axiosInstance from "@/api/axiosInstance";
 
 const RECENT_PRODUCTS = [
   {
@@ -31,41 +33,67 @@ const RECENT_PRODUCTS = [
   }
 ];
 
-const AI_PRODUCTS = [
-  {
-    id: 1,
-    image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=300&h=400&fit=crop",
-    name: "레이스 플리스 배색 리버시블 점퍼 블랙",
-    discount: "38%",
-    price: "98,580원",
-  },
-  {
-    id: 2,
-    image: "https://images.unsplash.com/photo-1595152772835-21967499ac8a?w=300&h=400&fit=crop",
-    name: "T Sherpa Fleece Jacket Grey",
-    discount: "30%",
-    price: "165,000원",
-  }
-];
-
 function ProductCard({ product }: { product: any }) {
+  // 백엔드 데이터 구조에 맞춰 이미지 경로 처리
+  let imageUrl = product.image;
+  if (!imageUrl && product.images && product.images.length > 0) {
+    imageUrl = product.images[0].imagePath;
+  }
+
+  // 가격 포맷팅 처리
+  const priceDisplay = typeof product.price === 'number'
+    ? product.price.toLocaleString() + "원"
+    : product.price;
+
+  const discountDisplay = typeof product.productDiscountRate === 'number' && product.productDiscountRate > 0
+    ? product.productDiscountRate + "%"
+    : product.discount; // 기존 더미 데이터 호환을 위해
+
+  const nameDisplay = product.productName || product.name;
+
   return (
     <div className="w-[180px] flex-shrink-0">
-      <div className="w-[180px] h-[230px] overflow-hidden bg-gray-100 mb-2">
-        <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
-      </div>
-      <div className="space-y-1">
-        <p className="text-[12px] font-medium line-clamp-2 h-[32px]">{product.name}</p>
-        <div className="flex gap-2 items-center">
-          <span className="text-red-500 font-bold text-[13px]">{product.discount}</span>
-          <span className="font-bold text-[13px]">{product.price}</span>
+      <Link to={`/product/${product.productIdx || product.id}`}>
+        <div className="w-[180px] h-[230px] overflow-hidden bg-gray-100 mb-2">
+          {imageUrl ? (
+            <img src={imageUrl} alt={nameDisplay} className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-200 text-xs">No Image</div>
+          )}
         </div>
-      </div>
+        <div className="space-y-1">
+          <p className="text-[12px] font-medium line-clamp-2 h-[32px]">{nameDisplay}</p>
+          <div className="flex gap-2 items-center">
+            {discountDisplay && (
+              <span className="text-red-500 font-bold text-[13px]">{discountDisplay}</span>
+            )}
+            <span className="font-bold text-[13px]">{priceDisplay}</span>
+          </div>
+        </div>
+      </Link>
     </div>
   );
 }
 
 export default function MyPage() {
+  const [aiProducts, setAiProducts] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchAiProducts = async () => {
+      try {
+        const response = await axiosInstance.get("/api/ai/recommend");
+        if (Array.isArray(response.data)) {
+          // 화면 공간 상 4~5개 정도만 보여주는 것이 깔끔할 수 있음
+          setAiProducts(response.data.slice(0, 5));
+        }
+      } catch (error) {
+        console.error("AI 추천 상품 로딩 실패:", error);
+      }
+    };
+
+    fetchAiProducts();
+  }, []);
+
   return (
     <div className="min-h-screen bg-white text-black pb-10">
       {/* Title */}
@@ -162,9 +190,15 @@ export default function MyPage() {
             </div>
           </Link>
           <div className="flex gap-8 overflow-x-auto pb-4 scrollbar-hide">
-            {AI_PRODUCTS.map(product => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+            {aiProducts.length > 0 ? (
+              aiProducts.map(product => (
+                <ProductCard key={product.productIdx} product={product} />
+              ))
+            ) : (
+              <div className="text-gray-400 py-4 w-full text-center">
+                추천 상품을 로딩 중이거나 없습니다.
+              </div>
+            )}
           </div>
         </div>
       </div>

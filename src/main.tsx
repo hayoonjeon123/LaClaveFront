@@ -25,6 +25,7 @@ import AddressList from "./pages/mypage/addressList";
 import AddAddress from "./pages/mypage/addAddress";
 import EditInquiry from "./pages/mypage/EditInquiry";
 import { AiSelect } from "./pages/member/AiSelect";
+import MyAi from "./pages/mypage/myAi";
 import { AppLogin } from "./pages/member/AppLogin";
 import { ProductDetail } from "./pages/product/ProductDetail";
 import { Cart } from "./pages/payment/CartPage";
@@ -88,6 +89,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="product/:productIdx" element={<ProductDetail />} />
           <Route path="category/:categoryName" element={<ProductPage />} />
           <Route path="best" element={<Best />} />
+          <Route path="myAi" element={<MyAi />} />
           <Route path="faq" element={<FAQ />} />
           <Route path="cart" element={<Cart />} />
           <Route path="order" element={<Order />} />
