@@ -55,7 +55,7 @@ export default function WriteReview() {
       "review",
       new Blob([JSON.stringify(reviewPayload)], {
         type: "application/json",
-      })
+      }),
     );
 
     if (imageFile) {
@@ -64,8 +64,10 @@ export default function WriteReview() {
 
     try {
       if (isEdit) {
-        await updateReview(formData);
+        const ok = window.confirm("리뷰를 수정하시겠습니까?");
+        await updateReview(state.reviewIdx, formData);
         alert("리뷰가 수정되었습니다!");
+        if (!ok) return;
       } else {
         await createReview(formData);
         alert("리뷰가 등록되었습니다!");

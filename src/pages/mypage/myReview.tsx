@@ -9,7 +9,7 @@ import axios from "axios";
 export default function MyReview() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<"writable" | "written">(
-    "written" // 보통 마이페이지 진입 시 작성한 리뷰를 먼저 보여주는 경우가 많아 변경했습니다.
+    "written", // 보통 마이페이지 진입 시 작성한 리뷰를 먼저 보여주는 경우가 많아 변경했습니다.
   );
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
@@ -201,7 +201,7 @@ export default function MyReview() {
                           return;
                         }
 
-                        navigate("/review/write", {
+                        navigate("/writeReview", {
                           state: {
                             mode: "edit",
                             reviewIdx: review.reviewIdx,

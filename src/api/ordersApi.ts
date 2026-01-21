@@ -11,6 +11,10 @@ export interface OrderDetail {
   sizeCode?: number;
   productName?: string; // 필요 시
   option?: string; // 필요 시
+
+  // ⭐ 추가
+  colorName?: string;
+  sizeName?: string;
 }
 
 // === 주문 타입 ===

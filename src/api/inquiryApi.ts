@@ -3,6 +3,19 @@ import type { Order } from "./ordersApi";
 
 const API_BASE_URL = "http://localhost:8080/api/inquiry";
 
+export interface Inquiry {
+  inquiryIdx: number;
+  inquiryTitle: string;
+  inquiryContent: string;
+  inquiryType: string; // 공통코드 label로 내려주는 값
+  inquiryStatus: "WAIT" | "DONE";
+  createdAt: string;
+
+  // ⭐ 관리자 답변
+  answerContent?: string;
+  answeredAt?: string;
+}
+
 // 문의 등록
 export const createInquiry = (data: {
   inquiryTitle: string;
@@ -34,7 +47,7 @@ export const updateInquiry = (
     inquiryTitle: string;
     inquiryContent: string;
     inquiryTypeCommonIdx: number;
-  }
+  },
 ) => {
   return axiosInstance.put(`${API_BASE_URL}/${inquiryIdx}`, data);
 };

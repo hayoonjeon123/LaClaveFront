@@ -26,9 +26,13 @@ export const createReview = (reviewData: any) => {
 };
 
 // 리뷰 수정
-export const updateReview = (reviewData: any) => {
-  return axios.put(`${API_URL}/api/review`, reviewData, {
+// reviewApi.ts
+export const updateReview = (reviewIdx: number, reviewData: FormData) => {
+  return axios.put(`${API_URL}/api/review/${reviewIdx}`, reviewData, {
     withCredentials: true,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
   });
 };
 
@@ -58,20 +62,20 @@ export const getWritableReviews = async (): Promise<Review[]> => {
 // [상품상세] 상품별 리뷰 조회
 export const getReviewsByProduct = async (
   productIdx: number,
-  status: string = "ACTIVE"
+  status: string = "ACTIVE",
 ): Promise<Review[]> => {
   const res = await axios.get<Review[]>(
-    `${API_URL}/api/review/product/${productIdx}?status=${status}`
+    `${API_URL}/api/review/product/${productIdx}?status=${status}`,
   );
   return res.data;
 };
 
 // 상품별 평균 평점 조회
 export const getProductAverageScore = async (
-  productIdx: number
+  productIdx: number,
 ): Promise<number> => {
   const res = await axios.get<number>(
-    `${API_URL}/api/review/average/${productIdx}`
+    `${API_URL}/api/review/average/${productIdx}`,
   );
   return res.data;
 };
