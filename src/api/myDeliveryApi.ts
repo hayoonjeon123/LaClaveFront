@@ -12,26 +12,31 @@ export interface MyDelivery {
   updatedAt: string | null;
 }
 
+// // 로그인한 회원 기준 호출
+// export const getMyDeliveryListByMember = async (): Promise<MyDelivery[]> => {
+//   try {
+//     const response = await axiosInstance.get<MyDelivery[]>(
+//       `${API_BASE_URL}/member`,
+//       {
+//         withCredentials: true,
+//       },
+//     );
+
+//     if (!Array.isArray(response.data)) {
+//       console.warn("배송 데이터가 배열이 아님:", response.data);
+//       return [];
+//     }
+
+//     return response.data;
+//   } catch (error) {
+//     console.error("배송 정보 조회 실패:", error);
+//     return [];
+//   }
+// };
+// myDeliveryApi.ts
 const API_BASE_URL = "http://localhost:8080/api/myDelivery";
 
-// 로그인한 회원 기준 호출
-export const getMyDeliveryListByMember = async (): Promise<MyDelivery[]> => {
-  try {
-    const response = await axiosInstance.get<MyDelivery[]>(
-      `${API_BASE_URL}/member`,
-      {
-        withCredentials: true,
-      }
-    );
-
-    if (!Array.isArray(response.data)) {
-      console.warn("배송 데이터가 배열이 아님:", response.data);
-      return [];
-    }
-
-    return response.data;
-  } catch (error) {
-    console.error("배송 정보 조회 실패:", error);
-    return [];
-  }
+export const getDeliveryByOrder = async (orderIdx: number) => {
+  const res = await axiosInstance.get(`${API_BASE_URL}/${orderIdx}/delivery`);
+  return res.data;
 };

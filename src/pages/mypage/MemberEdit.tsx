@@ -95,7 +95,7 @@ export default function MemberEdit() {
         <div className="space-y-4 px-4">
           {/* 이름 */}
           <div className="border-b border-gray-300 pb-2">
-            <label className="block text-[16px] font-bold text-[#5C4033] mb-1">
+            <label className="block text-[16px] font-bold text-[#5C4033] mb-1 ">
               이름
             </label>
             <input
@@ -103,6 +103,7 @@ export default function MemberEdit() {
               name="name"
               value={formData.memberName}
               onChange={handleChange}
+              readOnly
               className="w-full text-[18px] font-medium text-black bg-transparent outline-none"
             />
           </div>
@@ -148,7 +149,7 @@ export default function MemberEdit() {
 
           {/* 생년월일 */}
           <div className="border-b border-gray-300 pb-2">
-            <label className="block text-[16px] font-bold text-[#5C4033] mb-1">
+            <label className="block text-[16px] font-bold text-[#5C4033] mb-1 ">
               생년월일
             </label>
             <input
@@ -156,6 +157,7 @@ export default function MemberEdit() {
               name="birthdate"
               value={formData.birth}
               onChange={handleChange}
+              readOnly
               className="w-full text-[18px] font-medium text-black bg-transparent outline-none"
             />
           </div>

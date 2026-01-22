@@ -15,41 +15,50 @@ import {
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axiosInstance from "@/api/axiosInstance";
+import { getMemberInfo } from "@/api/memberApi";
 
 const RECENT_PRODUCTS = [
   {
     id: 1,
-    image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=300&h=400&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=300&h=400&fit=crop",
     name: "Soft Collar fur Jacket (Ash ivory)",
     discount: "30%",
     price: "194,000원",
   },
   {
     id: 2,
-    image: "https://images.unsplash.com/photo-1544026116-f3689408e06a?w=300&h=400&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1544026116-f3689408e06a?w=300&h=400&fit=crop",
     name: "T.S FLEECE JACKET - CHARCOAL",
     discount: "30%",
     price: "90,300원",
-  }
+  },
 ];
 
 function ProductCard({ product }: { product: any }) {
-  // 백엔드 데이터 구조에 맞춰 이미지 경로 처리
   let imageUrl = product.image;
   if (!imageUrl && product.images && product.images.length > 0) {
     imageUrl = product.images[0].imagePath;
   }
 
-  // 가격 포맷팅 처리
-  const actualPrice = product.productPrice !== undefined ? product.productPrice : product.price;
-  const priceDisplay = typeof actualPrice === 'number'
-    ? actualPrice.toLocaleString() + "원"
-    : actualPrice;
+  const actualPrice =
+    product.productPrice !== undefined ? product.productPrice : product.price;
+  const priceDisplay =
+    typeof actualPrice === "number"
+      ? actualPrice.toLocaleString() + "원"
+      : actualPrice;
 
-  const actualDiscount = product.productDiscountRate !== undefined ? product.productDiscountRate : product.discount;
-  const discountDisplay = typeof actualDiscount === 'number' && actualDiscount > 0
-    ? actualDiscount + "%"
-    : (typeof actualDiscount === 'string' ? actualDiscount : null);
+  const actualDiscount =
+    product.productDiscountRate !== undefined
+      ? product.productDiscountRate
+      : product.discount;
+  const discountDisplay =
+    typeof actualDiscount === "number" && actualDiscount > 0
+      ? actualDiscount + "%"
+      : typeof actualDiscount === "string"
+        ? actualDiscount
+        : null;
 
   const nameDisplay = product.productName || product.name;
 
@@ -58,16 +67,26 @@ function ProductCard({ product }: { product: any }) {
       <Link to={`/product/${product.productIdx || product.id}`}>
         <div className="w-[180px] h-[230px] overflow-hidden bg-gray-100 mb-2">
           {imageUrl ? (
-            <img src={imageUrl} alt={nameDisplay} className="w-full h-full object-cover" />
+            <img
+              src={imageUrl}
+              alt={nameDisplay}
+              className="w-full h-full object-cover"
+            />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-200 text-xs">No Image</div>
+            <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-200 text-xs">
+              No Image
+            </div>
           )}
         </div>
         <div className="space-y-0">
-          <p className="text-[12px] font-medium line-clamp-2 leading-tight">{nameDisplay}</p>
+          <p className="text-[12px] font-medium line-clamp-2 leading-tight">
+            {nameDisplay}
+          </p>
           <div className="flex gap-2 items-center mt-0.5">
             {discountDisplay && (
-              <span className="text-red-500 font-bold text-[13px]">{discountDisplay}</span>
+              <span className="text-red-500 font-bold text-[13px]">
+                {discountDisplay}
+              </span>
             )}
             <span className="font-bold text-[13px]">{priceDisplay}</span>
           </div>
@@ -79,28 +98,46 @@ function ProductCard({ product }: { product: any }) {
 
 export default function MyPage() {
   const [aiProducts, setAiProducts] = useState<any[]>([]);
+  const [member, setMember] = useState<{
+    nickname: string;
+    level: string;
+  } | null>(null);
 
+  // === 회원 정보 조회 ===
+  useEffect(() => {
+    const fetchMember = async () => {
+      try {
+        const data = await getMemberInfo();
+        setMember(data);
+      } catch (error) {
+        console.error("회원 정보 로딩 실패:", error);
+      }
+    };
+    fetchMember();
+  }, []);
+
+  // === AI 추천 상품 조회 ===
   useEffect(() => {
     const fetchAiProducts = async () => {
       try {
         const response = await axiosInstance.get("/api/ai/recommend");
         if (Array.isArray(response.data)) {
-          // 화면 공간 상 4~5개 정도만 보여주는 것이 깔끔할 수 있음
           setAiProducts(response.data.slice(0, 5));
         }
       } catch (error) {
         console.error("AI 추천 상품 로딩 실패:", error);
       }
     };
-
     fetchAiProducts();
   }, []);
 
   return (
-    <div className="min-h-screen bg-white text-black pb-10">
+    <>
       {/* Title */}
       <div className="text-center py-6">
-        <h2 className="text-[40px] font-bold text-[#5C4033] tracking-tight">My Page</h2>
+        <h2 className="text-[40px] font-bold text-[#5C4033] tracking-tight">
+          My Page
+        </h2>
       </div>
 
       <div className="max-w-[1100px] mx-auto px-6">
@@ -111,7 +148,7 @@ export default function MyPage() {
               <Smile size={60} />
             </div>
             <span className="font-bold text-[#333] text-[28px]">
-              빛나는 초코님 VIP
+              {member ? `${member.nickname}님` : "로딩 중..."}
             </span>
           </div>
           <div className="flex gap-6 text-[#333] items-center">
@@ -130,8 +167,16 @@ export default function MyPage() {
           <div className="w-full h-[150px] grid grid-cols-6 gap-4 p-4 border border-[#504033] rounded-[20px] bg-white shadow-sm">
             {[
               { icon: <List size={40} />, label: "주문", path: "/myOrders" },
-              { icon: <ClipboardList size={40} />, label: "리뷰", path: "/myReview" },
-              { icon: <Phone size={40} />, label: "문의", path: "/myInquiryHistory" },
+              {
+                icon: <ClipboardList size={40} />,
+                label: "리뷰",
+                path: "/myReview",
+              },
+              {
+                icon: <Phone size={40} />,
+                label: "문의",
+                path: "/myInquiryHistory",
+              },
               { icon: <Heart size={40} />, label: "찜", path: "/myWishList" },
               { icon: <Package size={40} />, label: "쿠폰", path: "/myCoupon" },
               { icon: <Gift size={40} />, label: "포인트", path: "/myPoint" },
@@ -150,7 +195,7 @@ export default function MyPage() {
           </div>
         </div>
 
-        {/* 배송현황 Section */}
+        {/* 배송현황 Section
         <div className="mb-4">
           <Link to="/myDelivery" className="group">
             <div className="flex justify-between items-center border-b border-[#5C4033] pb-2">
@@ -158,10 +203,13 @@ export default function MyPage() {
                 <Truck size={30} strokeWidth={1.5} className="text-[#5C4033]" />
                 <h3 className="font-bold text-[20px]">배송현황</h3>
               </div>
-              <ArrowRight size={24} className="text-gray-400 group-hover:text-black transition" />
+              <ArrowRight
+                size={24}
+                className="text-gray-400 group-hover:text-black transition"
+              />
             </div>
           </Link>
-        </div>
+        </div> */}
 
         {/* 최근 본 상품 Section */}
         <div className="mb-4">
@@ -171,11 +219,14 @@ export default function MyPage() {
                 <Gift size={30} strokeWidth={1.5} className="text-[#5C4033]" />
                 <h3 className="font-bold text-[20px]">최근 본 상품</h3>
               </div>
-              <ArrowRight size={24} className="text-gray-400 group-hover:text-black transition" />
+              <ArrowRight
+                size={24}
+                className="text-gray-400 group-hover:text-black transition"
+              />
             </div>
           </Link>
           <div className="flex gap-8 overflow-x-auto scrollbar-hide pb-4 border-b border-[#5C4033] mb-4">
-            {RECENT_PRODUCTS.map(product => (
+            {RECENT_PRODUCTS.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
@@ -188,12 +239,15 @@ export default function MyPage() {
               <div className="text-left">
                 <h3 className="font-bold text-[20px]">AI 추천 상품</h3>
               </div>
-              <ArrowRight size={24} className="text-gray-400 group-hover:text-black transition" />
+              <ArrowRight
+                size={24}
+                className="text-gray-400 group-hover:text-black transition"
+              />
             </div>
           </Link>
           <div className="flex gap-8 overflow-x-auto pb-4 scrollbar-hide">
             {aiProducts.length > 0 ? (
-              aiProducts.map(product => (
+              aiProducts.map((product) => (
                 <ProductCard key={product.productIdx} product={product} />
               ))
             ) : (
@@ -204,6 +258,6 @@ export default function MyPage() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -24,6 +24,7 @@ import MyWishList from "./pages/mypage/myWishList";
 import WriteReview from "./pages/mypage/writeReview";
 import AddressList from "./pages/mypage/addressList";
 import AddAddress from "./pages/mypage/addAddress";
+import EditAddress from "./pages/mypage/EditAddress";
 import EditInquiry from "./pages/mypage/EditInquiry";
 import { AiSelect } from "./pages/member/AiSelect";
 import MyAi from "./pages/mypage/myAi";
@@ -72,12 +73,13 @@ createRoot(document.getElementById("root")!).render(
           <Route path="myReview" element={<MyReview />} />
           <Route path="writeReview" element={<WriteReview />} />
           <Route path="addressList" element={<AddressList />} />
+          <Route path="/editAddress/:addressIdx" element={<EditAddress />} />
           <Route path="addAddress" element={<AddAddress />} />
           <Route path="myInquiryHistory" element={<MyInquiryHistory />} />
           <Route path="myRecent" element={<MyRecent />} />
           <Route path="myWithDraw" element={<MyWithDraw />} />
           <Route path="myCoupon" element={<MyCoupon />} />
-          <Route path="myDelivery" element={<MyDelivery />} />
+          <Route path="myDelivery/:orderIdx" element={<MyDelivery />} />
           <Route path="myClaim" element={<MyClaim />} />
           <Route path="myMemberEdit" element={<MyMemberEdit />} />
           <Route path="myPwEdit" element={<MyPwEdit />} />
@@ -135,5 +137,5 @@ createRoot(document.getElementById("root")!).render(
         </Route>
       </Routes>
     </BrowserRouter>
-  </StrictMode>
+  </StrictMode>,
 );

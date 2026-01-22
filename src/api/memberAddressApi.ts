@@ -8,6 +8,7 @@ export interface MemberAddress {
   postCode: string;
   address: string;
   addressDetail: string;
+  isDefault?: boolean;
 }
 
 export interface MemberAddressDto {
@@ -18,13 +19,14 @@ export interface MemberAddressDto {
   postCode: string;
   address: string;
   addressDetail: string;
+  isDefault?: boolean;
 }
 
 const API_BASE_URL = "http://localhost:8080/api/member/address";
 
 // ✅ 1. 주소 등록
 export const registerAddress = async (
-  address: MemberAddress
+  address: MemberAddress,
 ): Promise<number | null> => {
   try {
     const response = await axiosInstance.post<number>(API_BASE_URL, address, {
@@ -52,12 +54,12 @@ export const getMyAddressList = async (): Promise<MemberAddressDto[]> => {
 
 // ✅ 3. 특정 주소 조회
 export const getAddress = async (
-  addressIdx: number
+  addressIdx: number,
 ): Promise<MemberAddressDto | null> => {
   try {
     const response = await axiosInstance.get<MemberAddressDto>(
       `${API_BASE_URL}/${addressIdx}`,
-      { withCredentials: true }
+      { withCredentials: true },
     );
     return response.data;
   } catch (error) {
@@ -69,7 +71,7 @@ export const getAddress = async (
 // ✅ 4. 주소 수정
 export const modifyAddress = async (
   addressIdx: number,
-  updatedAddress: MemberAddress
+  updatedAddress: MemberAddress,
 ): Promise<boolean> => {
   try {
     await axiosInstance.put(`${API_BASE_URL}/${addressIdx}`, updatedAddress, {

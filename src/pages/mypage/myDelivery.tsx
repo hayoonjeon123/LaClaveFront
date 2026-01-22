@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import sampleImg from "../../assets/sample-product.jpg";
-import { getMyDeliveryListByMember } from "@/api/myDeliveryApi";
+import { getDeliveryByOrder } from "@/api/myDeliveryApi";
 import type { MyDelivery } from "@/api/myDeliveryApi";
 
 interface DeliveryLog {
@@ -17,43 +17,75 @@ interface DeliveryLog {
 
 export default function MyDeliveryPage() {
   const navigate = useNavigate();
+  const { orderIdx } = useParams<{ orderIdx: string }>();
   const [deliveryLogs, setDeliveryLogs] = useState<DeliveryLog[]>([]);
 
   useEffect(() => {
+    if (!orderIdx) return;
+
+    console.log("📦 주문별 배송 조회 시작:", orderIdx);
+
     const fetchDelivery = async () => {
       try {
-        const data = await getMyDeliveryListByMember();
-        console.log(data); // 여기서 확인
-        // 화면용 deliveryLogs 변환
-        const logs: DeliveryLog[] = data.map((d, idx) => {
-          const dateObj = new Date(d.startDate);
-          const date = dateObj.toISOString().split("T")[0];
-          const time = dateObj.toTimeString().split(" ")[0];
+        const data: MyDelivery[] = await getDeliveryByOrder(Number(orderIdx));
+        console.log("📦 배송 API 응답:", data);
 
-          const statusMap: { [key: number]: string } = {
-            79: "배송 준비",
-            80: "배송 중",
-            81: "배송 완료",
-          };
+        if (!Array.isArray(data) || data.length === 0) {
+          setDeliveryLogs([]);
+          return;
+        }
+
+        const statusMap: Record<number, string> = {
+          79: "배송 준비",
+          80: "배송 중",
+          81: "배송 완료",
+        };
+
+        const sorted = [...data].sort(
+          (a, b) =>
+            new Date(b.startDate).getTime() - new Date(a.startDate).getTime(),
+        );
+
+        const logs: DeliveryLog[] = sorted.map((d, idx) => {
+          const dateObj = new Date(d.startDate);
 
           return {
             id: d.deliveryIdx,
-            date,
-            time,
-            status: statusMap[d.deliveryStatusCommonIdx] || "배송 정보 없음",
-            location: "서울 강남구", // 실제 위치 데이터 있으면 대체 가능
-            active: idx === 0, // 최신 기록만 active 처리
+            date: dateObj.toISOString().split("T")[0],
+            time: dateObj.toTimeString().split(" ")[0],
+            status: statusMap[d.deliveryStatusCommonIdx] ?? "배송 정보 없음",
+            location: d.courier ?? "배송사 정보 없음",
+            active: idx === 0,
           };
         });
 
         setDeliveryLogs(logs);
-      } catch (err) {
-        console.error("배송 정보 조회 실패", err);
+      } catch (err: any) {
+        console.error("❌ 주문별 배송 조회 실패");
+
+        if (err.response) {
+          console.error("📛 status:", err.response.status);
+          console.error("📛 data:", err.response.data);
+          console.error("📛 headers:", err.response.headers);
+        } else if (err.request) {
+          console.error("📛 요청은 갔지만 응답 없음:", err.request);
+        } else {
+          console.error("📛 axios 설정 에러:", err.message);
+        }
       }
     };
 
     fetchDelivery();
-  }, []);
+  }, [orderIdx]);
+
+  /** 진행바 퍼센트 계산 */
+  const progressPercent = (() => {
+    const status = deliveryLogs[0]?.status;
+    if (status === "배송 준비") return "25%";
+    if (status === "배송 중") return "75%";
+    if (status === "배송 완료") return "100%";
+    return "10%";
+  })();
 
   return (
     <div className="pb-10">
@@ -61,103 +93,82 @@ export default function MyDeliveryPage() {
       <div className="max-w-[700px] mx-auto px-6 pt-6 flex items-center relative mb-4">
         <button
           onClick={() => navigate(-1)}
-          className="absolute left-[-40px] p-1.5 rounded-full hover:bg-gray-100 transition"
+          className="absolute left-[-40px] p-1.5 rounded-full hover:bg-gray-100"
         >
-          <ArrowLeft size={28} strokeWidth={1.5} />
+          <ArrowLeft size={28} />
         </button>
-        <div className="flex-1 text-center">
-          <h2 className="text-[24px] font-bold text-[#5C4033] tracking-tight">
-            배송조회
-          </h2>
-        </div>
+        <h2 className="flex-1 text-center text-[24px] font-bold text-[#5C4033]">
+          배송조회
+        </h2>
       </div>
 
       <div className="max-w-[700px] mx-auto px-6">
-        {/* Status Illustration Section */}
+        {/* 배송 상태 요약 */}
         <div className="p-8">
-          <h3 className="text-[20px] font-bold text-center text-gray-800 mb-8">
-            주문하신 상품이 도착했어요
+          <h3 className="text-[20px] font-bold text-center mb-8">
+            {deliveryLogs[0]?.status ?? "배송 준비중입니다"}
           </h3>
 
           <div className="px-5">
-            <div className="relative h-[14px] bg-[#EEEEEE] rounded-full mb-4 overflow-hidden">
-              <div className="absolute top-0 left-0 h-full w-full bg-[#5C4033] rounded-full"></div>
+            <div className="relative h-[14px] bg-[#EEEEEE] rounded-full mb-4">
+              <div
+                className="absolute top-0 left-0 h-full bg-[#5C4033] rounded-full transition-all"
+                style={{ width: progressPercent }}
+              />
             </div>
-            <div className="flex justify-between px-1">
-              {["발송", "집하", "배송중", "도착"].map((step, idx) => (
-                <span
-                  key={idx}
-                  className="text-[14px] font-bold text-[#5C4033]"
-                >
-                  {step}
-                </span>
+            <div className="flex justify-between text-[14px] font-bold text-[#5C4033]">
+              {["발송", "집하", "배송중", "도착"].map((step) => (
+                <span key={step}>{step}</span>
               ))}
             </div>
           </div>
         </div>
 
-        <Separator className="bg-[#A8A9AD] h-[1px] my-2" />
+        <Separator />
 
-        {/* Product Summary Section */}
+        {/* 주문 요약 */}
         <div className="py-4 flex items-center gap-5">
-          <div className="w-[70px] h-[70px] rounded-[10px] overflow-hidden flex-shrink-0">
-            <img
-              src={sampleImg}
-              alt="Product"
-              className="w-full h-full object-cover"
-            />
-          </div>
+          <img
+            src={sampleImg}
+            alt="상품"
+            className="w-[70px] h-[70px] rounded-[10px] object-cover"
+          />
           <div>
-            <h4 className="text-[18px] font-bold text-[#333] mb-1">
-              배색 리버시블 컴포트핏 다운패딩(블랙)
-            </h4>
-            <p className="text-[14px] text-[#A8A9AD] font-medium">블랙/FREE</p>
+            <h4 className="text-[18px] font-bold">주문번호 {orderIdx}</h4>
+            <p className="text-[14px] text-gray-400">배송 현황 조회</p>
           </div>
         </div>
 
-        <Separator className="bg-[#A8A9AD] h-[1px] my-2" />
+        <Separator />
 
-        {/* Delivery Logs Section */}
+        {/* 배송 기록 */}
         <div className="p-3">
-          <h3 className="text-[18px] font-bold text-black mb-6">배송 기록</h3>
-          <div className="space-y-6">
-            {deliveryLogs.map((log) => (
-              <div key={log.id} className="flex items-start gap-6">
-                <div className="w-[100px] flex-shrink-0">
-                  <p
-                    className={`text-[14px] font-bold ${
-                      log.active ? "text-black" : "text-[#A8A9AD]"
-                    }`}
-                  >
-                    {log.date}
-                  </p>
-                  <p
-                    className={`text-[13px] font-bold ${
-                      log.active ? "text-black" : "text-[#A8A9AD]"
-                    }`}
-                  >
-                    {log.time}
-                  </p>
+          <h3 className="text-[18px] font-bold mb-6">배송 기록</h3>
+
+          {deliveryLogs.length === 0 ? (
+            <p className="text-gray-400 text-center">배송 정보가 없습니다.</p>
+          ) : (
+            <div className="space-y-6">
+              {deliveryLogs.map((log) => (
+                <div key={log.id} className="flex gap-6">
+                  <div className="w-[100px]">
+                    <p className={log.active ? "font-bold" : "text-gray-400"}>
+                      {log.date}
+                    </p>
+                    <p className={log.active ? "font-bold" : "text-gray-400"}>
+                      {log.time}
+                    </p>
+                  </div>
+                  <div>
+                    <p className={log.active ? "font-bold" : "text-gray-400"}>
+                      {log.status}
+                    </p>
+                    <p className="text-sm text-gray-500">{log.location}</p>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <p
-                    className={`text-[15px] font-bold mb-0.5 ${
-                      log.active ? "text-black" : "text-[#A8A9AD]"
-                    }`}
-                  >
-                    {log.status}
-                  </p>
-                  <p
-                    className={`text-[14px] font-medium ${
-                      log.active ? "text-gray-600" : "text-[#A8A9AD]"
-                    }`}
-                  >
-                    {log.location}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

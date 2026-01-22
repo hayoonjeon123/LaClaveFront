@@ -22,7 +22,7 @@ export default function MyWithDraw() {
     }
 
     const confirmWithdraw = window.confirm(
-      "정말로 회원 탈퇴하시겠습니까?\n탈퇴 후 복구할 수 없습니다."
+      "정말로 회원 탈퇴하시겠습니까?\n탈퇴 후 복구할 수 없습니다.",
     );
     if (!confirmWithdraw) return;
 
@@ -91,10 +91,7 @@ export default function MyWithDraw() {
             <div>
               <p className="font-bold mb-1">3. 재가입 가능 여부</p>
               <ul className="list-none pl-1 space-y-1">
-                <li>
-                  • 일반적인 경우 탈퇴 후 재가입이 가능합니다.{" "}
-                  <span className="text-gray-400">empty</span>
-                </li>
+                <li>• 일반적인 경우 탈퇴 후 재가입이 가능합니다. </li>
                 <li>
                   • 단, 약관 위반·강제 탈퇴 이력이 있는 경우에는 재가입이 제한될
                   수 있습니다.
@@ -103,11 +100,11 @@ export default function MyWithDraw() {
             </div>
           </div>
         </div>
-
         {/* 비밀번호 입력 섹션 */}
         <div className="max-w-[650px] mx-auto space-y-6 mb-8 mt-8">
-          <div className="flex items-center">
-            <label className="w-[120px] text-[16px] font-bold text-black">
+          {/* 비밀번호 */}
+          <div>
+            <label className="block text-[16px] font-bold text-black mb-2">
               비밀번호
             </label>
             <input
@@ -115,15 +112,21 @@ export default function MyWithDraw() {
               placeholder="비밀번호"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="flex-1 h-[40px] px-[12px] text-[14px] border border-[#5C4033] placeholder:text-[#A8A9AD] focus:outline-none focus:ring-1 focus:ring-[#5C4033]"
+              className="w-full h-[40px] px-[12px] text-[14px] border border-[#5C4033] placeholder:text-[#A8A9AD] focus:outline-none focus:ring-1 focus:ring-[#5C4033]"
             />
+          </div>
 
+          {/* 비밀번호 확인 */}
+          <div>
+            <label className="block text-[16px] font-bold text-black mb-2">
+              비밀번호 확인
+            </label>
             <input
               type="password"
               placeholder="비밀번호 확인"
               value={passwordCheck}
               onChange={(e) => setPasswordCheck(e.target.value)}
-              className="flex-1 h-[40px] px-[12px] text-[14px] border border-[#5C4033] placeholder:text-[#A8A9AD] focus:outline-none focus:ring-1 focus:ring-[#5C4033]"
+              className="w-full h-[40px] px-[12px] text-[14px] border border-[#5C4033] placeholder:text-[#A8A9AD] focus:outline-none focus:ring-1 focus:ring-[#5C4033]"
             />
           </div>
         </div>

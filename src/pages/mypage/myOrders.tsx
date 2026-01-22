@@ -62,7 +62,7 @@ export default function MyOrders() {
                   <img
                     src={sampleImg}
                     alt="상품 이미지"
-                    className="w-[100px] h-[100px] object-cover"
+                    className="w-[100px] h-[100px] object-cover rounded-md"
                   />
 
                   <div className="flex-1 text-sm">
@@ -70,18 +70,17 @@ export default function MyOrders() {
                     <p>색상 : {detail.colorName ?? detail.colorCode}</p>
                     <p>사이즈 : {detail.sizeName ?? detail.sizeCode}</p>
                     <p>수량 : {detail.quantity}개</p>
+
                     {/* 상품 액션 버튼 */}
                     <div className="mt-3 flex gap-2">
-                      {/* 취소 */}
                       <button
                         className="flex-1 h-[34px] border border-[#5C4033] text-[#5C4033]
-               rounded-md text-[13px] font-bold
-               hover:bg-[#5C4033] hover:text-white transition"
+                        rounded-md text-[13px] font-bold
+                        hover:bg-[#5C4033] hover:text-white transition"
                       >
                         취소
                       </button>
 
-                      {/* 리뷰쓰기 */}
                       <button
                         onClick={() =>
                           navigate("/writeReview", {
@@ -94,13 +93,12 @@ export default function MyOrders() {
                           })
                         }
                         className="flex-1 h-[34px] border border-[#5C4033] text-[#5C4033]
-               rounded-md text-[13px] font-bold
-               hover:bg-[#5C4033] hover:text-white transition"
+                        rounded-md text-[13px] font-bold
+                        hover:bg-[#5C4033] hover:text-white transition"
                       >
                         리뷰쓰기
                       </button>
 
-                      {/* 문의하기 */}
                       <button
                         onClick={() =>
                           navigate("/writeInquiry", {
@@ -111,8 +109,8 @@ export default function MyOrders() {
                           })
                         }
                         className="flex-1 h-[34px] border border-[#5C4033] text-[#5C4033]
-               rounded-md text-[13px] font-bold
-               hover:bg-[#5C4033] hover:text-white transition"
+                        rounded-md text-[13px] font-bold
+                        hover:bg-[#5C4033] hover:text-white transition"
                       >
                         문의하기
                       </button>
@@ -156,9 +154,11 @@ export default function MyOrders() {
                           주소: {order.delivery.address}{" "}
                           {order.delivery.addressDetail}
                         </p>
+                        <p>요청사항:{order.deliveryMsg}</p>
                       </div>
                     )}
                   </div>
+
                   {/* 결제 */}
                   <div className="border rounded-[10px] overflow-hidden">
                     <button
@@ -188,6 +188,26 @@ export default function MyOrders() {
                   </div>
                 </div>
               )}
+
+              {/* ✅ 배송 현황 버튼 (최종 핵심) */}
+              <div className="mt-5">
+                <button
+                  onClick={() => {
+                    console.log("📦 배송조회 클릭됨");
+                    console.log("주문번호(orderIdx):", order.ordersIdx);
+
+                    navigate(`/myDelivery/${order.ordersIdx}`);
+                  }}
+                  className="w-full h-[44px]
+      border border-[#5C4033]
+      text-[#5C4033] font-bold text-[15px]
+      rounded-lg
+      hover:bg-[#5C4033] hover:text-white
+      transition"
+                >
+                  배송 현황 조회
+                </button>
+              </div>
             </div>
           ))
         )}

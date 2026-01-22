@@ -23,6 +23,7 @@ export interface Order {
   ordersDate: string; // ISO 문자열
   ordersStatus: number;
   totalPrice: number;
+  deliveryMsg: string;
   details: OrderDetail[];
   delivery?: {
     recipientName: string;

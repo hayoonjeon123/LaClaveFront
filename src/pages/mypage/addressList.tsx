@@ -38,7 +38,6 @@ export default function AddressList() {
   // 🔹 수정
   const handleModify = (addressIdx: number) => {
     navigate(`/editAddress/${addressIdx}`);
-    navigate("/addressList", { state: { message: "주소가 수정되었습니다." } });
   };
 
   return (
