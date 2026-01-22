@@ -18,6 +18,14 @@ interface AppSidebarProps {
 
 function AppSidebar({ open, onOpenChange }: AppSidebarProps) {
     const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        // 로그인 상태 초기 확인
+        const localLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+        setIsLoggedIn(localLoggedIn);
+    }, [open]); // 사이드바가 열릴 때마다 확인하거나 적절한 시점에 업데이트
 
     const toggleMenu = (id: number) => {
         setOpenMenuId((prev) => (prev === id ? null : id));
@@ -29,7 +37,16 @@ function AppSidebar({ open, onOpenChange }: AppSidebarProps) {
         }
     }, [open]);
 
-    const navigate = useNavigate();
+    const handleLogout = () => {
+        if (window.confirm("로그아웃 하시겠습니까?")) {
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("memberId");
+            setIsLoggedIn(false);
+            onOpenChange?.(false);
+            navigate("/");
+            window.location.reload();
+        }
+    };
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
 
@@ -44,16 +61,47 @@ function AppSidebar({ open, onOpenChange }: AppSidebarProps) {
                         />
 
                         <div className="mt-3 flex items-center gap-2 text-[9px] flex-wrap justify-center">
-                            <button className="text-white font-semibold cursor-pointer px-1 py-0.5 hover:bg-white/10 rounded">
-                                회원가입
-                            </button>
-                            <button className="text-white font-semibold cursor-pointer px-1 py-0.5 hover:bg-white/10 rounded">
-                                로그인
-                            </button>
-                            <button className="text-white font-semibold cursor-pointer px-1 py-0.5 hover:bg-white/10 rounded">
+                            {isLoggedIn ? (
+                                <>
+                                    <button
+                                        onClick={() => { navigate("/myPage"); onOpenChange?.(false); }}
+                                        className="text-white font-semibold cursor-pointer px-1 py-0.5 hover:bg-white/10 rounded"
+                                    >
+                                        마이페이지
+                                    </button>
+                                    <button
+                                        onClick={handleLogout}
+                                        className="text-white font-semibold cursor-pointer px-1 py-0.5 hover:bg-white/10 rounded"
+                                    >
+                                        로그아웃
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <button
+                                        onClick={() => { navigate("/signup"); onOpenChange?.(false); }}
+                                        className="text-white font-semibold cursor-pointer px-1 py-0.5 hover:bg-white/10 rounded"
+                                    >
+                                        회원가입
+                                    </button>
+                                    <button
+                                        onClick={() => { navigate("/loginProc"); onOpenChange?.(false); }}
+                                        className="text-white font-semibold cursor-pointer px-1 py-0.5 hover:bg-white/10 rounded"
+                                    >
+                                        로그인
+                                    </button>
+                                </>
+                            )}
+                            <button
+                                onClick={() => { navigate(isLoggedIn ? "/myOrders" : "/loginProc"); onOpenChange?.(false); }}
+                                className="text-white font-semibold cursor-pointer px-1 py-0.5 hover:bg-white/10 rounded"
+                            >
                                 주문조회
                             </button>
-                            <button className="text-white font-semibold cursor-pointer px-1 py-0.5 hover:bg-white/10 rounded">
+                            <button
+                                onClick={() => { navigate("/recent-products"); onOpenChange?.(false); }}
+                                className="text-white font-semibold cursor-pointer px-1 py-0.5 hover:bg-white/10 rounded"
+                            >
                                 최근 본 상품
                             </button>
                         </div>

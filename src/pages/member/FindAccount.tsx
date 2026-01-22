@@ -20,7 +20,7 @@ const FindAccount = () => {
     }
     try {
       // Backend expects email for sendAuthCode
-      await axios.post("http://localhost:8080/email-send", { email }, { withCredentials: true });
+      await axios.post("/api/email-send", { email }, { withCredentials: true });
       alert("인증번호가 전송되었습니다. 이메일을 확인해주세요.");
       setIsEmailSent(true);
     } catch (error) {
@@ -35,7 +35,7 @@ const FindAccount = () => {
     }
     try {
       // Backend expects email and authCode for verifyCode
-      const response = await axios.post("http://localhost:8080/email-verify", {
+      const response = await axios.post("/api/email-verify", {
         email,
         authCode
       }, { withCredentials: true });
@@ -57,7 +57,7 @@ const FindAccount = () => {
 
     try {
       if (activeTab === "id") {
-        const response = await axios.post("http://localhost:8080/find-id", {
+        const response = await axios.post("/api/find-id", {
           memberName: name,
           email,
         }, { withCredentials: true });
@@ -68,7 +68,7 @@ const FindAccount = () => {
           alert("아이디를 입력해주세요.");
           return;
         }
-        const response = await axios.post("http://localhost:8080/find-pw", {
+        const response = await axios.post("/api/find-pw", {
           memberId,
           memberName: name,
           email,

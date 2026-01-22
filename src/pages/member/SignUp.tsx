@@ -20,7 +20,7 @@ const PW_REGEX =
 const SignUp = () => {
   const navigate = useNavigate();
   /* ================= 개발 모드 설정 ================= */
-  const IS_DEV_MODE = true; // true일 때 유효성 검사를 건너뜁니다.
+  const IS_DEV_MODE = false; // true일 때 유효성 검사를 건너뜁니다.
 
   /* ================= 약관 상태 ================= */
   const [agreeAll, setAgreeAll] = useState(false);
@@ -38,7 +38,8 @@ const SignUp = () => {
   const [emailId, setEmailId] = useState<string>("");
   const [emailDomain, setEmailDomain] = useState<string>("");
   const [authCode, setAuthCode] = useState<string>("");
-  const [isEmailVerified, setIsEmailVerified] = useState<boolean>(false); // 개발용: true로 설정하여 이메일 인증 건너뛰기
+  const [isEmailVerified, setIsEmailVerified] = useState<boolean>(false);
+  const [isIdAvailable, setIsIdAvailable] = useState<boolean>(false);
 
   /* ================= 주소 상태 ================= */
   const [postCode, setPostCode] = useState("");
@@ -69,17 +70,42 @@ const SignUp = () => {
   }, [agreeTerms, agreePrivacy, agreeMarketing]);
 
   /* ================= 실시간 유효성 검사 로직 ================= */
-  // 아이디 검증
   useEffect(() => {
     if (IS_DEV_MODE) {
       setIdError("");
+      setIsIdAvailable(true);
       return;
     }
-    if (memberId.length > 0 && !ID_REGEX.test(memberId)) {
-      setIdError("아이디는 영문, 숫자, 특수문자 포함 4~20자여야 합니다.");
-    } else {
+
+    if (memberId.length === 0) {
       setIdError("");
+      setIsIdAvailable(false);
+      return;
     }
+
+    if (!ID_REGEX.test(memberId)) {
+      setIdError("아이디는 영문, 숫자, 특수문자 포함 4~20자여야 합니다.");
+      setIsIdAvailable(false);
+      return;
+    }
+
+    // 디바운싱: 입력이 멈춘 후 500ms 뒤에 중복 체크 수행
+    const delayDebounceFn = setTimeout(async () => {
+      try {
+        const response = await axios.post("/api/check-id", { memberId });
+        if (response.data === true) {
+          setIdError("이미 사용 중인 아이디입니다.");
+          setIsIdAvailable(false);
+        } else {
+          setIdError("");
+          setIsIdAvailable(true);
+        }
+      } catch (error) {
+        console.error("아이디 중복 확인 실패:", error);
+      }
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
   }, [memberId, IS_DEV_MODE]);
 
   // 비밀번호 검증
@@ -120,19 +146,28 @@ const SignUp = () => {
       alert("이메일 주소를 완성해주세요.");
       return;
     }
+
     try {
-      // Backend expects MemberDTO with 'email'
+      // 1. 회원가입 시에는 먼저 이메일 중복 체크 수행
+      const checkRes = await axios.post("/api/check-email", { email: fullEmail });
+      if (checkRes.data === true) {
+        alert("이미 가입된 이메일입니다.");
+        return;
+      }
+
+      // 2. 중복이 아닐 때만 인증번호 발송 요청
       await axios.post(
-        "http://localhost:8080/email-send",
+        "/api/email-send",
         { email: fullEmail },
         {
           withCredentials: true,
         }
       );
       alert("인증번호가 발송되었습니다.");
-    } catch (error) {
-      console.error("이메일 발송 실패:", error);
-      alert("인증번호 발송에 실패했습니다.");
+    } catch (error: any) {
+      console.error("이메일 프로세스 실패:", error);
+      const errorMsg = error.response?.data || "요청 처리에 실패했습니다.";
+      alert(errorMsg);
     }
   };
 
@@ -145,7 +180,7 @@ const SignUp = () => {
     try {
       // Backend expects Map with 'email' and 'authCode'
       const response = await axios.post(
-        "http://localhost:8080/email-verify",
+        "/api/email-verify",
         {
           email: fullEmail,
           authCode: authCode,
@@ -204,6 +239,11 @@ const SignUp = () => {
         {idError && (
           <span className="ml-[120px] text-red-500 text-[12px] mt-[4px]">
             {idError}
+          </span>
+        )}
+        {isIdAvailable && memberId.length > 0 && !idError && (
+          <span className="ml-[120px] text-blue-500 text-[12px] mt-[4px]">
+            ✓ 사용 가능한 아이디입니다.
           </span>
         )}
       </div>
@@ -727,6 +767,10 @@ const SignUp = () => {
                 }
                 if (!isRequiredAgreed) {
                   window.alert("필수 약관에 동의하셔야 가입이 가능합니다.");
+                  return;
+                }
+                if (!isIdAvailable) {
+                  window.alert("아이디를 올바르게 입력해주세요.");
                   return;
                 }
                 if (!isEmailVerified) {

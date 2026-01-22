@@ -56,16 +56,16 @@ function ProductDetail() {
   const [activeTab, setActiveTab] = useState("info");
   const [productData, setProductData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
-
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
+  const [wishlistCount, setWishlistCount] = useState<number>(0);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     setSelectedSize("");
     setSelectedColor("");
   }, [productIdx]);
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProductDetail = async () => {
@@ -74,6 +74,13 @@ function ProductDetail() {
         const response = await axios.get(`/api/product/${productIdx}`);
         console.log("=== 상품 상세 데이터 ===", response.data);
         setProductData(response.data);
+        setWishlistCount(response.data.wishlistCount || 0);
+
+        // 찜 상태 확인
+        const wishResponse = await axios.get(`/api/Wishlist/status/${productIdx}`, {
+          withCredentials: true,
+        });
+        setIsLiked(wishResponse.data);
       } catch (error) {
         console.error("상품 상세 정보를 가져오는데 실패했습니다:", error);
       } finally {
@@ -85,6 +92,22 @@ function ProductDetail() {
       fetchProductDetail();
     }
   }, [productIdx]);
+
+  const handleToggleLike = async () => {
+    try {
+      const response = await axios.post(`/api/Wishlist/toggle/${productIdx}`, {}, {
+        withCredentials: true,
+      });
+      setIsLiked(response.data);
+      setWishlistCount(prev => response.data ? prev + 1 : prev - 1);
+    } catch (error: any) {
+      console.error("찜 토글 실패:", error);
+      if (error.response?.status === 401) {
+        alert("로그인이 필요한 서비스입니다.");
+        navigate("/loginProc");
+      }
+    }
+  };
 
   const handleAddToCart = async () => {
     if (!selectedSize || !selectedColor) {
@@ -297,8 +320,13 @@ function ProductDetail() {
             <div className="flex items-center gap-1 mb-8">
               <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
               <span className="text-[18px] font-bold">
-                {productData.averageRating || 0}
+                {productData.averageRating ? productData.averageRating.toFixed(1) : "0"}
               </span>
+              {productData.reviewCount > 0 && (
+                <span className="text-gray-400 text-sm font-normal ml-1">
+                  ({productData.reviewCount})
+                </span>
+              )}
             </div>
 
             <div className="mb-8">
@@ -355,18 +383,19 @@ function ProductDetail() {
 
             <div className="flex gap-3">
               <button
-                onClick={() => setIsLiked(!isLiked)}
+                onClick={handleToggleLike}
                 className="w-[60px] h-[60px] flex items-center justify-center relative group"
               >
                 <div className="flex flex-col items-center">
                   <Heart
                     className={`w-8 h-8 transition-colors ${isLiked
-                        ? "fill-red-500 text-red-500"
-                        : "text-[#5C4033] group-hover:text-red-400"
+                      ? "text-red-500"
+                      : "text-[#5C4033] group-hover:text-red-400"
                       }`}
+                    fill={isLiked ? "currentColor" : "none"}
                   />
                   <span className="text-[12px] font-bold mt-1 text-gray-600">
-                    0
+                    {wishlistCount}
                   </span>
                 </div>
               </button>
