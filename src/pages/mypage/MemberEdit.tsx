@@ -15,6 +15,17 @@ export default function MemberEdit() {
     address: "",
     addressDetail: "",
   });
+  const handlePostcodeSearch = () => {
+    new (window as any).daum.Postcode({
+      oncomplete: function (data: any) {
+        setFormData((prev) => ({
+          ...prev,
+          postCode: data.zonecode,
+          address: data.address,
+        }));
+      },
+    }).open();
+  };
 
   useEffect(() => {
     const fetchMember = async () => {
@@ -164,17 +175,58 @@ export default function MemberEdit() {
 
           {/* 주소 */}
           <div className="border-b border-gray-300 pb-2">
-            <label className="block text-[16px] font-bold text-[#5C4033] mb-1">
+            {/* <label className="block text-[16px] font-bold text-[#5C4033] mb-1">
               주소
+            </label> */}
+            {/* 우편번호 */}
+            <div className="border-b border-gray-300 pb-2">
+              <label className="block text-[16px] font-bold text-[#5C4033] mb-1">
+                우편번호
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={formData.postCode}
+                  readOnly
+                  className="flex-1 text-[18px] font-medium text-black bg-transparent outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={handlePostcodeSearch}
+                  className="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50"
+                >
+                  검색
+                </button>
+              </div>
+            </div>
+
+            {/* 주소 */}
+            <div className="border-b border-gray-300 pb-2">
+              <label className="block text-[16px] font-bold text-[#5C4033] mb-1">
+                주소
+              </label>
+              <input
+                type="text"
+                value={formData.address}
+                readOnly
+                className="w-full text-[18px] font-medium text-black bg-transparent outline-none"
+              />
+            </div>
+
+            {/* 상세 주소 */}
+            {/* <div className="border-b border-gray-300 pb-2"> */}
+            <label className="block text-[16px] font-bold text-[#5C4033] mb-1">
+              상세 주소
             </label>
             <input
               type="text"
-              name="address"
-              value={formData.address}
+              name="addressDetail"
+              value={formData.addressDetail}
               onChange={handleChange}
-              className="w-full text-[17px] font-medium text-black bg-transparent outline-none"
+              className="w-full text-[18px] font-medium text-black bg-transparent outline-none"
             />
           </div>
+          {/* </div> */}
 
           {/* 배송지 목록 */}
           <div

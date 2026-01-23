@@ -2,8 +2,12 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import sampleImg from "../../assets/sample-product.jpg";
 import { useEffect, useState } from "react"; // ⭐ 중요
-import { getMyReviews, deleteReview } from "../../api/reviewApi";
-import type { Review } from "../../api/reviewApi";
+import {
+  getMyReviews,
+  deleteReview,
+  getWritableReviews,
+} from "../../api/reviewApi";
+import type { Review, WritableReview } from "../../api/reviewApi";
 import axios from "axios";
 
 export default function MyReview() {
@@ -24,22 +28,25 @@ export default function MyReview() {
   };
   // 회원 리뷰 불러오기
   useEffect(() => {
-    setLoading(true);
+    const fetchReviews = async () => {
+      try {
+        setLoading(true);
 
-    // 작성 완료 리뷰 가져오기
-    getMyReviews()
-      .then((data) => {
-        setReviews(data);
-      })
-      .catch(console.error);
+        const [written, writable] = await Promise.all([
+          getMyReviews(), // 작성 완료 리뷰
+          getWritableReviews(), // 작성 가능 리뷰
+        ]);
 
-    // 작성 가능 리뷰 가져오기 (예: 아직 리뷰 안 쓴 주문)
-    getWritableReviews()
-      .then((data) => {
-        setWritableReviews(data);
-      })
-      .catch(console.error)
-      .finally(() => setLoading(false));
+        setReviews(written);
+        setWritableReviews(writable);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReviews();
   }, []);
 
   const handleDelete = async (reviewIdx: number) => {

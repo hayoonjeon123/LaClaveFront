@@ -18,6 +18,14 @@ export interface Review {
   status?: string;
   updatedAt?: string;
 }
+
+export interface WritableReview {
+  ordersIdx: number;
+  productIdx: number;
+  productName: string;
+  imageUrl: string;
+  optionInfo: string;
+}
 // 리뷰 등록
 export const createReview = (reviewData: any) => {
   return axios.post(`${API_URL}/api/review`, reviewData, {
