@@ -26,7 +26,7 @@ export default function MyWishList() {
   const toggleLike = async (productIdx: number) => {
     await deleteWishlist(productIdx);
     setWishItems((prev) =>
-      prev.filter((item) => item.productIdx !== productIdx)
+      prev.filter((item) => item.productIdx !== productIdx),
     );
   };
 
@@ -60,7 +60,8 @@ export default function MyWishList() {
             {wishItems.map((item) => (
               <div
                 key={item.productIdx}
-                className="group relative flex flex-col"
+                className="group relative flex flex-col cursor-pointer" // 커서 표시
+                onClick={() => navigate(`/product/${item.productIdx}`)} // 클릭 시 상세페이지 이동
               >
                 <div className="relative aspect-[4/5] bg-[#F9F9F9] overflow-hidden mb-3">
                   <img
@@ -69,8 +70,12 @@ export default function MyWishList() {
                     className="w-full h-full object-cover group-hover:scale-105 transition"
                   />
 
+                  {/* 찜 버튼은 클릭 이벤트가 div 클릭을 방해하지 않도록 stopPropagation */}
                   <button
-                    onClick={() => toggleLike(item.productIdx)}
+                    onClick={(e) => {
+                      e.stopPropagation(); // div 클릭 이벤트 막기
+                      toggleLike(item.productIdx);
+                    }}
                     className="absolute top-3 right-3 p-1"
                   >
                     <Heart size={20} className="fill-red-500 text-red-500" />

@@ -31,6 +31,23 @@ export interface Order {
     address: string;
     addressDetail: string;
   };
+  payInfo?: PayInfo; // ⭐ 추가
+}
+
+// === 결제 정보 타입 ===
+export interface PayInfo {
+  paymentIdx: number;
+  paymentDate: string; // ISO 문자열
+  totalPrice: number;
+  payStatus: number;
+  payWay: number; // 결제 수단 코드
+  payType: number; // 결제 유형
+  payReference: number;
+  externalTransaction?: string;
+
+  payWayName?: string;
+  payStatusName?: string;
+  payTypeName?: string;
 }
 
 const API_BASE_URL = "/api/my"; // 프록시를 통해 백엔드로 전달

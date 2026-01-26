@@ -95,7 +95,7 @@ export default function WriteInquiry() {
           className="w-full h-[220px] p-6 border border-[#A8A9AD] rounded-[6px] text-[16px] outline-none focus:border-[#5C4033] resize-none placeholder:text-[#A8A9AD]"
         />
 
-        {/* 사진 첨부 */}
+        {/* 사진 첨부
         <div className="space-y-2">
           <label className="block text-[18px] font-bold text-black">사진</label>
           <div className="w-[100px] h-[100px] border border-[#A8A9AD] rounded-[6px] flex items-center justify-center cursor-pointer hover:bg-gray-50 transition group">
@@ -104,7 +104,7 @@ export default function WriteInquiry() {
               className="text-[#A8A9AD] group-hover:text-black transition"
             />
           </div>
-        </div>
+        </div> */}
 
         {/* 유의사항 */}
         <div className="border border-[#A8A9AD] rounded-[6px] p-5 min-h-[140px]">

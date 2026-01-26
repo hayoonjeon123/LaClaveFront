@@ -13,19 +13,11 @@ export default function MyReview() {
   const [writableReviews, setWritableReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const getReviewImageUrl = (fileName?: string) => {
-    if (!fileName) return sampleImg; // 이미지 없으면 샘플
+  const getReviewImageUrl = (filePath?: string) => {
+    if (!filePath) return sampleImg;
 
-    // 1️⃣ 이미 경로가 포함된 경우
-    if (fileName) {
-      console.log(fileName);
-      return `C:\\temp\\upload\\review\\${fileName}`;
-      // return `http://localhost:8080${fileName}`;
-    }
-
-    // 2️⃣ 파일 이름만 있는 경우
-    console.log(fileName);
-    return `http://localhost:8080/review/uploads/review${fileName}`;
+    // DB에 /uploads/review/ 포함돼 있으므로 그대로 붙이면 됨
+    return `http://localhost:8080${filePath}`;
   };
 
   const fetchWritableReviews = async () => {

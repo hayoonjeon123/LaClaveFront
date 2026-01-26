@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
 import sampleImg from "../../assets/sample-product.jpg";
 import { getMyOrders } from "../../api/ordersApi";
-import type { Order } from "../../api/ordersApi";
+import type { Order, PayInfo } from "../../api/ordersApi";
 
 export default function MyOrders() {
   const navigate = useNavigate();
@@ -181,8 +181,31 @@ export default function MyOrders() {
 
                     {openPaymentIdx === order.ordersIdx && (
                       <div className="border-t px-5 py-4 text-sm space-y-1">
-                        <p>결제방법: BC카드</p>
-                        <p>결제금액: {order.totalPrice.toLocaleString()}원</p>
+                        <p>
+                          결제방법:{" "}
+                          {order.payInfo
+                            ? order.payInfo.payWayName
+                            : "정보 없음"}
+                        </p>
+                        <p>
+                          결제상태:{" "}
+                          {order.payInfo
+                            ? order.payInfo.payStatusName
+                            : "정보 없음"}
+                        </p>
+                        <p>
+                          결제유형:{" "}
+                          {order.payInfo
+                            ? order.payInfo.payTypeName
+                            : "정보 없음"}
+                        </p>
+                        <p>
+                          결제금액:{" "}
+                          {order.payInfo
+                            ? order.payInfo.totalPrice.toLocaleString()
+                            : "정보 없음"}
+                          원
+                        </p>
                       </div>
                     )}
                   </div>
