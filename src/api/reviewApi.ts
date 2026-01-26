@@ -6,14 +6,15 @@ export interface Review {
   reviewIdx: number;
   productIdx: number;
   productName: string;
-  imageUrl: string; // 추가: 상품 이미지 경로
-  optionInfo: string; // 수정: option -> optionInfo (백엔드 필드명과 일치)
+  imageUrl: string; // 상품 대표 이미지
+  reviewImageUrl?: string; // 추가: 리뷰 이미지
+  optionInfo: string; // 구매 옵션 정보
   content: string;
   score: number;
   createdAt: string;
-  ordersIdx?: number; // 추가: 수정/삭제 시 필요할 수 있음
+  ordersIdx?: number; // 수정/삭제 시 필요
 
-  // 아래 필드들은 상세조회 등 다른 API에서 올 수 있으므로 선택사항(?)으로 유지
+  // 선택사항: 상세조회 등
   memberIdx?: number;
   status?: string;
   updatedAt?: string;

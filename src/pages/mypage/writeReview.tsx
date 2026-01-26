@@ -23,6 +23,7 @@ export default function WriteReview() {
   const [rating, setRating] = useState<number>(state.score ?? 0);
   const [content, setContent] = useState<string>(state.content ?? "");
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const handleSubmit = async () => {
     if (rating === 0) {
@@ -131,13 +132,27 @@ export default function WriteReview() {
           hidden
           id="reviewImage"
           accept="image/*"
-          onChange={(e) => e.target.files && setImageFile(e.target.files[0])}
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+
+            setImageFile(file);
+            setPreviewUrl(URL.createObjectURL(file));
+          }}
         />
         <label
           htmlFor="reviewImage"
-          className="w-[80px] h-[80px] border rounded flex items-center justify-center cursor-pointer"
+          className="w-[80px] h-[80px] border rounded flex items-center justify-center cursor-pointer overflow-hidden"
         >
-          <Plus />
+          {previewUrl ? (
+            <img
+              src={previewUrl}
+              alt="리뷰 이미지 미리보기"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <Plus />
+          )}
         </label>
 
         {/* 버튼 */}
