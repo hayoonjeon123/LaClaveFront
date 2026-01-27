@@ -20,6 +20,8 @@ import {
 import { ProductReviews } from "@/components/product/ProductReviews";
 import { ProductInquiries } from "@/components/product/ProductInquiries";
 
+import { addRecentProduct } from "@/api/recentApi";
+
 const SIZE_ORDER = ["XS", "S", "M", "L", "XL", "XXL", "FREE"];
 
 const COLOR_TO_EN: Record<string, string> = {
@@ -70,16 +72,22 @@ function ProductDetail() {
   useEffect(() => {
     const fetchProductDetail = async () => {
       try {
+        if (!productIdx) return;
         setIsLoading(true);
         const response = await axios.get(`/api/product/${productIdx}`);
         console.log("=== 상품 상세 데이터 ===", response.data);
         setProductData(response.data);
         setWishlistCount(response.data.wishlistCount || 0);
+        // 최근 본 상품 추가
+        addRecentProduct(Number(productIdx)).catch(console.error);
 
         // 찜 상태 확인
-        const wishResponse = await axios.get(`/api/Wishlist/status/${productIdx}`, {
-          withCredentials: true,
-        });
+        const wishResponse = await axios.get(
+          `/api/Wishlist/status/${productIdx}`,
+          {
+            withCredentials: true,
+          },
+        );
         setIsLiked(wishResponse.data);
       } catch (error) {
         console.error("상품 상세 정보를 가져오는데 실패했습니다:", error);
@@ -95,11 +103,15 @@ function ProductDetail() {
 
   const handleToggleLike = async () => {
     try {
-      const response = await axios.post(`/api/Wishlist/toggle/${productIdx}`, {}, {
-        withCredentials: true,
-      });
+      const response = await axios.post(
+        `/api/Wishlist/toggle/${productIdx}`,
+        {},
+        {
+          withCredentials: true,
+        },
+      );
       setIsLiked(response.data);
-      setWishlistCount(prev => response.data ? prev + 1 : prev - 1);
+      setWishlistCount((prev) => (response.data ? prev + 1 : prev - 1));
     } catch (error: any) {
       console.error("찜 토글 실패:", error);
       if (error.response?.status === 401) {
@@ -125,8 +137,8 @@ function ProductDetail() {
         discountPrice:
           productData.discount > 0
             ? Math.floor(
-              productData.productPrice * (productData.discount / 100)
-            )
+                productData.productPrice * (productData.discount / 100),
+              )
             : 0,
       };
 
@@ -139,7 +151,7 @@ function ProductDetail() {
       if (response.status === 200 || response.status === 201) {
         if (
           window.confirm(
-            "장바구니에 담겼습니다. 장바구니 페이지로 이동하시겠습니까?"
+            "장바구니에 담겼습니다. 장바구니 페이지로 이동하시겠습니까?",
           )
         ) {
           navigate("/cart");
@@ -320,7 +332,9 @@ function ProductDetail() {
             <div className="flex items-center gap-1 mb-8">
               <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
               <span className="text-[18px] font-bold">
-                {productData.averageRating ? productData.averageRating.toFixed(1) : "0"}
+                {productData.averageRating
+                  ? productData.averageRating.toFixed(1)
+                  : "0"}
               </span>
               {productData.reviewCount > 0 && (
                 <span className="text-gray-400 text-sm font-normal ml-1">
@@ -388,10 +402,11 @@ function ProductDetail() {
               >
                 <div className="flex flex-col items-center">
                   <Heart
-                    className={`w-8 h-8 transition-colors ${isLiked
-                      ? "text-red-500"
-                      : "text-[#5C4033] group-hover:text-red-400"
-                      }`}
+                    className={`w-8 h-8 transition-colors ${
+                      isLiked
+                        ? "text-red-500"
+                        : "text-[#5C4033] group-hover:text-red-400"
+                    }`}
                     fill={isLiked ? "currentColor" : "none"}
                   />
                   <span className="text-[12px] font-bold mt-1 text-gray-600">
@@ -434,14 +449,16 @@ function ProductDetail() {
                 }
               }}
               className={`flex-1 h-full text-[16px] font-bold transition-all 
-                                ${index !== tabConfig.length - 1
-                  ? "border-r border-[#A8A9AD]"
-                  : ""
-                }
-                                ${activeTab === tab.id
-                  ? "bg-[#5C4033] text-white"
-                  : "bg-white text-black hover:bg-gray-50"
-                }`}
+                                ${
+                                  index !== tabConfig.length - 1
+                                    ? "border-r border-[#A8A9AD]"
+                                    : ""
+                                }
+                                ${
+                                  activeTab === tab.id
+                                    ? "bg-[#5C4033] text-white"
+                                    : "bg-white text-black hover:bg-gray-50"
+                                }`}
             >
               {tab.label}
             </button>
@@ -453,8 +470,8 @@ function ProductDetail() {
           {tabConfig.map((tab) => (
             <div key={tab.id} id={tab.id} className="scroll-mt-[100px]">
               {tab.type === "image" &&
-                Array.isArray(tab.content) &&
-                tab.content.length > 0 ? (
+              Array.isArray(tab.content) &&
+              tab.content.length > 0 ? (
                 <div className="flex flex-col items-center gap-0 w-full">
                   {tab.content.map((img, index) => (
                     <img
