@@ -9,8 +9,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+const SERVER_URL = "http://localhost:8080";
 
 const COLOR_MAP: Record<string, string> = {
+
     // 영문 색상명
     "black": "#000000",
     "white": "#FFFFFF",
@@ -152,10 +154,10 @@ export function ProductPage() {
                     products.map((product: any) => (
                         <Link to={`/product/${product.productIdx}`} key={product.productName} className="group block">
                             <div className="bg-gray-200 mb-4 overflow-hidden relative aspect-[3/4]">
-                                {/* DTO에서 mainImageUrl로 보내주고 있으니 하나만 써도 됩니다 */}
                                 {product.mainImageUrl ? (
                                     <img
-                                        src={product.mainImageUrl}
+                                        key={product.productIdx}
+                                        src={`${SERVER_URL}${product.mainImageUrl}`}
                                         alt={product.productName}
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                     />

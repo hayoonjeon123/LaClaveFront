@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import axiosInstance from "@/api/axiosInstance";
+const SERVER_URL = "http://localhost:8080";
+
 
 export function SearchResult() {
     const [searchParams] = useSearchParams();
@@ -59,13 +61,13 @@ export function SearchResult() {
                                     {/* 여기서는 images 세트/리스트의 첫번째를 사용한다고 가정 */}
                                     {(product.mainImageUrl) ? (
                                         <img
-                                            src={product.mainImageUrl}
+                                            src={`${SERVER_URL}${product.mainImageUrl}`}
                                             alt={product.productName}
                                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                         />
                                     ) : (product.images && product.images.length > 0) ? (
                                         <img
-                                            src={product.images[0].url || product.images[0].imagePath}
+                                            src={`${SERVER_URL}${product.images[0].url || product.images[0].imagePath}`}
                                             alt={product.productName}
                                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                         />
