@@ -16,17 +16,26 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axiosInstance from "@/api/axiosInstance";
 import { getMemberInfo } from "@/api/memberApi";
+import { getRecentProducts } from "../../api/recentApi";
 
 // ------------------- ProductCard -------------------
 function ProductCard({ product }: { product: any }) {
-  const imageUrl = product.image || (product.images?.[0]?.imagePath ?? "");
+  const imageUrl =
+    product.productImageUrl ||
+    product.image ||
+    product.images?.[0]?.imagePath ||
+    "";
   const nameDisplay = product.productName || product.name;
+  const priceValue = product.productPrice ?? product.price;
+
   const priceDisplay =
-    product.productPrice !== undefined
-      ? typeof product.productPrice === "number"
-        ? product.productPrice.toLocaleString() + "원"
-        : product.productPrice
-      : product.price;
+    typeof priceValue === "number"
+      ? priceValue.toLocaleString() + "원"
+      : priceValue
+        ? priceValue.toString().includes("원")
+          ? priceValue
+          : priceValue + "원"
+        : "";
 
   const discountDisplay =
     product.productDiscountRate !== undefined
@@ -91,31 +100,18 @@ export default function MyPage() {
 
   // === 최근 본 상품 조회 (localStorage) ===
   useEffect(() => {
-    const saved = localStorage.getItem("recentProducts");
-    if (saved) {
-      setRecentProducts(JSON.parse(saved));
-    } else {
-      // 초기 예시 데이터
-      const initialProducts = [
-        {
-          id: 1,
-          name: "Soft Collar fur Jacket",
-          price: "194,000원",
-          image:
-            "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=300&h=400&fit=crop",
-        },
-        {
-          id: 2,
-          name: "T.S FLEECE JACKET - CHARCOAL",
-          price: "90,300원",
-          image:
-            "https://images.unsplash.com/photo-1544026116-f3689408e06a?w=300&h=400&fit=crop",
-        },
-      ];
-      setRecentProducts(initialProducts);
-    }
-  }, []);
+    const fetchRecentProducts = async () => {
+      try {
+        const data = await getRecentProducts();
+        // 최신순 기준 상위 5개
+        setRecentProducts(data.slice(0, 5));
+      } catch (error) {
+        console.error("최근 본 상품 로딩 실패:", error);
+      }
+    };
 
+    fetchRecentProducts();
+  }, []);
   // === AI 추천 상품 조회 ===
   useEffect(() => {
     const fetchAiProducts = async () => {
@@ -192,6 +188,21 @@ export default function MyPage() {
             </Link>
           ))}
         </div>
+      </div>
+
+      <div className="mb-3 border-b border-[#5C4033]">
+        <Link to="/myDelivery" className="group">
+          <div className="flex justify-between items-center pb-2 mb-2">
+            <div className="flex items-center gap-3 text-left">
+              <Truck size={30} strokeWidth={1.5} className="text-[#5C4033]" />
+              <h3 className="font-bold text-[20px]">배송현황</h3>
+            </div>
+            <ArrowRight
+              size={24}
+              className="text-gray-400 group-hover:text-black transition"
+            />
+          </div>
+        </Link>
       </div>
 
       {/* 최근 본 상품 Section */}

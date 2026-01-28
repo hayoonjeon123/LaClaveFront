@@ -8,6 +8,7 @@ import { App } from "./App";
 import { BlankLayout, MainLayout, AdminLayout } from "./layouts";
 import { SignUp } from "./pages/member/SignUp";
 import MyPage from "./pages/mypage/myPage";
+import Mytest from "./pages/mypage/Mytest";
 import MyOrders from "./pages/mypage/myOrders";
 import MyReview from "./pages/mypage/myReview";
 import MyInquiryHistory from "./pages/mypage/myInquiryHistory";
@@ -69,6 +70,7 @@ createRoot(document.getElementById("root")!).render(
         <Route element={<MainLayout />}>
           <Route index element={<App />} />
           <Route path="myPage" element={<MyPage />} />
+          <Route path="mytest" element={<Mytest />} />
           <Route path="myOrders" element={<MyOrders />} />
           <Route path="myReview" element={<MyReview />} />
           <Route path="writeReview" element={<WriteReview />} />

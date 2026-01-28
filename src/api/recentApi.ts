@@ -8,6 +8,7 @@ export interface RecentProduct {
   viewedAt: string;
   productName?: string;
   price?: string;
+  productImageUrl?: string;
   isLiked?: boolean;
 }
 

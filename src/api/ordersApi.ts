@@ -15,6 +15,7 @@ export interface OrderDetail {
   // ⭐ 추가
   colorName?: string;
   sizeName?: string;
+  productImageUrl?: string; //
 }
 
 // === 주문 타입 ===
@@ -25,6 +26,7 @@ export interface Order {
   totalPrice: number;
   deliveryMsg: string;
   details: OrderDetail[];
+  orderNo: string;
   delivery?: {
     recipientName: string;
     phone: string;

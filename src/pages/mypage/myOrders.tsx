@@ -13,7 +13,12 @@ export default function MyOrders() {
   const [openDeliveryIdx, setOpenDeliveryIdx] = useState<number | null>(null);
 
   useEffect(() => {
-    getMyOrders().then(setOrders).catch(console.error);
+    getMyOrders()
+      .then((res) => {
+        console.log("📦 주문목록:", res);
+        setOrders(res);
+      })
+      .catch(console.error);
   }, []);
 
   return (
@@ -44,7 +49,7 @@ export default function MyOrders() {
             >
               {/* 주문 헤더 */}
               <div className="mb-2">
-                <p className="font-bold">주문번호 {order.ordersIdx}</p>
+                <p className="font-bold">주문번호 {order.orderNo}</p>
                 <p className="text-sm text-gray-400">
                   결제 날짜 :{" "}
                   {new Date(order.ordersDate).toLocaleString("ko-KR")}
@@ -60,8 +65,12 @@ export default function MyOrders() {
                   className="flex gap-4 items-start mb-4"
                 >
                   <img
-                    src={sampleImg}
-                    alt="상품 이미지"
+                    src={
+                      detail.productImageUrl
+                        ? `http://localhost:8080${detail.productImageUrl}`
+                        : sampleImg
+                    }
+                    alt={detail.productName}
                     className="w-[100px] h-[100px] object-cover rounded-md"
                   />
 
@@ -187,18 +196,18 @@ export default function MyOrders() {
                             ? order.payInfo.payWayName
                             : "정보 없음"}
                         </p>
-                        <p>
+                        {/* <p>
                           결제상태:{" "}
                           {order.payInfo
                             ? order.payInfo.payStatusName
                             : "정보 없음"}
-                        </p>
-                        <p>
+                        </p> */}
+                        {/* <p>
                           결제유형:{" "}
                           {order.payInfo
                             ? order.payInfo.payTypeName
                             : "정보 없음"}
-                        </p>
+                        </p> */}
                         <p>
                           결제금액:{" "}
                           {order.payInfo
