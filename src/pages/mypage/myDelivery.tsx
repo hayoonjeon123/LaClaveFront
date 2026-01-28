@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import sampleImg from "../../assets/sample-product.jpg";
 import { getDeliveryByOrder } from "@/api/myDeliveryApi";
 import type { MyDelivery } from "@/api/myDeliveryApi";
 
@@ -129,7 +128,7 @@ export default function MyDeliveryPage() {
         {/* 주문 요약 */}
         <div className="py-4 flex items-center gap-5">
           <img
-            src={sampleImg}
+            src={""}
             alt="상품"
             className="w-[70px] h-[70px] rounded-[10px] object-cover"
           />

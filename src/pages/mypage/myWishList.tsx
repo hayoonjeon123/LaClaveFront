@@ -11,6 +11,11 @@ export default function MyWishList() {
 
   // ✅ 찜 목록 조회 (memberIdx 없음)
   useEffect(() => {
+    if (sessionStorage.getItem("isLoggedIn") !== "true") {
+      alert("로그인이 필요한 서비스입니다.");
+      navigate("/loginProc");
+      return;
+    }
     getWishlistByMember()
       .then((data) => {
         console.log("📦 wishlist data:", data);

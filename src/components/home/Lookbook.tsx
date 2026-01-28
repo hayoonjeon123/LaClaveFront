@@ -6,7 +6,7 @@ import main_b3 from "@/assets/main/main_b3.png";
 
 function Lookbook() {
     return (
-        <div className="w-[1420px] mx-auto py-20 px-[70px]"> {/* px-[70px] to match 1420 outer - 1280 inner */}
+        <div className="w-[1420px] mx-auto py-20 px-[70px]">
 
             <div className="grid grid-cols-12 gap-8 mb-24">
                 {/* Left: 1 Portrait Image (Large) */}

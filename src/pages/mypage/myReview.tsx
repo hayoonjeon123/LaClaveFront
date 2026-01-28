@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import sampleImg from "../../assets/sample-product.jpg";
 import { useEffect, useState } from "react";
 import { getMyReviews, deleteReview } from "../../api/reviewApi";
 import type { Review } from "../../api/reviewApi";
@@ -14,7 +13,7 @@ export default function MyReview() {
   const [loading, setLoading] = useState(true);
 
   const getReviewImageUrl = (filePath?: string) => {
-    if (!filePath) return sampleImg;
+    if (!filePath) return ""; // 또는 기본 이미지 URL
 
     // DB에 /uploads/review/ 포함돼 있으므로 그대로 붙이면 됨
     return `http://localhost:8080${filePath}`;
@@ -79,21 +78,19 @@ export default function MyReview() {
       <div className="grid grid-cols-2 border-b mb-6 border-[#A8A9AD] max-w-[650px] mx-auto">
         <button
           onClick={() => setActiveTab("writable")}
-          className={`w-full pb-2 font-bold text-[18px] text-center transition cursor-pointer ${
-            activeTab === "writable"
+          className={`w-full pb-2 font-bold text-[18px] text-center transition cursor-pointer ${activeTab === "writable"
               ? "text-[#5C4033] border-b-2 border-[#5C4033]"
               : "text-[#A8A9AD] hover:text-[#5C4033]"
-          }`}
+            }`}
         >
           작성 가능 리뷰
         </button>
         <button
           onClick={() => setActiveTab("written")}
-          className={`w-full pb-2 font-bold text-[18px] text-center transition cursor-pointer ${
-            activeTab === "written"
+          className={`w-full pb-2 font-bold text-[18px] text-center transition cursor-pointer ${activeTab === "written"
               ? "text-[#5C4033] border-b-2 border-[#5C4033]"
               : "text-[#A8A9AD] hover:text-[#5C4033]"
-          }`}
+            }`}
         >
           작성 완료 리뷰
         </button>
@@ -119,7 +116,7 @@ export default function MyReview() {
                 <div className="p-4 py-3 flex items-center gap-4">
                   <div className="w-[52px] h-[52px] flex-shrink-0 overflow-hidden rounded-[8px] bg-gray-50">
                     <img
-                      src={sampleImg}
+                      src={""}
                       alt={review.productName}
                       className="w-full h-full object-cover"
                     />

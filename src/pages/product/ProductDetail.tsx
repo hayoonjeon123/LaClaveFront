@@ -102,6 +102,11 @@ function ProductDetail() {
   }, [productIdx]);
 
   const handleToggleLike = async () => {
+    if (sessionStorage.getItem("isLoggedIn") !== "true") {
+      alert("로그인이 필요한 서비스입니다.");
+      navigate("/loginProc");
+      return;
+    }
     try {
       const response = await axios.post(
         `/api/Wishlist/toggle/${productIdx}`,
@@ -122,6 +127,11 @@ function ProductDetail() {
   };
 
   const handleAddToCart = async () => {
+    if (sessionStorage.getItem("isLoggedIn") !== "true") {
+      alert("로그인이 필요한 서비스입니다.");
+      navigate("/loginProc");
+      return;
+    }
     if (!selectedSize || !selectedColor) {
       alert("사이즈와 색상을 선택해 주세요.");
       return;
@@ -137,8 +147,8 @@ function ProductDetail() {
         discountPrice:
           productData.discount > 0
             ? Math.floor(
-                productData.productPrice * (productData.discount / 100),
-              )
+              productData.productPrice * (productData.discount / 100),
+            )
             : 0,
       };
 
@@ -166,6 +176,33 @@ function ProductDetail() {
         alert("장바구니 추가 중 오류가 발생했습니다.");
       }
     }
+  };
+
+  const handleBuyNow = () => {
+    if (sessionStorage.getItem("isLoggedIn") !== "true") {
+      alert("로그인이 필요한 서비스입니다.");
+      navigate("/loginProc");
+      return;
+    }
+    if (!selectedSize || !selectedColor) {
+      alert("사이즈와 색상을 선택해 주세요.");
+      return;
+    }
+
+    const selectedItems = [
+      {
+        productIdx: Number(productIdx),
+        name: productData.productName,
+        option: `${getDisplayColor(selectedColor)} / ${selectedSize}`,
+        price: productData.productPrice,
+        quantity: 1,
+        image: mainImages[0],
+        colorCommonIdx: productData.colorCommonIdx[0], // 실제 선택된 인덱스로 매칭 필요할 수 있음
+        sizeCommonIdx: productData.sizeCommonIdx[0],
+      },
+    ];
+
+    navigate("/order", { state: { selectedItems } });
   };
 
   useEffect(() => {
@@ -402,11 +439,10 @@ function ProductDetail() {
               >
                 <div className="flex flex-col items-center">
                   <Heart
-                    className={`w-8 h-8 transition-colors ${
-                      isLiked
+                    className={`w-8 h-8 transition-colors ${isLiked
                         ? "text-red-500"
                         : "text-[#5C4033] group-hover:text-red-400"
-                    }`}
+                      }`}
                     fill={isLiked ? "currentColor" : "none"}
                   />
                   <span className="text-[12px] font-bold mt-1 text-gray-600">
@@ -421,7 +457,10 @@ function ProductDetail() {
                 장바구니
               </button>
 
-              <button className="flex-1 h-[60px] bg-[#5C4033] border-[#A8A9AD] border-2 text-white rounded-lg text-lg font-bold hover:bg-[#4a332a] transition-colors cursor-pointer">
+              <button
+                onClick={handleBuyNow}
+                className="flex-1 h-[60px] bg-[#5C4033] border-[#A8A9AD] border-2 text-white rounded-lg text-lg font-bold hover:bg-[#4a332a] transition-colors cursor-pointer"
+              >
                 결제하기
               </button>
             </div>
@@ -449,16 +488,14 @@ function ProductDetail() {
                 }
               }}
               className={`flex-1 h-full text-[16px] font-bold transition-all 
-                                ${
-                                  index !== tabConfig.length - 1
-                                    ? "border-r border-[#A8A9AD]"
-                                    : ""
-                                }
-                                ${
-                                  activeTab === tab.id
-                                    ? "bg-[#5C4033] text-white"
-                                    : "bg-white text-black hover:bg-gray-50"
-                                }`}
+                                ${index !== tabConfig.length - 1
+                  ? "border-r border-[#A8A9AD]"
+                  : ""
+                }
+                                ${activeTab === tab.id
+                  ? "bg-[#5C4033] text-white"
+                  : "bg-white text-black hover:bg-gray-50"
+                }`}
             >
               {tab.label}
             </button>
@@ -470,8 +507,8 @@ function ProductDetail() {
           {tabConfig.map((tab) => (
             <div key={tab.id} id={tab.id} className="scroll-mt-[100px]">
               {tab.type === "image" &&
-              Array.isArray(tab.content) &&
-              tab.content.length > 0 ? (
+                Array.isArray(tab.content) &&
+                tab.content.length > 0 ? (
                 <div className="flex flex-col items-center gap-0 w-full">
                   {tab.content.map((img, index) => (
                     <img

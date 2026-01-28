@@ -21,7 +21,6 @@ export const CLASS_CATEGORY = [
             { id: 113, label: '데님' },
             { id: 114, label: '숏팬츠' },
             { id: 131, label: '트레이닝' },
-            { id: 132, label: '팬츠' }
         ]
     },
     {

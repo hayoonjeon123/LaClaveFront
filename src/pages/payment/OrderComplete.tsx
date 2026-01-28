@@ -1,19 +1,21 @@
+import { useLocation, useNavigate } from "react-router-dom";
 import Logo from "@/assets/Logo_brown.png";
-import { useNavigate } from "react-router-dom";
 
 const OrderComplete = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state || {};
 
   const orderInfo = {
-    orderNumber: "20251603947",
-    date: "2025.06.13 오후 15:33",
-    productName: "배색 리버시블 컴포트핏 다운패딩(블랙)",
-    amount: "280,000원",
-    image: "/path/to/product-image.jpg",
+    orderNumber: state.orderNo || "00000000000",
+    date: new Date().toLocaleString(),
+    productName: state.productName || "주문 상품",
+    amount: (state.amount || 0).toLocaleString() + "원",
+    image: state.image || "",
   };
 
   return (
-    <div className="w-full max-w-[800px] mx-auto py-12 px-6 font-sans text-[#000]">
+    <div className="w-full max-w-[800px] mx-auto py-12 px-6 ">
       <div className="flex justify-center mb-2">
         <div className="flex justify-center mb-6">
           <img src={Logo} alt="LOGO" className="h-16" />

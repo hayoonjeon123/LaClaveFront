@@ -24,17 +24,12 @@ const COLOR_MAP: Record<string, string> = {
     "beige": "#F5F5DC",
     "ivory": "#FFFFF0",
     "brown": "#A52A2A",
+    "light_denim": "#A8C1D8",
+    "mid_denim": "#5A7A9C",
+    "dark_denim": "#2B3E58",
+    "black_denim": "#323232",
 
-    // 한글 색상명
-    "블랙": "#000000",
-    "화이트": "#FFFFFF",
-    "그레이": "#808080",
-    "레드": "#FF0000",
-    "블루": "#0000FF",
-    "네이비": "#000080",
-    "베이지": "#F5F5DC",
-    "아이보리": "#FFFFF0",
-    "브라운": "#A52A2A",
+
 };
 
 const getSafeColor = (colorName: any) => {

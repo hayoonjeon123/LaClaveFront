@@ -23,6 +23,11 @@ const Cart = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        if (sessionStorage.getItem("isLoggedIn") !== "true") {
+            alert("로그인이 필요한 서비스입니다.");
+            navigate("/loginProc");
+            return;
+        }
         const fetchCartItems = async () => {
             try {
                 const response = await axios.get("/api/cart/list", {
@@ -44,6 +49,7 @@ const Cart = () => {
                     const data = response.data.map((item: any) => ({
                         id: item.cartItemIdx,
                         cartItemIdx: item.cartItemIdx,
+                        productIdx: item.productIdx, // ✅ 실제 상품 번호 추가
                         name: item.productName,
                         option: `${item.color?.codeName} / ${item.size?.codeName}`,
                         price: item.price,

@@ -36,8 +36,8 @@ const AppLogin = () => {
 
       if (response.status === 200) {
         alert("로그인 성공!");
-        localStorage.setItem("isLoggedIn", "true"); // 로그인 상태 저장
-        localStorage.setItem("memberId", memberId); // 필요시 아이디도 저장
+        sessionStorage.setItem("isLoggedIn", "true"); // 로그인 상태 저장
+        sessionStorage.setItem("memberId", memberId); // 필요시 아이디도 저장
         navigate("/"); // 로그인 성공 시 메인으로 이동
         window.location.reload(); // 헤더 상태 갱신을 위해 새로고침 (간단한 방법)
       }

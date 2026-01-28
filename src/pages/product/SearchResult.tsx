@@ -3,6 +3,45 @@ import { Link, useSearchParams } from "react-router-dom";
 import axiosInstance from "@/api/axiosInstance";
 const SERVER_URL = "http://localhost:8080";
 
+const COLOR_MAP: Record<string, string> = {
+    "black": "#000000",
+    "white": "#FFFFFF",
+    "gray": "#808080",
+    "grey": "#808080",
+    "red": "#FF0000",
+    "blue": "#0000FF",
+    "navy": "#000080",
+    "beige": "#F5F5DC",
+    "ivory": "#FFFFF0",
+    "brown": "#A52A2A",
+
+    // 데님 색상
+    "light_denim": "#A8C1D8",
+    "mid_denim": "#5A7A9C",
+    "dark_denim": "#2B3E58",
+    "black_denim": "#323232",
+    "연청": "#A8C1D8",
+    "중청": "#5A7A9C",
+    "진청": "#2B3E58",
+    "흑청": "#323232",
+
+    "블랙": "#000000",
+    "화이트": "#FFFFFF",
+    "그레이": "#808080",
+    "레드": "#FF0000",
+    "블루": "#0000FF",
+    "네이비": "#000080",
+    "베이지": "#F5F5DC",
+    "아이보리": "#FFFFF0",
+    "브라운": "#A52A2A",
+};
+
+const getSafeColor = (colorName: any) => {
+    if (!colorName || typeof colorName !== "string") return "transparent";
+    if (colorName.startsWith("#")) return colorName;
+    const cleanName = colorName.replace("색상", "").toLowerCase().trim();
+    return COLOR_MAP[cleanName] || colorName;
+};
 
 export function SearchResult() {
     const [searchParams] = useSearchParams();
@@ -56,9 +95,6 @@ export function SearchResult() {
                             <Link to={`/product/${product.productIdx}`} key={product.productIdx} className="group block">
                                 <div className="bg-gray-200 mb-4 overflow-hidden relative aspect-[3/4]">
                                     {/* 이미지 처리 로직 */}
-                                    {/* 검색 결과의 Item 엔티티 구조에 따라 이미지 필드가 다를 수 있음 */}
-                                    {/* 일반적으로 images 리스트 혹은 mainImageUrl 필드 사용 */}
-                                    {/* 여기서는 images 세트/리스트의 첫번째를 사용한다고 가정 */}
                                     {(product.mainImageUrl) ? (
                                         <img
                                             src={`${SERVER_URL}${product.mainImageUrl}`}
@@ -80,10 +116,25 @@ export function SearchResult() {
                                         {product.productName || "상품명 없음"}
                                     </h3>
                                     <div className="flex items-baseline gap-2">
-                                        {product.productDiscountRate > 0 && (
-                                            <span className="text-red-500 font-bold text-lg">{product.productDiscountRate}%</span>
+                                        {product.discount > 0 && (
+                                            <span className="text-red-500 font-bold text-lg">{product.discount}%</span>
                                         )}
                                         <span className="text-gray-900 font-bold text-lg">{formatPrice(product.productPrice)}</span>
+                                    </div>
+                                    {/* 색상 스와치 추가 */}
+                                    <div className="flex gap-1.5 mt-2">
+                                        {product.colors && product.colors.length > 0 ? (
+                                            product.colors.map((color: string, index: number) => (
+                                                <div
+                                                    key={index}
+                                                    title={color}
+                                                    className="w-4 h-4 border border-gray-300 shadow-sm"
+                                                    style={{ backgroundColor: getSafeColor(color) }}
+                                                />
+                                            ))
+                                        ) : (
+                                            <span className="text-[10px] text-gray-400">옵션 없음</span>
+                                        )}
                                     </div>
                                 </div>
                             </Link>

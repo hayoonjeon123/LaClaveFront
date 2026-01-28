@@ -32,8 +32,8 @@ function Header({ onMenuClick }: HeaderProps) {
 
   useEffect(() => {
     const checkLoginStatus = async () => {
-      // 로컬 스토리지에서 먼저 확인
-      const localLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+      // 세션 스토리지에서 먼저 확인
+      const localLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
 
       if (localLoggedIn) {
         // 서버 세션 유효성 검증 (401 발생 시 인터셉터 리다이렉트 방지: skipRedirect)
@@ -46,22 +46,16 @@ function Header({ onMenuClick }: HeaderProps) {
             setIsLoggedIn(true);
           } else {
             console.log("세션 만료됨 (응답이 JSON이 아님)");
-            localStorage.removeItem("isLoggedIn");
-            localStorage.removeItem("memberId");
+            sessionStorage.removeItem("isLoggedIn");
+            sessionStorage.removeItem("memberId");
             setIsLoggedIn(false);
           }
         } catch (error: any) {
-          // 세션이 만료된 경우 (401)
-          if (error.response && error.response.status === 401) {
-            console.log("세션 만료됨 (초기 확인)");
-            localStorage.removeItem("isLoggedIn");
-            localStorage.removeItem("memberId");
-            setIsLoggedIn(false);
-          } else {
-            // 다른 에러지만 일단 로컬 스토리지 믿고 유지 (혹은 안전하게 로그아웃 처리?)
-            // 서버 다운 등이면 로그아웃 처리가 나을 수도 있음
-            setIsLoggedIn(true);
-          }
+          // 서버 통신 실패 시 (401 포함 모든 에러) 안전하게 로그아웃 처리
+          console.log("세션 검증 실패:", error.message);
+          sessionStorage.removeItem("isLoggedIn");
+          sessionStorage.removeItem("memberId");
+          setIsLoggedIn(false);
         }
       } else {
         setIsLoggedIn(false);

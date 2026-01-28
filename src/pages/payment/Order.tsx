@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { getMyAddressList } from "@/api/memberAddressApi";
+import type { MemberAddressDto } from "@/api/memberAddressApi";
 import {
     Select,
     SelectContent,
@@ -34,6 +36,8 @@ interface MemberInfo {
     address: string;
     addressDetail: string;
     point: number;
+    addrIdx: number;
+    phone: string;
 }
 
 const Order = () => {
@@ -49,8 +53,15 @@ const Order = () => {
     const [deliveryMessage, setDeliveryMessage] = useState("집 앞에 배송해주세요");
     const [selectedCoupon, setSelectedCoupon] = useState("선택 안함");
     const [paymentMethod, setPaymentMethod] = useState("카드 결제");
+    const [addressList, setAddressList] = useState<MemberAddressDto[]>([]);
+    const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
 
     useEffect(() => {
+        if (sessionStorage.getItem("isLoggedIn") !== "true") {
+            alert("로그인이 필요한 서비스입니다.");
+            navigate("/loginProc");
+            return;
+        }
         // 상품이 없으면 장바구니로 리다이렉트
         if (orderItems.length === 0) {
             alert("주문할 상품이 없습니다.");
@@ -99,18 +110,22 @@ const Order = () => {
             console.error("이니시스 초기화 실패:", error);
         });
 
-        // 회원 정보 가져오기
-        const fetchMemberInfo = async () => {
+        // 회원 정보 및 배송지 목록 가져오기
+        const fetchData = async () => {
             try {
-                const response = await axios.get("/api/info", { withCredentials: true });
-                setMemberInfo(response.data);
+                const [infoRes, addrList] = await Promise.all([
+                    axios.get("/api/info", { withCredentials: true }),
+                    getMyAddressList()
+                ]);
+                setMemberInfo(infoRes.data);
+                setAddressList(addrList);
             } catch (error) {
-                console.error("회원 정보 조회 실패:", error);
+                console.error("데이터 조회 실패:", error);
                 alert("로그인 정보가 없거나 세션이 만료되었습니다.");
                 navigate("/login");
             }
         };
-        fetchMemberInfo();
+        fetchData();
     }, [orderItems, navigate]);
 
     const removeItem = (id: number) => {
@@ -125,15 +140,21 @@ const Order = () => {
             return;
         }
 
+        if (!memberInfo?.addrIdx) {
+            alert("배송지 정보가 없습니다. 배송지를 등록하거나 선택해주세요.");
+            setIsAddressModalOpen(true);
+            return;
+        }
+
         try {
             // [STEP 1] 주문 생성
             const orderData = {
-                addrIdx: 1,
+                addrIdx: memberInfo?.addrIdx,
                 usedPoint: appliedPoints,
                 totalPrice: finalAmount,
                 deliveryMsg: deliveryMessage,
                 orderItems: orderItems.map(item => ({
-                    productIdx: item.id,
+                    productIdx: (item as any).productIdx || item.id, // productIdx가 있으면 사용, 없으면 id 사용
                     productName: item.name,
                     colorCode: item.colorCommonIdx,
                     sizeCode: item.sizeCommonIdx,
@@ -161,13 +182,13 @@ const Order = () => {
             // 결제 요청
             IMP.request_pay({
                 pg: "html5_inicis",  // 이니시스 웹표준 (가장 안정적)
-                pay_method: "card",             // 결제 수단
-                merchant_uid: orderNo,          // 주문 번호
+                pay_method: "card",
+                merchant_uid: orderNo,
                 name: orderItems[0].name + (orderItems.length > 1 ? ` 외 ${orderItems.length - 1}건` : ""),
-                amount: 1,                    // ⚠️ 테스트용 100원 (실제 금액: finalAmount)
-                buyer_email: memberInfo?.email || "test@test.com",
-                buyer_name: memberInfo?.memberName || "구매자",
-                buyer_tel: "01000000000",
+                amount: 1,
+                buyer_email: memberInfo?.email || "",
+                buyer_name: memberInfo?.memberName || "",
+                buyer_tel: memberInfo?.phone || "010-0000-0000",
                 buyer_addr: memberInfo?.address || "",
                 buyer_postcode: memberInfo?.postCode || "",
             }, async (rsp: any) => {
@@ -198,7 +219,7 @@ const Order = () => {
                                     "/api/cart/delete",
                                     { cartItemIdx: item.cartItemIdx },
                                     { withCredentials: true }
-                                ).catch(err => console.warn(`장바구니 삭제 실패 (ID ${item.cartItemIdx})`))
+                                ).catch(() => console.warn(`장바구니 삭제 실패 (ID ${item.cartItemIdx})`))
                             );
 
                         if (deletePromises.length > 0) {
@@ -211,7 +232,10 @@ const Order = () => {
                             state: {
                                 orderNo: orderNo,
                                 impUid: rsp.imp_uid,
-                                merchantUid: rsp.merchant_uid
+                                merchantUid: rsp.merchant_uid,
+                                productName: orderItems[0].name + (orderItems.length > 1 ? ` 외 ${orderItems.length - 1}건` : ""),
+                                image: orderItems[0].image,
+                                amount: rsp.paid_amount
                             }
                         });
                     } catch (error) {
@@ -259,7 +283,10 @@ const Order = () => {
             <section className="mb-12">
                 <div className="flex justify-between items-center border-b border-black pb-2 mb-6">
                     <h3 className="text-[16px] font-bold">배송지</h3>
-                    <button className="border border-[#000000] px-3 py-1 text-[12px] rounded hover:bg-[#5C4033] hover:text-[#ffffff] cursor-pointer transition-colors">
+                    <button
+                        onClick={() => setIsAddressModalOpen(true)}
+                        className="border border-[#000000] px-3 py-1 text-[12px] rounded hover:bg-[#5C4033] hover:text-[#ffffff] cursor-pointer transition-colors"
+                    >
                         배송지 변경
                     </button>
                 </div>
@@ -440,6 +467,56 @@ const Order = () => {
                     {finalAmount.toLocaleString()}원 결제 하기
                 </button>
             </section>
+            {/* 배송지 변경 모달 */}
+            {isAddressModalOpen && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
+                    <div className="bg-white w-full max-w-[500px] rounded-lg p-6 shadow-xl overflow-hidden flex flex-col max-h-[80vh]">
+                        <div className="flex justify-between items-center mb-6 border-b pb-4">
+                            <h3 className="text-[18px] font-bold">배송지 선택</h3>
+                            <button onClick={() => setIsAddressModalOpen(false)} className="text-[20px]">✕</button>
+                        </div>
+                        <div className="overflow-y-auto space-y-4 pr-2">
+                            {addressList.length > 0 ? (
+                                addressList.map((addr) => (
+                                    <div
+                                        key={addr.addressIdx}
+                                        className={`border rounded-lg p-4 cursor-pointer transition-all ${memberInfo?.addrIdx === addr.addressIdx
+                                            ? "border-[#5C4033] bg-[#F9F8F7]"
+                                            : "border-gray-200 hover:border-gray-400"
+                                            }`}
+                                        onClick={() => {
+                                            setMemberInfo(prev => prev ? {
+                                                ...prev,
+                                                addrIdx: addr.addressIdx,
+                                                address: addr.address,
+                                                addressDetail: addr.addressDetail,
+                                                postCode: addr.postCode,
+                                                phone: addr.phone
+                                            } : null);
+                                            setIsAddressModalOpen(false);
+                                        }}
+                                    >
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="font-bold text-[15px]">{addr.addressName}</span>
+                                            {addr.isDefault && <span className="text-[11px] bg-[#5C4033] text-white px-2 py-0.5 rounded">기본</span>}
+                                        </div>
+                                        <p className="text-[13px] text-gray-600 mb-1">{addr.recipientName} | {addr.phone}</p>
+                                        <p className="text-[13px] text-black">[{addr.postCode}] {addr.address} {addr.addressDetail}</p>
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="text-center py-10 text-gray-500">등록된 배송지가 없습니다.</p>
+                            )}
+                        </div>
+                        <button
+                            onClick={() => navigate("/addAddress")}
+                            className="w-full mt-6 h-12 border border-[#5C4033] text-[#5C4033] rounded font-medium hover:bg-[#5C4033] hover:text-white transition-all"
+                        >
+                            + 새 배송지 추가
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

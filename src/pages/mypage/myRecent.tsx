@@ -2,9 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { Heart, ArrowLeft } from "lucide-react";
 import { useState, useEffect } from "react";
 import { getRecentProducts } from "../../api/recentApi";
-import outer1 from "../../assets/proudct/outer.png";
-import outer2 from "../../assets/proudct/outer2.png";
-import outer3 from "../../assets/proudct/outer3.png";
 import type { RecentProduct } from "../../api/recentApi";
 
 export default function MyRecent() {
@@ -14,9 +11,9 @@ export default function MyRecent() {
 
   // 이미지 매핑 (상품 idx → 이미지)
   const imageMap: Record<number, string> = {
-    1: outer1,
-    2: outer2,
-    3: outer3,
+    1: "",
+    2: "",
+    3: "",
   };
 
   // 최근 본 상품 가져오기
@@ -67,7 +64,7 @@ export default function MyRecent() {
             >
               <div className="relative aspect-[4/5] bg-[#F9F9F9] overflow-hidden rounded-sm mb-2">
                 <img
-                  src={imageMap[item.productIdx] || outer1}
+                  src={imageMap[item.productIdx] || ""}
                   alt={`상품 ${item.productIdx}`}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
@@ -80,11 +77,10 @@ export default function MyRecent() {
                 >
                   <Heart
                     size={18}
-                    className={`transition-colors duration-300 ${
-                      (item as any).isLiked
-                        ? "fill-red-500 text-red-500"
-                        : "text-gray-300 fill-transparent"
-                    }`}
+                    className={`transition-colors duration-300 ${(item as any).isLiked
+                      ? "fill-red-500 text-red-500"
+                      : "text-gray-300 fill-transparent"
+                      }`}
                   />
                 </button>
               </div>

@@ -1,7 +1,6 @@
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import sampleImg from "../../assets/sample-product.jpg";
 
 export default function MyClaim() {
   const navigate = useNavigate();
@@ -50,7 +49,7 @@ export default function MyClaim() {
       <div className="max-w-5xl mx-auto flex items-center gap-6 my-4">
         {/* 상품 이미지 */}
         <img
-          src={sampleImg}
+          src={""}
           alt="상품 이미지"
           className="w-20 h-20 object-cover rounded-lg border border-gray-100 shadow-sm"
         />
