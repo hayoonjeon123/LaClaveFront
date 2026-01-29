@@ -7,6 +7,7 @@ import {
   getWritableReviews,
 } from "../../api/reviewApi";
 import type { Review, WritableReview } from "../../api/reviewApi";
+import { SERVER_URL } from "@/utils/productUtils";
 
 export default function MyReview() {
   const navigate = useNavigate();
@@ -71,21 +72,19 @@ export default function MyReview() {
       <div className="grid grid-cols-2 border-b mb-6 border-[#A8A9AD] max-w-[650px] mx-auto">
         <button
           onClick={() => setActiveTab("writable")}
-          className={`w-full pb-2 font-bold text-[18px] ${
-            activeTab === "writable"
-              ? "text-[#5C4033] border-b-2 border-[#5C4033]"
-              : "text-[#A8A9AD]"
-          }`}
+          className={`w-full pb-2 font-bold text-[18px] ${activeTab === "writable"
+            ? "text-[#5C4033] border-b-2 border-[#5C4033]"
+            : "text-[#A8A9AD]"
+            }`}
         >
           작성 가능 리뷰
         </button>
         <button
           onClick={() => setActiveTab("written")}
-          className={`w-full pb-2 font-bold text-[18px] ${
-            activeTab === "written"
-              ? "text-[#5C4033] border-b-2 border-[#5C4033]"
-              : "text-[#A8A9AD]"
-          }`}
+          className={`w-full pb-2 font-bold text-[18px] ${activeTab === "written"
+            ? "text-[#5C4033] border-b-2 border-[#5C4033]"
+            : "text-[#A8A9AD]"
+            }`}
         >
           작성 완료 리뷰
         </button>
@@ -112,7 +111,7 @@ export default function MyReview() {
                   <div className="w-[52px] h-[52px] rounded-[8px] bg-gray-50 overflow-hidden">
                     {review.productImageUrl && (
                       <img
-                        src={`http://localhost:8080${review.productImageUrl}`}
+                        src={`${SERVER_URL}${review.productImageUrl}`}
                         alt={review.productName}
                         className="w-full h-full object-cover"
                       />
@@ -151,7 +150,6 @@ export default function MyReview() {
         </div>
       )}
 
-      {/* 작성 완료 리뷰 (❗ 건드리지 않음) */}
       {!loading && activeTab === "written" && (
         <div className="space-y-4 px-6">
           {reviews.length === 0 ? (
@@ -166,11 +164,13 @@ export default function MyReview() {
               >
                 <div className="p-4 flex items-center gap-4">
                   <div className="w-[52px] h-[52px] rounded-[8px] bg-gray-50 overflow-hidden">
-                    <img
-                      src={`http://localhost:8080${review.reviewImageUrl}`}
-                      alt={review.productName}
-                      className="w-full h-full object-cover"
-                    />
+                    {review.imageUrl && (
+                      <img
+                        src={`${SERVER_URL}${review.imageUrl}`}
+                        alt={review.productName}
+                        className="w-full h-full object-cover"
+                      />
+                    )}
                   </div>
 
                   <div className="flex-1 min-w-0">

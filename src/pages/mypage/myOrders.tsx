@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
 import { getMyOrders } from "../../api/ordersApi";
-import type { Order, PayInfo } from "../../api/ordersApi";
+import type { Order } from "../../api/ordersApi";
+import { SERVER_URL } from "@/utils/productUtils";
 
 export default function MyOrders() {
   const navigate = useNavigate();
@@ -64,7 +65,7 @@ export default function MyOrders() {
                   className="flex gap-4 items-start mb-4"
                 >
                   <img
-                    src={`http://localhost:8080${detail.productImageUrl}`}
+                    src={`${SERVER_URL}${detail.productImageUrl}`}
                     alt={detail.productName}
                     className="w-[100px] h-[100px] object-cover rounded-md"
                   />
@@ -191,18 +192,6 @@ export default function MyOrders() {
                             ? order.payInfo.payWayName
                             : "정보 없음"}
                         </p>
-                        {/* <p>
-                          결제상태:{" "}
-                          {order.payInfo
-                            ? order.payInfo.payStatusName
-                            : "정보 없음"}
-                        </p> */}
-                        {/* <p>
-                          결제유형:{" "}
-                          {order.payInfo
-                            ? order.payInfo.payTypeName
-                            : "정보 없음"}
-                        </p> */}
                         <p>
                           결제금액:{" "}
                           {order.payInfo

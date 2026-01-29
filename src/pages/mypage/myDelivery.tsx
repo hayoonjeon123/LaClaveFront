@@ -4,6 +4,9 @@ import { ArrowLeft } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { getDeliveryByOrder } from "@/api/myDeliveryApi";
 import type { MyDelivery } from "@/api/myDeliveryApi";
+import { getMyOrders } from "@/api/ordersApi";
+import type { Order } from "@/api/ordersApi";
+import { SERVER_URL } from "@/utils/productUtils";
 
 interface DeliveryLog {
   id: number;
@@ -18,6 +21,7 @@ export default function MyDeliveryPage() {
   const navigate = useNavigate();
   const { orderIdx } = useParams<{ orderIdx: string }>();
   const [deliveryLogs, setDeliveryLogs] = useState<DeliveryLog[]>([]);
+  const [orderInfo, setOrderInfo] = useState<Order | null>(null);
 
   useEffect(() => {
     if (!orderIdx) return;
@@ -75,6 +79,16 @@ export default function MyDeliveryPage() {
     };
 
     fetchDelivery();
+
+    // 주문 정보 조회 (상품 이미지를 위해)
+    getMyOrders()
+      .then((orders) => {
+        const order = orders.find((o) => o.ordersIdx === Number(orderIdx));
+        if (order) {
+          setOrderInfo(order);
+        }
+      })
+      .catch(console.error);
   }, [orderIdx]);
 
   /** 진행바 퍼센트 계산 */
@@ -127,11 +141,17 @@ export default function MyDeliveryPage() {
 
         {/* 주문 요약 */}
         <div className="py-4 flex items-center gap-5">
-          <img
-            src={""}
-            alt="상품"
-            className="w-[70px] h-[70px] rounded-[10px] object-cover"
-          />
+          {orderInfo && orderInfo.details.length > 0 && orderInfo.details[0].productImageUrl ? (
+            <img
+              src={`${SERVER_URL}${orderInfo.details[0].productImageUrl}`}
+              alt="상품"
+              className="w-[70px] h-[70px] rounded-[10px] object-cover"
+            />
+          ) : (
+            <div className="w-[70px] h-[70px] rounded-[10px] bg-gray-200 flex items-center justify-center">
+              <span className="text-gray-400 text-xs">No Image</span>
+            </div>
+          )}
           <div>
             <h4 className="text-[18px] font-bold">주문번호 {orderIdx}</h4>
             <p className="text-[14px] text-gray-400">배송 현황 조회</p>

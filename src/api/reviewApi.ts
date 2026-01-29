@@ -1,6 +1,6 @@
-import axios from "axios";
+import axiosInstance from "./axiosInstance";
 
-const API_URL = "http://localhost:8080";
+const API_BASE_URL = "/api/review";
 
 export interface Review {
   reviewIdx: number;
@@ -27,18 +27,19 @@ export interface WritableReview {
   productImageUrl: string;
   optionInfo: string;
 }
+
 // 리뷰 등록
-export const createReview = (reviewData: any) => {
-  return axios.post(`${API_URL}/api/review`, reviewData, {
-    withCredentials: true,
+export const createReview = (reviewData: FormData) => {
+  return axiosInstance.post(`${API_BASE_URL}`, reviewData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
   });
 };
 
 // 리뷰 수정
-// reviewApi.ts
 export const updateReview = (reviewIdx: number, reviewData: FormData) => {
-  return axios.put(`${API_URL}/api/review/${reviewIdx}`, reviewData, {
-    withCredentials: true,
+  return axiosInstance.put(`${API_BASE_URL}/${reviewIdx}`, reviewData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -47,25 +48,18 @@ export const updateReview = (reviewIdx: number, reviewData: FormData) => {
 
 // 리뷰 삭제
 export const deleteReview = (reviewIdx: number) => {
-  return axios.delete(`${API_URL}/api/review/${reviewIdx}`, {
-    withCredentials: true,
-  });
+  return axiosInstance.delete(`${API_BASE_URL}/${reviewIdx}`);
 };
 
 // [마이페이지] 회원별 리뷰 조회
 export const getMyReviews = async (): Promise<Review[]> => {
-  const res = await axios.get<Review[]>(`${API_URL}/api/review/my`, {
-    withCredentials: true,
-  });
+  const res = await axiosInstance.get<Review[]>(`${API_BASE_URL}/my`);
   return res.data;
 };
 
 // [마이페이지] 작성 가능 리뷰 조회
 export const getWritableReviews = async (): Promise<WritableReview[]> => {
-  const res = await axios.get<WritableReview[]>(
-    `${API_URL}/api/review/writable`,
-    { withCredentials: true },
-  );
+  const res = await axiosInstance.get<WritableReview[]>(`${API_BASE_URL}/writable`);
   return res.data;
 };
 
@@ -74,8 +68,8 @@ export const getReviewsByProduct = async (
   productIdx: number,
   status: string = "ACTIVE",
 ): Promise<Review[]> => {
-  const res = await axios.get<Review[]>(
-    `${API_URL}/api/review/product/${productIdx}?status=${status}`,
+  const res = await axiosInstance.get<Review[]>(
+    `${API_BASE_URL}/product/${productIdx}?status=${status}`,
   );
   return res.data;
 };
@@ -84,8 +78,8 @@ export const getReviewsByProduct = async (
 export const getProductAverageScore = async (
   productIdx: number,
 ): Promise<number> => {
-  const res = await axios.get<number>(
-    `${API_URL}/api/review/average/${productIdx}`,
+  const res = await axiosInstance.get<number>(
+    `${API_BASE_URL}/average/${productIdx}`,
   );
   return res.data;
 };
