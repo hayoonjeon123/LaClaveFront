@@ -1,4 +1,4 @@
-import Logo from "@/assets/Logo_brown.png";
+import Logo from "@/assets/image/Logo_brown.png";
 import { useNavigate } from "react-router-dom";
 
 const JoinComplete = () => {

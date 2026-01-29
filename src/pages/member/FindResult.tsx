@@ -1,4 +1,4 @@
-import Logo from "@/assets/Logo_brown.png";
+import Logo from "@/assets/image/Logo_brown.png";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 const FindResult = () => {
@@ -6,7 +6,6 @@ const FindResult = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // FindAccount에서 넘겨준 데이터 (없을 경우 기본값 처리)
   const userData = location.state || {
     name: "정보 없음",
     id: "정보 없음",
@@ -17,7 +16,6 @@ const FindResult = () => {
   return (
     <div className="flex flex-col items-center justify-center py-14">
       <div className="w-full max-w-[800px] px-6">
-        {/* 로고 영역 */}
         <div className="flex justify-center mb-6">
           <img
             src={Logo}
@@ -27,14 +25,10 @@ const FindResult = () => {
           />
         </div>
 
-        {/* 페이지 타이틀: 타입에 따라 동적 변경 */}
         <h2 className="text-center text-[32px] font-bold mb-6 tracking-tight text-[#5C4033]">
           {type === "id" ? "아이디 찾기 결과" : "비밀번호 찾기 결과"}
         </h2>
-
-        {/* 결과 정보 박스 */}
         <div className="border border-gray-300 rounded-[20px] p-12 mb-12 flex items-center justify-center gap-16 shadow-sm">
-          {/* 프로필 플레이스홀더 아이콘 */}
           <div className="w-[180px] h-[180px] bg-gray-100 rounded-full flex items-center justify-center overflow-hidden">
             <svg
               className="w-2/3 h-2/3 text-gray-300"
@@ -45,16 +39,13 @@ const FindResult = () => {
             </svg>
           </div>
 
-          {/* 정보 텍스트 영역 */}
           <div className="space-y-5 text-[20px]">
-            {/* 1. 이름 (공통) */}
             <div className="flex items-center">
               <span className="w-24 font-bold text-[#5C4033]">이름</span>
               <span className="mr-6">:</span>
               <span className="text-gray-700">{userData.name}</span>
             </div>
 
-            {/* 2. 아이디 (아이디 찾기 결과일 때만 표시) */}
             {type === "id" && (
               <div className="flex items-center">
                 <span className="w-24 font-bold text-[#5C4033]">아이디</span>
@@ -65,14 +56,12 @@ const FindResult = () => {
               </div>
             )}
 
-            {/* 3. 이메일 (공통) */}
             <div className="flex items-center">
               <span className="w-24 font-bold text-[#5C4033]">이메일</span>
               <span className="mr-6">:</span>
               <span className="text-gray-700">{userData.email}</span>
             </div>
 
-            {/* 4. 비밀번호 (비밀번호 찾기 결과일 때만 표시) */}
             {type === "password" && (
               <div className="flex items-center">
                 <span className="w-24 font-bold text-[#5C4033]">비밀번호</span>
@@ -85,9 +74,7 @@ const FindResult = () => {
           </div>
         </div>
 
-        {/* 하단 액션 버튼 */}
         <div className="flex justify-center gap-6">
-          {/* 로그인 버튼: 로그인 페이지로 이동 */}
           <button
             onClick={() => navigate("/loginProc")}
             className="w-[280px] h-16 border-2 border-[#A8A9AD] text-[#5C4033] text-[22px] font-semibold cursor-pointer rounded-[15px] hover:bg-gray-50 transition-colors"
@@ -95,7 +82,6 @@ const FindResult = () => {
             로그인
           </button>
 
-          {/* 우측 버튼: 타입에 따라 문구 및 기능 변경 */}
           {type === "id" ? (
             <button
               onClick={() => navigate("/findaccount")}

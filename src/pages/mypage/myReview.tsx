@@ -5,8 +5,8 @@ import {
   getMyReviews,
   deleteReview,
   getWritableReviews,
-} from "../../api/reviewApi";
-import type { Review, WritableReview } from "../../api/reviewApi";
+} from "../../api/myPage/reviewApi";
+import type { Review, WritableReview } from "../../api/myPage/reviewApi";
 import { SERVER_URL } from "@/utils/productUtils";
 
 export default function MyReview() {

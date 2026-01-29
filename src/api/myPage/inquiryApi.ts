@@ -1,5 +1,5 @@
-import axiosInstance from "./axiosInstance";
-import type { Order } from "./ordersApi";
+import axiosInstance from "../axiosInstance";
+import type { Order } from "../order/myOrdersApi";
 
 const API_BASE_URL = "/api/inquiry";
 
@@ -25,7 +25,7 @@ export const createInquiry = (data: {
   return axiosInstance.post(`${API_BASE_URL}/create`, data);
 };
 
-export const getMyOrders = async (): Promise<Order[]> => {
+export const getMyOrdersForInquiry = async (): Promise<Order[]> => {
   const response = await axiosInstance.get<Order[]>(`${API_BASE_URL}/orders`);
   return response.data; // 이제 호출하는 쪽에서 바로 Order[]
 };

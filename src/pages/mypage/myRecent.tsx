@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { Heart, ArrowLeft } from "lucide-react";
 import { useState, useEffect } from "react";
-import { getRecentProducts } from "../../api/recentApi";
-import type { RecentProduct } from "../../api/recentApi";
+import { getRecentProducts } from "../../api/myPage/recentApi";
+import type { RecentProduct } from "../../api/myPage/recentApi";
 
 export default function MyRecent() {
   const navigate = useNavigate();
@@ -81,11 +81,10 @@ export default function MyRecent() {
                 >
                   <Heart
                     size={18}
-                    className={`transition-colors duration-300 ${
-                      (item as any).isLiked
-                        ? "fill-red-500 text-red-500"
-                        : "text-gray-300 fill-transparent"
-                    }`}
+                    className={`transition-colors duration-300 ${(item as any).isLiked
+                      ? "fill-red-500 text-red-500"
+                      : "text-gray-300 fill-transparent"
+                      }`}
                   />
                 </button>
               </div>

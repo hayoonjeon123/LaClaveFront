@@ -15,8 +15,8 @@ import {
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axiosInstance from "@/api/axiosInstance";
-import { getMemberInfo } from "@/api/memberApi";
-import { getRecentProducts } from "../../api/recentApi";
+import { getMemberInfo } from "@/api/member/memberApi";
+import { getRecentProducts } from "../../api/myPage/recentApi";
 
 // ------------------- ProductCard -------------------
 function ProductCard({ product }: { product: any }) {

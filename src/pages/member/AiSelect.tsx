@@ -1,27 +1,23 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { signUp } from "@/api/memberApi";
+import { signUp } from "@/api/member/memberApi";
 import { FASHION_STYLES } from "@/constants/style.constants";
 
 const AiSelect = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const signUpData = location.state || {}; // SignUp 페이지에서 넘어온 데이터
-
-  /* ================= 상태 관리 ================= */
+  const signUpData = location.state || {};
   const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
   const [height, setHeight] = useState<string>("");
   const [weight, setWeight] = useState<string>("");
 
 
-  // 스타일 클릭
   const toggleStyle = (label: string) => {
     setSelectedStyles((prev) =>
       prev.includes(label) ? prev.filter((s) => s !== label) : [...prev, label]
     );
   };
 
-  /* ================= 가입/저장 핸들러 ================= */
   const handleSignup = async () => {
     if (!signUpData || !signUpData.memberId) {
       alert("회원가입 정보가 누락되었습니다. 다시 시도해주세요.");
@@ -29,29 +25,24 @@ const AiSelect = () => {
       return;
     }
 
-    // 백엔드 MemberDTO 구조 및 AI 정보를 합쳐서 전송
     const data = {
-      ...signUpData, // memberId, memberPw, memberName, email, gender, birth, postCode, address, addressDetail, marketingAgree 등
+      ...signUpData,
       marketingAgree: signUpData.marketingAgree ? 1 : 0,
       height: height ? parseFloat(height) : 0,
       weight: weight ? parseFloat(weight) : 0,
       prefStyles: selectedStyles,
     };
 
-    console.log("전송할 데이터:", data);
-
     try {
       await signUp(data);
       navigate("/JoinComplete");
     } catch (error: any) {
-      console.error("저장 중 에러 발생:", error);
       alert(error.response?.data?.message || "저장에 실패했습니다. 백엔드 서버 상태를 확인해주세요.");
     }
   };
 
   return (
     <div className="w-full flex flex-col items-center">
-      {/* 제목 */}
       <div className="text-[30px] font-semibold text-[#000000] mt-[20px]">
         Ai 맞춤 정보
       </div>
@@ -60,7 +51,6 @@ const AiSelect = () => {
         AI가 체형과 스타일을 분석해 추천 드려요
       </div>
 
-      {/* 라인 */}
       <div className="w-[1360px] h-[1px] bg-[#5C4033] my-[30px]" />
 
       <div className="w-[1360px] flex justify-start ml-[24px]">
@@ -72,7 +62,6 @@ const AiSelect = () => {
       </div>
 
       <div className="w-[1360px] flex justify-start ml-[24px] mt-[20px] gap-[60px]">
-        {/* 키 */}
         <div className="flex flex-col gap-[6px]">
           <span className="text-[16px] font-medium text-black">
             키{" "}
@@ -92,7 +81,6 @@ const AiSelect = () => {
           </div>
         </div>
 
-        {/* 몸무게 */}
         <div className="flex flex-col gap-[6px]">
           <span className="text-[16px] font-medium text-black">
             몸무게{" "}
@@ -122,7 +110,6 @@ const AiSelect = () => {
       </div>
 
       <div className="w-[1360px] flex flex-col items-start ml-[24px] mt-[20px] gap-[16px]">
-        {/* 라벨 */}
         <span className="text-[16px] font-medium text-black">
           선호 스타일{" "}
           <span className="ml-[4px] text-[#A8A9AD] text-[14px]">
@@ -130,7 +117,6 @@ const AiSelect = () => {
           </span>
         </span>
 
-        {/* 스타일 버튼 그리드 */}
         <div className="grid grid-cols-4 gap-x-[20px] gap-y-[12px]">
           {FASHION_STYLES.map((style) => (
             <button
@@ -160,7 +146,6 @@ const AiSelect = () => {
         </div>
       </div>
 
-      {/* 회원가입 버튼 */}
       <div className="w-full flex justify-center mt-[60px] mb-[80px]">
         <div className="w-full max-w-[1360px]">
           <button

@@ -1,5 +1,5 @@
-import axiosInstance from "./axiosInstance";
-import type { OrderRequest, OrderApprovalRequest } from "../types/order";
+import axiosInstance from "../axiosInstance";
+import type { OrderRequest, OrderApprovalRequest } from "../../types/order";
 
 //주문 생성
 export const createOrder = async (orderData: OrderRequest): Promise<string> => {

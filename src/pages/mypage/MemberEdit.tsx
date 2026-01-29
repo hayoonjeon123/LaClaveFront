@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getMemberInfo, updateMemberInfo } from "@/api/memberApi";
-import type { MemberUpdateDto } from "@/api/memberApi";
+import { getMemberInfo, updateMemberInfo } from "@/api/member/memberApi";
+import type { MemberUpdateDto } from "@/api/member/memberApi";
 import { ArrowLeft, Smile, ChevronRight } from "lucide-react";
 
 export default function MemberEdit() {

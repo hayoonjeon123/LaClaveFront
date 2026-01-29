@@ -1,4 +1,4 @@
-import LogoBrown from "@/assets/Logo_brown.png";
+import LogoBrown from "@/assets/image/Logo_brown.png";
 
 const FAQ_ITEMS = [
     { id: 1, title: "La Clave 이용 안내", date: "2025.12.20" },

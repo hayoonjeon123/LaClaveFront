@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
-import { getMyAddressList, removeAddress } from "@/api/memberAddressApi"; // API import
-import type { MemberAddressDto } from "@/api/memberAddressApi";
+import { getMyAddressList, removeAddress } from "@/api/myPage/memberAddressApi"; // API import
+import type { MemberAddressDto } from "@/api/myPage/memberAddressApi";
 
 export default function AddressList() {
   const navigate = useNavigate();

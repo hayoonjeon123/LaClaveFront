@@ -1,7 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getInquiryList, deleteInquiry } from "../../api/inquiryApi";
+import { getInquiryList, deleteInquiry } from "../../api/myPage/inquiryApi";
 
 export default function MyInquiryHistory() {
   const navigate = useNavigate();

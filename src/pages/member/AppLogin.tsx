@@ -1,11 +1,11 @@
 import { useState } from "react";
-import Logo from "@/assets/Logo_brown.png";
-import Naver from "@/assets/Naver_login.png";
-import Kakao from "@/assets/Kakao_login.png";
+import Logo from "@/assets/image/Logo_brown.png";
+import Naver from "@/assets/image/Naver_login.png";
+import Kakao from "@/assets/image/kakao_login.png";
 import { Link, useNavigate } from "react-router-dom";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { login } from "@/api/authApi";
+import { login } from "@/api/member/authApi";
 
 const AppLogin = () => {
   const [rememberMe, setRememberMe] = useState(false);
@@ -36,18 +36,14 @@ const AppLogin = () => {
 
   return (
     <div className="flex flex-col items-center justify-center py-16">
-      {/* 컨테이너 너비 설정 */}
       <div className="w-full max-w-[450px] px-6">
-        {/* 로고 영역 */}
         <div className=" mb-10">
           <div className="flex justify-center">
             <img src={Logo} alt="Logo" className="h-14" />
           </div>
         </div>
 
-        {/* 로그인 폼 */}
         <div className="space-y-4">
-          {/* ID 입력 */}
           <div className="relative border-b border-black pb-1">
             <label className="block text-[11px] font-bold mb-1">ID</label>
             <input
@@ -59,7 +55,6 @@ const AppLogin = () => {
             />
           </div>
 
-          {/* Password 입력 */}
           <div className="relative border-b border-black pb-1">
             <label className="block text-[11px] font-bold mb-1">PASSWORD</label>
             <input
@@ -73,7 +68,6 @@ const AppLogin = () => {
             />
           </div>
 
-          {/* 로그인 버튼 */}
           <button
             onClick={handleLogin}
             className="w-full h-[52px] flex items-center justify-center
@@ -85,7 +79,6 @@ const AppLogin = () => {
             LOGIN
           </button>
 
-          {/* 하단 옵션 (아이디 저장 / 찾기) */}
           <div className="flex justify-between items-center text-[12px] text-gray-700 mt-2">
             <div className="flex items-center gap-2">
               <Checkbox
@@ -111,12 +104,9 @@ const AppLogin = () => {
           </div>
         </div>
 
-        {/* 구분선 (점선) */}
         <div className="my-6 border-t border-dotted border-gray-400"></div>
 
-        {/* 소셜 로그인 버튼 영역 */}
         <div className="space-y-3">
-          {/* 네이버 - 배경색을 직접 주고 이미지를 가운데 정렬 */}
           <button className="w-full h-[52px] bg-[#02A94D] flex justify-center items-center rounded-sm overflow-hidden cursor-pointer">
             <img
               src={Naver}
@@ -125,7 +115,6 @@ const AppLogin = () => {
             />
           </button>
 
-          {/* 카카오 - 배경색(#FEE500)을 주고 이미지를 가운데 정렬 */}
           <button className="w-full h-[52px] bg-[#FEE500] flex justify-center items-center rounded-sm overflow-hidden cursor-pointer">
             <img
               src={Kakao}
@@ -135,7 +124,6 @@ const AppLogin = () => {
           </button>
         </div>
 
-        {/* 회원가입 안내 */}
         <div className="mt-10 text-center text-[13px]">
           <span className="text-gray-600">신규 가입 즉시 할인 쿠폰 지급</span>
           <Link to="/signup">

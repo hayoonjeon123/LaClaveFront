@@ -3,9 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { modifyAddress } from "@/api/memberAddressApi"; // 수정 API import
-import { getAddress } from "@/api/memberAddressApi"; // 주소 조회 API
-import type { MemberAddress } from "@/api/memberAddressApi";
+import { modifyAddress } from "@/api/myPage/memberAddressApi"; // 수정 API import
+import { getAddress } from "@/api/myPage/memberAddressApi"; // 주소 조회 API
+import type { MemberAddress } from "@/api/myPage/memberAddressApi";
 
 export default function EditAddress() {
   const navigate = useNavigate();

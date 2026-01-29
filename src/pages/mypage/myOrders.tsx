@@ -2,8 +2,8 @@ import { ArrowDownIcon, ArrowLeft, ChevronUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
-import { getMyOrders } from "../../api/ordersApi";
-import type { Order } from "../../api/ordersApi";
+import { getMyOrders } from "../../api/order/myOrdersApi";
+import type { Order } from "../../api/order/myOrdersApi";
 import { SERVER_URL } from "@/utils/productUtils";
 
 export default function MyOrders() {

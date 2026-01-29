@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { getMyCoupons } from "@/api/couponApi"; // API 모듈 import
-import type { Coupon } from "@/api/couponApi";
+import { getMyCoupons } from "@/api/myPage/couponApi"; // API 모듈 import
+import type { Coupon } from "@/api/myPage/couponApi";
 
 export default function MyCoupon() {
   const navigate = useNavigate();
@@ -87,11 +87,10 @@ export default function MyCoupon() {
             <div
               key={coupon.couponIdx}
               className={`border rounded-[8px] shadow-sm overflow-hidden
-    ${
-      activeTab === "used"
-        ? "border-gray-300 bg-gray-50 opacity-80"
-        : "border-[#A8A9AD] bg-white"
-    }`}
+    ${activeTab === "used"
+                  ? "border-gray-300 bg-gray-50 opacity-80"
+                  : "border-[#A8A9AD] bg-white"
+                }`}
             >
               {/* 상단 금액 */}
               <div className="px-5 py-3 border-b border-[#A8A9AD]">
@@ -103,17 +102,15 @@ export default function MyCoupon() {
               {/* 하단 정보 */}
               <div className="p-5 pt-3 space-y-1">
                 <div
-                  className={`text-[16px] font-bold ${
-                    activeTab === "used" ? "text-gray-400" : "text-black"
-                  }`}
+                  className={`text-[16px] font-bold ${activeTab === "used" ? "text-gray-400" : "text-black"
+                    }`}
                 >
                   {coupon.couponName} / 최소 결제{" "}
                   {coupon.minOrderPrice.toLocaleString()}원
                 </div>
                 <div
-                  className={`text-[14px] font-medium ${
-                    activeTab === "used" ? "text-gray-400" : "text-[#A8A9AD]"
-                  }`}
+                  className={`text-[14px] font-medium ${activeTab === "used" ? "text-gray-400" : "text-[#A8A9AD]"
+                    }`}
                 >
                   {coupon.startDate} ~ {coupon.endDate}
                 </div>

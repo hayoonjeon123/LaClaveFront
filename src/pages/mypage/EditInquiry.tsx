@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getInquiryList, updateInquiry } from "../../api/inquiryApi";
+import { getInquiryList, updateInquiry } from "../../api/myPage/inquiryApi";
 import { ArrowLeft } from "lucide-react";
 import {
   Select,

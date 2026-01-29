@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { getDeliveryByOrder } from "@/api/myDeliveryApi";
-import type { MyDelivery } from "@/api/myDeliveryApi";
-import { getMyOrders } from "@/api/ordersApi";
-import type { Order } from "@/api/ordersApi";
+import { getDeliveryByOrder } from "@/api/myPage/myDeliveryApi";
+import type { MyDelivery } from "@/api/myPage/myDeliveryApi";
+import { getMyOrders } from "@/api/order/myOrdersApi";
+import type { Order } from "@/api/order/myOrdersApi";
 import { SERVER_URL } from "@/utils/productUtils";
 
 interface DeliveryLog {

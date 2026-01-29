@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, Star, Plus } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { createReview, updateReview } from "../../api/reviewApi";
+import { createReview, updateReview } from "../../api/myPage/reviewApi";
 
 export default function WriteReview() {
   const navigate = useNavigate();
@@ -41,16 +41,16 @@ export default function WriteReview() {
     // ⭐ 수정/작성 분기 명확히
     const reviewPayload = isEdit
       ? {
-          reviewIdx: state.reviewIdx,
-          score: rating,
-          content,
-        }
+        reviewIdx: state.reviewIdx,
+        score: rating,
+        content,
+      }
       : {
-          ordersIdx: state.ordersIdx,
-          productIdx: state.productIdx,
-          score: rating,
-          content,
-        };
+        ordersIdx: state.ordersIdx,
+        productIdx: state.productIdx,
+        score: rating,
+        content,
+      };
 
     formData.append(
       "review",

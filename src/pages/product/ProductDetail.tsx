@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Heart, Star } from "lucide-react";
-import { getProductDetail, getWishlistStatus, toggleWishlist } from "@/api/productApi";
-import { addToCart } from "@/api/cartApi";
+import { getProductDetail, getWishlistStatus, toggleWishlist } from "@/api/product/productApi";
+import { addToCart } from "@/api/order/cartApi";
 import type { ProductDetail as ProductDetailType } from "@/types/product";
 import { formatPrice, getDisplayColor, sortSizes } from "@/utils/productUtils";
 import {
@@ -23,7 +23,7 @@ import {
 import { ProductReviews } from "@/components/product/ProductReviews";
 import { ProductInquiries } from "@/components/product/ProductInquiries";
 
-import { addRecentProduct } from "@/api/recentApi";
+import { addRecentProduct } from "@/api/myPage/recentApi";
 
 
 function ProductDetail() {

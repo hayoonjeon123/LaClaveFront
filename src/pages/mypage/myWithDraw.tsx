@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { withdrawMember } from "@/api/memberApi";
+import { withdrawMember } from "@/api/member/memberApi";
 import { useState } from "react";
 
 export default function MyWithDraw() {

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronDown, Key, ArrowLeft } from "lucide-react";
-import { getMyPoints } from "@/api/pointApi";
-import type { Point } from "@/api/pointApi";
+import { getMyPoints } from "@/api/myPage/pointApi";
+import type { Point } from "@/api/myPage/pointApi";
 
 export default function MyPoint() {
   const navigate = useNavigate();
@@ -60,9 +60,8 @@ export default function MyPoint() {
           >
             포인트 안내사항
             <ChevronDown
-              className={`transition-transform ${
-                isGuideOpen ? "rotate-180" : ""
-              }`}
+              className={`transition-transform ${isGuideOpen ? "rotate-180" : ""
+                }`}
             />
           </button>
 

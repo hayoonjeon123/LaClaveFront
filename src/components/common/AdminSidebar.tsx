@@ -1,5 +1,5 @@
 import { ADMIN_CATEGORY } from "@/constants/category.constants"
-import Logo from "@/assets/Logo.png"
+import Logo from "@/assets/image/Logo.png"
 import { ChevronDown } from "lucide-react"
 import { useState } from "react"
 import { useNavigate, Link } from "react-router-dom";
@@ -13,7 +13,6 @@ function AdminSidebar({ onOpenChange }: { onOpenChange?: (open: boolean) => void
 
     const handleMenuClick = (menu: any) => {
         if (menu.subItems && menu.subItems.length > 0) {
-            // 서브메뉴가 있으면 토글만 수행 (이동하지 않음)
             setOpenMenuId((prev) => (prev === menu.id ? null : menu.id));
         } else if (menu.path) {
             setOpenMenuId(null);

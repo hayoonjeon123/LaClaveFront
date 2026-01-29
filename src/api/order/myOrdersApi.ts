@@ -1,4 +1,4 @@
-import axiosInstance from "./axiosInstance";
+import axiosInstance from "../axiosInstance";
 
 // === 주문 상세 타입 ===
 export interface OrderDetail {

@@ -1,6 +1,6 @@
 import React from 'react';
 import DaumPostcode from 'react-daum-postcode';
-import type { AddressData, SelectedAddress } from './address';
+import type { AddressData, SelectedAddress } from '@/types/address';
 
 interface Props {
     onComplete: (data: SelectedAddress) => void;

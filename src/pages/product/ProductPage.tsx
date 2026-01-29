@@ -8,7 +8,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { getProductsByCategory } from "@/api/productApi";
+import { getProductsByCategory } from "@/api/product/productApi";
 import type { Product } from "@/types/product";
 import { formatPrice, getSafeColor, SERVER_URL } from "@/utils/productUtils";
 

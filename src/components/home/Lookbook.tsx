@@ -9,12 +9,9 @@ function Lookbook() {
         <div className="w-[1420px] mx-auto py-20 px-[70px]">
 
             <div className="grid grid-cols-12 gap-8 mb-24">
-                {/* Left: 1 Portrait Image (Large) */}
                 <div className="col-span-6">
                     <img src={main_t1} alt="Lookbook 1" className="w-full object-cover h-[500px]" />
                 </div>
-
-                {/* Right: Text + Landscape Image */}
                 <div className="col-span-6 flex flex-col justify-between pl-8">
                     <div className="mt-8">
                         <h3 className="text-gray-500 mb-2 text-[30px]">감각적인 디자인</h3>
@@ -31,11 +28,7 @@ function Lookbook() {
                 <img src={main_b1} alt="Season Hero" className="w-full h-[600px] object-cover" />
             </div>
 
-
-            {/* --- Section 3: Product Highlights (Zigzag) --- */}
             <div className="flex flex-col gap-24">
-
-                {/* Row 1: Left Text, Right Image */}
                 <div className="grid grid-cols-12 gap-8 items-center">
                     <div className="col-span-4 flex flex-col justify-center items-center text-center">
                         <span className="text-[100px] font-['Aguafina_Script'] leading-[0.8]">01</span>
@@ -49,7 +42,6 @@ function Lookbook() {
                     </div>
                 </div>
 
-                {/* Row 2: Left Image, Right Text */}
                 <div className="grid grid-cols-12 gap-8 items-center">
                     <div className="col-span-8">
                         <img src={main_b3} alt="Denim" className="w-full h-[600px] object-cover" />
@@ -64,8 +56,6 @@ function Lookbook() {
                 </div>
 
             </div>
-
-
         </div>
     );
 }

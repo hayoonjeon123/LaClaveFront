@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCartItems, deleteCartItem, updateCartItemQuantity } from "@/api/cartApi";
+import { getCartItems, deleteCartItem, updateCartItemQuantity } from "@/api/order/cartApi";
 import type { CartItemResponse } from "@/types/cart";
 import { formatPrice, SERVER_URL } from "@/utils/productUtils";
 
@@ -20,10 +20,8 @@ const Cart = () => {
         const fetchCartData = async () => {
             try {
                 const data = await getCartItems();
-                // 모든 아이템의 초기 체크 상태를 true로 설정 및 옵션 객체 처리
                 const itemsWithChecked = data.map(item => {
                     console.log("CartItem raw data:", item);
-                    // 데이터 안전성 확보 (객체 혹은 문자열 혼용 대비, null 체크 포함)
                     const colorObj = (item.color && typeof item.color === 'object') ? item.color : null;
                     const sizeObj = (item.size && typeof item.size === 'object') ? item.size : null;
 

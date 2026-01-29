@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { getMemberInfo } from "@/api/memberApi";
-import { getMyAddressList } from "@/api/memberAddressApi";
-import type { MemberAddressDto } from "@/api/memberAddressApi";
-import { createOrder, approvePayment } from "@/api/orderApi";
-import { deleteCartItem } from "@/api/cartApi";
+import { getMemberInfo } from "@/api/member/memberApi";
+import { getMyAddressList } from "@/api/myPage/memberAddressApi";
+import type { MemberAddressDto } from "@/api/myPage/memberAddressApi";
+import { createOrder, approvePayment } from "@/api/order/orderApi";
+import { deleteCartItem } from "@/api/order/cartApi";
 import type { OrderItem, OrderRequest, OrderApprovalRequest } from "@/types/order";
 import { formatPrice, SERVER_URL } from "@/utils/productUtils";
 import {

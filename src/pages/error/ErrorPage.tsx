@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import LogoBrown from "@/assets/Logo_brown.png";
+import LogoBrown from "@/assets/image/Logo_brown.png";
 
 const ErrorPage: React.FC = () => {
     const navigate = useNavigate();

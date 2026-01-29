@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import Logo from "@/assets/Logo_brown.png";
+import Logo from "@/assets/image/Logo_brown.png";
 import { SERVER_URL } from "@/utils/productUtils";
 
 const OrderComplete = () => {

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { searchProducts } from "@/api/productApi";
+import { searchProducts } from "@/api/product/productApi";
 import type { Product } from "@/types/product";
 import { formatPrice, getSafeColor, SERVER_URL } from "@/utils/productUtils";
 

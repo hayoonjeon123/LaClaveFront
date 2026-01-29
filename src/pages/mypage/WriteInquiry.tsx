@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "../../components/ui/select";
 import { useState } from "react";
-import { createInquiry } from "../../api/inquiryApi";
+import { createInquiry } from "../../api/myPage/inquiryApi";
 
 export default function WriteInquiry() {
   const navigate = useNavigate();

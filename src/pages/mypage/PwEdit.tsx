@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
-import LogoBrown from "../../assets/Logo_brown.png";
-import { updatePassword, type PasswordUpdateDto } from "@/api/memberApi";
+import LogoBrown from "@/assets/image/Logo_brown.png";
+import { updatePassword, type PasswordUpdateDto } from "@/api/member/memberApi";
 
 export default function PwEdit() {
   const navigate = useNavigate();

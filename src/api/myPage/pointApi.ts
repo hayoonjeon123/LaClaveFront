@@ -1,5 +1,5 @@
 // src/api/pointApi.ts
-import axiosInstance from "./axiosInstance";
+import axiosInstance from "../axiosInstance";
 
 const API_BASE_URL = "/api/point";
 

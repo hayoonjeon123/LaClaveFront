@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { checkIdDuplicate, checkEmailDuplicate, sendEmailAuth, verifyEmailCode } from "@/api/authApi";
+import { checkIdDuplicate, checkEmailDuplicate, sendEmailAuth, verifyEmailCode } from "@/api/member/authApi";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import {

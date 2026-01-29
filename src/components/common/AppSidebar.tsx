@@ -2,7 +2,7 @@ import { CLASS_CATEGORY } from "@/constants/category.constants"
 import { Separator } from "@/components/ui/separator"
 import { Link, useNavigate } from "react-router-dom";
 // navigate hook moved inside component
-import Logo from "@/assets/Logo.png"
+import Logo from "@/assets/image/Logo.png"
 import { ChevronDown } from "lucide-react"
 import {
     Sheet,
@@ -22,10 +22,9 @@ function AppSidebar({ open, onOpenChange }: AppSidebarProps) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // 로그인 상태 초기 확인
         const localLoggedIn = localStorage.getItem("isLoggedIn") === "true";
         setIsLoggedIn(localLoggedIn);
-    }, [open]); // 사이드바가 열릴 때마다 확인하거나 적절한 시점에 업데이트
+    }, [open]);
 
     const toggleMenu = (id: number) => {
         setOpenMenuId((prev) => (prev === id ? null : id));
@@ -52,7 +51,6 @@ function AppSidebar({ open, onOpenChange }: AppSidebarProps) {
 
             <SheetContent side="left" className="w-80 p-0 bg-[#5C4033] border-none">
                 <div className="h-full flex flex-col">
-                    {/* 로고 + 상단 메뉴 */}
                     <div className="p-4 flex flex-col items-center border-b border-white/20">
                         <img
                             src={Logo}

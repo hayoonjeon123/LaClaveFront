@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Logo from "@/assets/Logo_brown.png";
+import Logo from "@/assets/image/Logo_brown.png";
 import { useNavigate } from "react-router-dom";
-import { findMemberId, findMemberPw, sendEmailAuth, verifyEmailCode } from "@/api/authApi";
+import { findMemberId, findMemberPw, sendEmailAuth, verifyEmailCode } from "@/api/member/authApi";
 
 const FindAccount = () => {
   const [activeTab, setActiveTab] = useState("id");
@@ -67,12 +67,10 @@ const FindAccount = () => {
   return (
     <div className="flex flex-col items-center justify-center py-10">
       <div className="w-full max-w-[600px] px-6">
-        {/* 로고 영역 */}
         <div className="flex justify-center mb-4">
           <img src={Logo} alt="LOGO" className="h-16" />
         </div>
 
-        {/* 탭 메뉴 */}
         <div className="relative flex border-b border-gray-200 mb-8">
           <button
             onClick={() => { setActiveTab("id"); setIsVerified(false); }}
@@ -92,7 +90,6 @@ const FindAccount = () => {
             비밀번호 찾기
           </button>
 
-          {/* 이동하는 하단 바 */}
           <div
             className="absolute bottom-0 h-[3px] bg-[#5C4033] transition-all duration-300 ease-in-out"
             style={{
@@ -102,9 +99,7 @@ const FindAccount = () => {
           />
         </div>
 
-        {/* 입력 폼 컨테이너 */}
         <div className="border border-gray-300 rounded-[10px] p-8 space-y-4 w-full max-w-[800px] mx-auto">
-          {/* 비밀번호 찾기일 때만 아이디 입력창 노출 */}
           {activeTab === "password" && (
             <div className="flex items-center gap-2">
               <label className="w-24 text-[16px] font-medium text-[#5C4033] shrink-0">
@@ -152,7 +147,7 @@ const FindAccount = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="w-24 shrink-0" /> {/* 레이블 간격 맞춤용 공백 */}
+            <div className="w-24 shrink-0" />
             <div className="flex-1 flex gap-2">
               <input
                 type="text"
@@ -179,7 +174,6 @@ const FindAccount = () => {
           )}
         </div>
 
-        {/* 최종 확인 버튼 */}
         <div className="mt-8 flex justify-center">
           <button
             onClick={handleSubmit}
