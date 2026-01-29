@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Heart, Star } from "lucide-react";
-import axios from "axios";
+import { getProductDetail, getWishlistStatus, toggleWishlist } from "@/api/productApi";
+import { addToCart } from "@/api/cartApi";
+import type { ProductDetail as ProductDetailType } from "@/types/product";
+import { formatPrice, getDisplayColor, sortSizes } from "@/utils/productUtils";
 import {
   Select,
   SelectContent,
@@ -22,41 +25,12 @@ import { ProductInquiries } from "@/components/product/ProductInquiries";
 
 import { addRecentProduct } from "@/api/recentApi";
 
-const SIZE_ORDER = ["XS", "S", "M", "L", "XL", "XXL", "FREE"];
-
-const COLOR_TO_EN: Record<string, string> = {
-  블랙: "Black",
-  화이트: "White",
-  그레이: "Gray",
-  네이비: "Navy",
-  브라운: "Brown",
-  아이보리: "Ivory",
-  베이지: "Beige",
-};
-
-const sortSizes = (sizes: string[]) => {
-  if (!sizes) return [];
-  return [...sizes].sort((a, b) => {
-    const indexA = SIZE_ORDER.indexOf(a.toUpperCase());
-    const indexB = SIZE_ORDER.indexOf(b.toUpperCase());
-    if (indexA === -1 && indexB === -1) return a.localeCompare(b);
-    if (indexA === -1) return 1;
-    if (indexB === -1) return -1;
-    return indexA - indexB;
-  });
-};
-
-const getDisplayColor = (name: string) => {
-  if (!name) return "";
-  const cleanName = name.replace("색상", "").trim();
-  return COLOR_TO_EN[cleanName] || cleanName;
-};
 
 function ProductDetail() {
   const { productIdx } = useParams();
   const [isLiked, setIsLiked] = useState(false);
   const [activeTab, setActiveTab] = useState("info");
-  const [productData, setProductData] = useState<any>(null);
+  const [productData, setProductData] = useState<ProductDetailType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
@@ -70,25 +44,29 @@ function ProductDetail() {
   }, [productIdx]);
 
   useEffect(() => {
-    const fetchProductDetail = async () => {
+    const fetchProductData = async () => {
       try {
         if (!productIdx) return;
         setIsLoading(true);
-        const response = await axios.get(`/api/product/${productIdx}`);
-        console.log("=== 상품 상세 데이터 ===", response.data);
-        setProductData(response.data);
-        setWishlistCount(response.data.wishlistCount || 0);
-        // 최근 본 상품 추가
-        addRecentProduct(Number(productIdx)).catch(console.error);
 
-        // 찜 상태 확인
-        const wishResponse = await axios.get(
-          `/api/Wishlist/status/${productIdx}`,
-          {
-            withCredentials: true,
-          },
-        );
-        setIsLiked(wishResponse.data);
+        const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
+        // 로그인 상태에 따라 찜 상태 조회
+        const detail = await getProductDetail(Number(productIdx));
+        let status = false;
+
+        if (isLoggedIn) {
+          status = await getWishlistStatus(Number(productIdx));
+        }
+
+        setProductData(detail);
+        setWishlistCount(detail.wishlistCount || 0);
+        setIsLiked(status);
+
+        // 최근 본 상품 추가 (로그인 시에만)
+        if (isLoggedIn) {
+          addRecentProduct(Number(productIdx)).catch(console.error);
+        }
       } catch (error) {
         console.error("상품 상세 정보를 가져오는데 실패했습니다:", error);
       } finally {
@@ -97,37 +75,27 @@ function ProductDetail() {
     };
 
     if (productIdx) {
-      fetchProductDetail();
+      fetchProductData();
     }
   }, [productIdx]);
 
   const handleToggleLike = async () => {
-    if (sessionStorage.getItem("isLoggedIn") !== "true") {
+    if (localStorage.getItem("isLoggedIn") !== "true") {
       alert("로그인이 필요한 서비스입니다.");
       navigate("/loginProc");
       return;
     }
     try {
-      const response = await axios.post(
-        `/api/Wishlist/toggle/${productIdx}`,
-        {},
-        {
-          withCredentials: true,
-        },
-      );
-      setIsLiked(response.data);
-      setWishlistCount((prev) => (response.data ? prev + 1 : prev - 1));
+      const status = await toggleWishlist(Number(productIdx));
+      setIsLiked(status);
+      setWishlistCount((prev) => (status ? prev + 1 : prev - 1));
     } catch (error: any) {
       console.error("찜 토글 실패:", error);
-      if (error.response?.status === 401) {
-        alert("로그인이 필요한 서비스입니다.");
-        navigate("/loginProc");
-      }
     }
   };
 
   const handleAddToCart = async () => {
-    if (sessionStorage.getItem("isLoggedIn") !== "true") {
+    if (localStorage.getItem("isLoggedIn") !== "true") {
       alert("로그인이 필요한 서비스입니다.");
       navigate("/loginProc");
       return;
@@ -136,50 +104,35 @@ function ProductDetail() {
       alert("사이즈와 색상을 선택해 주세요.");
       return;
     }
+
+    if (!productData) return;
 
     try {
       const cartData = {
         productIdx: Number(productIdx),
         size: selectedSize,
         color: selectedColor,
-        quantity: 1, // 기본 수량 1
+        quantity: 1,
         price: productData.productPrice,
         discountPrice:
           productData.discount > 0
-            ? Math.floor(
-              productData.productPrice * (productData.discount / 100),
-            )
+            ? Math.floor(productData.productPrice * (productData.discount / 100))
             : 0,
       };
 
-      console.log("=== 장바구니 추가 요청 데이터 ===", cartData);
+      await addToCart(cartData);
 
-      const response = await axios.post("/api/cart/add", cartData, {
-        withCredentials: true,
-      });
-
-      if (response.status === 200 || response.status === 201) {
-        if (
-          window.confirm(
-            "장바구니에 담겼습니다. 장바구니 페이지로 이동하시겠습니까?",
-          )
-        ) {
-          navigate("/cart");
-        }
+      if (window.confirm("장바구니에 담겼습니다. 장바구니 페이지로 이동하시겠습니까?")) {
+        navigate("/cart");
       }
     } catch (error: any) {
       console.error("장바구니 추가 실패:", error);
-      if (error.response?.status === 401) {
-        alert("로그인이 필요한 서비스입니다.");
-        navigate("/loginProc");
-      } else {
-        alert("장바구니 추가 중 오류가 발생했습니다.");
-      }
+      alert("장바구니 추가 중 오류가 발생했습니다.");
     }
   };
 
   const handleBuyNow = () => {
-    if (sessionStorage.getItem("isLoggedIn") !== "true") {
+    if (localStorage.getItem("isLoggedIn") !== "true") {
       alert("로그인이 필요한 서비스입니다.");
       navigate("/loginProc");
       return;
@@ -188,6 +141,8 @@ function ProductDetail() {
       alert("사이즈와 색상을 선택해 주세요.");
       return;
     }
+
+    if (!productData) return;
 
     const selectedItems = [
       {
@@ -313,9 +268,6 @@ function ProductDetail() {
     },
   ];
 
-  const formatPrice = (price: any) => {
-    return Number(price).toLocaleString() + "원";
-  };
 
   return (
     <div className="w-full max-w-[1200px] mx-auto py-8 px-4">
@@ -440,8 +392,8 @@ function ProductDetail() {
                 <div className="flex flex-col items-center">
                   <Heart
                     className={`w-8 h-8 transition-colors ${isLiked
-                        ? "text-red-500"
-                        : "text-[#5C4033] group-hover:text-red-400"
+                      ? "text-red-500"
+                      : "text-[#5C4033] group-hover:text-red-400"
                       }`}
                     fill={isLiked ? "currentColor" : "none"}
                   />

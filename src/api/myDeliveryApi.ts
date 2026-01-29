@@ -34,7 +34,7 @@ export interface MyDelivery {
 //   }
 // };
 // myDeliveryApi.ts
-const API_BASE_URL = "http://localhost:8080/api/myDelivery";
+const API_BASE_URL = "/api/myDelivery";
 
 export const getDeliveryByOrder = async (orderIdx: number) => {
   const res = await axiosInstance.get(`${API_BASE_URL}/${orderIdx}/delivery`);

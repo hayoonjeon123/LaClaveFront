@@ -22,7 +22,7 @@ export interface MemberAddressDto {
   isDefault?: boolean;
 }
 
-const API_BASE_URL = "http://localhost:8080/api/member/address";
+const API_BASE_URL = "/api/member/address";
 
 // ✅ 1. 주소 등록
 export const registerAddress = async (

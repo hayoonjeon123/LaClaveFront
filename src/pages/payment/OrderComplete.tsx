@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import Logo from "@/assets/Logo_brown.png";
+import { SERVER_URL } from "@/utils/productUtils";
 
 const OrderComplete = () => {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ const OrderComplete = () => {
         {/* 상품 이미지 */}
         <div className="w-[120px] h-[150px] bg-gray-100 rounded overflow-hidden">
           <img
-            src={orderInfo.image}
+            src={`${SERVER_URL}${orderInfo.image}`}
             alt="주문 상품"
             className="w-full h-full object-cover"
           />

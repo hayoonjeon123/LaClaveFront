@@ -108,7 +108,7 @@ export default function AddAddress() {
                   placeholder="우편번호"
                   value={form.postCode}
                   readOnly
-                  className="flex-1 h-[44px] px-3 border border-[#A8A9AD] focus:outline-none placeholder:text-[#A8A9AD] text-[14px] bg-gray-50"
+                  className="flex-1 h-[44px] px-3 border border-[#A8A9AD] focus:outline-none placeholder:text-[#A8A9AD] text-[14px] "
                 />
                 <button
                   type="button"
@@ -130,7 +130,7 @@ export default function AddAddress() {
                 placeholder="기본주소"
                 value={form.address}
                 readOnly
-                className="flex-1 h-[44px] px-3 border border-[#A8A9AD] focus:outline-none placeholder:text-[#A8A9AD] text-[14px] bg-gray-50"
+                className="flex-1 h-[44px] px-3 border border-[#A8A9AD] focus:outline-none placeholder:text-[#A8A9AD] text-[14px]"
               />
             </div>
 

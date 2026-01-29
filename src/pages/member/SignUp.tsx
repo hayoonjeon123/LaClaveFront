@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { checkIdDuplicate, checkEmailDuplicate, sendEmailAuth, verifyEmailCode } from "@/api/authApi";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import {
@@ -92,8 +92,8 @@ const SignUp = () => {
     // 디바운싱: 입력이 멈춘 후 500ms 뒤에 중복 체크 수행
     const delayDebounceFn = setTimeout(async () => {
       try {
-        const response = await axios.post("/api/check-id", { memberId });
-        if (response.data === true) {
+        const isUsed = await checkIdDuplicate(memberId);
+        if (isUsed) {
           setIdError("이미 사용 중인 아이디입니다.");
           setIsIdAvailable(false);
         } else {
@@ -149,20 +149,14 @@ const SignUp = () => {
 
     try {
       // 1. 회원가입 시에는 먼저 이메일 중복 체크 수행
-      const checkRes = await axios.post("/api/check-email", { email: fullEmail });
-      if (checkRes.data === true) {
+      const isUsed = await checkEmailDuplicate(fullEmail);
+      if (isUsed) {
         alert("이미 가입된 이메일입니다.");
         return;
       }
 
       // 2. 중복이 아닐 때만 인증번호 발송 요청
-      await axios.post(
-        "/api/email-send",
-        { email: fullEmail },
-        {
-          withCredentials: true,
-        }
-      );
+      await sendEmailAuth(fullEmail);
       alert("인증번호가 발송되었습니다.");
     } catch (error: any) {
       console.error("이메일 프로세스 실패:", error);
@@ -178,22 +172,13 @@ const SignUp = () => {
       return;
     }
     try {
-      // Backend expects Map with 'email' and 'authCode'
-      const response = await axios.post(
-        "/api/email-verify",
-        {
-          email: fullEmail,
-          authCode: authCode,
-        },
-        {
-          withCredentials: true,
-        }
-      );
+      await verifyEmailCode({
+        email: fullEmail,
+        authCode: authCode,
+      });
 
-      if (response.status === 200) {
-        alert("이메일 인증에 성공했습니다.");
-        setIsEmailVerified(true);
-      }
+      alert("이메일 인증에 성공했습니다.");
+      setIsEmailVerified(true);
     } catch (error: any) {
       console.error("인증 확인 실패:", error);
       alert(error.response?.data || "인증번호가 틀렸습니다.");

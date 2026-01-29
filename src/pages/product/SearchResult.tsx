@@ -1,53 +1,15 @@
 import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import axiosInstance from "@/api/axiosInstance";
-const SERVER_URL = "http://localhost:8080";
+import { searchProducts } from "@/api/productApi";
+import type { Product } from "@/types/product";
+import { formatPrice, getSafeColor, SERVER_URL } from "@/utils/productUtils";
 
-const COLOR_MAP: Record<string, string> = {
-    "black": "#000000",
-    "white": "#FFFFFF",
-    "gray": "#808080",
-    "grey": "#808080",
-    "red": "#FF0000",
-    "blue": "#0000FF",
-    "navy": "#000080",
-    "beige": "#F5F5DC",
-    "ivory": "#FFFFF0",
-    "brown": "#A52A2A",
-
-    // 데님 색상
-    "light_denim": "#A8C1D8",
-    "mid_denim": "#5A7A9C",
-    "dark_denim": "#2B3E58",
-    "black_denim": "#323232",
-    "연청": "#A8C1D8",
-    "중청": "#5A7A9C",
-    "진청": "#2B3E58",
-    "흑청": "#323232",
-
-    "블랙": "#000000",
-    "화이트": "#FFFFFF",
-    "그레이": "#808080",
-    "레드": "#FF0000",
-    "블루": "#0000FF",
-    "네이비": "#000080",
-    "베이지": "#F5F5DC",
-    "아이보리": "#FFFFF0",
-    "브라운": "#A52A2A",
-};
-
-const getSafeColor = (colorName: any) => {
-    if (!colorName || typeof colorName !== "string") return "transparent";
-    if (colorName.startsWith("#")) return colorName;
-    const cleanName = colorName.replace("색상", "").toLowerCase().trim();
-    return COLOR_MAP[cleanName] || colorName;
-};
 
 export function SearchResult() {
     const [searchParams] = useSearchParams();
     const keyword = searchParams.get("keyword");
 
-    const [products, setProducts] = useState<any[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -59,12 +21,8 @@ export function SearchResult() {
     const fetchSearchResults = async (searchKeyword: string) => {
         setLoading(true);
         try {
-            // 백엔드 SearchController: /api/search?keyword=...
-            const response = await axiosInstance.get("/api/search", {
-                params: { keyword: searchKeyword }
-            });
-            console.log("검색 결과:", response.data);
-            setProducts(Array.isArray(response.data) ? response.data : []);
+            const data = await searchProducts(searchKeyword);
+            setProducts(data);
         } catch (error) {
             console.error("검색 실패:", error);
             setProducts([]);
@@ -73,10 +31,6 @@ export function SearchResult() {
         }
     };
 
-    const formatPrice = (price: any) => {
-        if (price === null || price === undefined) return "0원";
-        return Number(price).toLocaleString() + "원";
-    };
 
     return (
         <div className="w-full max-w-[1000px] mx-auto px-4 py-12 font-['Inter',sans-serif]">
@@ -91,7 +45,7 @@ export function SearchResult() {
             ) : (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-x-20 gap-y-16 mb-16">
                     {products && products.length > 0 ? (
-                        products.map((product: any) => (
+                        products.map((product: Product) => (
                             <Link to={`/product/${product.productIdx}`} key={product.productIdx} className="group block">
                                 <div className="bg-gray-200 mb-4 overflow-hidden relative aspect-[3/4]">
                                     {/* 이미지 처리 로직 */}

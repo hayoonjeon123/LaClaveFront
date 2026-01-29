@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useNavigate, useLocation } from "react-router-dom";
+import { getMemberInfo } from "@/api/memberApi";
 import { getMyAddressList } from "@/api/memberAddressApi";
 import type { MemberAddressDto } from "@/api/memberAddressApi";
+import { createOrder, approvePayment } from "@/api/orderApi";
+import { deleteCartItem } from "@/api/cartApi";
+import type { OrderItem, OrderRequest, OrderApprovalRequest } from "@/types/order";
+import { formatPrice, SERVER_URL } from "@/utils/productUtils";
 import {
     Select,
     SelectContent,
@@ -16,18 +20,6 @@ declare global {
         IMP: any;
     }
 }
-interface OrderItem {
-    id: number;
-    cartItemIdx?: number;
-    name: string;
-    option: string;
-    quantity: number;
-    price: number;
-    image: string;
-    colorCommonIdx: number;
-    sizeCommonIdx: number;
-}
-
 interface MemberInfo {
     memberName: string;
     memberId: string;
@@ -47,7 +39,21 @@ const Order = () => {
     // CartPage에서 넘겨준 선택 상품들
     const selectedItemsFromCart = location.state?.selectedItems || [];
 
-    const [orderItems, setOrderItems] = useState<OrderItem[]>(selectedItemsFromCart);
+    // OrderItem 형식에 맞게 변환 (CartItemResponse -> OrderItem)
+    const initialOrderItems = selectedItemsFromCart.map((item: any) => ({
+        id: item.cartItemIdx || item.productIdx,
+        cartItemIdx: item.cartItemIdx,
+        productIdx: item.productIdx,
+        name: item.productName || item.name,
+        option: item.option || `${item.colorName} / ${item.sizeName}`,
+        quantity: item.quantity,
+        price: item.price,
+        image: item.mainImageUrl || item.image,
+        colorCommonIdx: item.colorCommonIdx,
+        sizeCommonIdx: item.sizeCommonIdx
+    }));
+
+    const [orderItems, setOrderItems] = useState<OrderItem[]>(initialOrderItems);
     const [memberInfo, setMemberInfo] = useState<MemberInfo | null>(null);
     const [pointsToUse, setPointsToUse] = useState(0);
     const [deliveryMessage, setDeliveryMessage] = useState("집 앞에 배송해주세요");
@@ -57,7 +63,7 @@ const Order = () => {
     const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
 
     useEffect(() => {
-        if (sessionStorage.getItem("isLoggedIn") !== "true") {
+        if (localStorage.getItem("isLoggedIn") !== "true") {
             alert("로그인이 필요한 서비스입니다.");
             navigate("/loginProc");
             return;
@@ -113,11 +119,11 @@ const Order = () => {
         // 회원 정보 및 배송지 목록 가져오기
         const fetchData = async () => {
             try {
-                const [infoRes, addrList] = await Promise.all([
-                    axios.get("/api/info", { withCredentials: true }),
+                const [info, addrList] = await Promise.all([
+                    getMemberInfo(), // memberApi의 getMemberInfo 사용
                     getMyAddressList()
                 ]);
-                setMemberInfo(infoRes.data);
+                setMemberInfo(info);
                 setAddressList(addrList);
             } catch (error) {
                 console.error("데이터 조회 실패:", error);
@@ -148,13 +154,13 @@ const Order = () => {
 
         try {
             // [STEP 1] 주문 생성
-            const orderData = {
+            const orderData: OrderRequest = {
                 addrIdx: memberInfo?.addrIdx,
                 usedPoint: appliedPoints,
                 totalPrice: finalAmount,
                 deliveryMsg: deliveryMessage,
                 orderItems: orderItems.map(item => ({
-                    productIdx: (item as any).productIdx || item.id, // productIdx가 있으면 사용, 없으면 id 사용
+                    productIdx: (item as any).productIdx || item.id,
                     productName: item.name,
                     colorCode: item.colorCommonIdx,
                     sizeCode: item.sizeCommonIdx,
@@ -164,9 +170,7 @@ const Order = () => {
                 }))
             };
 
-            console.log("=== 주문 생성 요청 ===", orderData);
-            const response = await axios.post("/api/orders/create", orderData, { withCredentials: true });
-            const orderNo = response.data;
+            const orderNo = await createOrder(orderData);
             console.log("=== 주문 생성 성공, 번호:", orderNo);
 
             // [STEP 2] 포트원 결제 요청
@@ -200,26 +204,21 @@ const Order = () => {
 
                     try {
                         // [STEP 3] 백엔드 결제 승인 처리 (DB 저장)
-                        const approveData = {
+                        const approveData: OrderApprovalRequest = {
                             orderNo: orderNo,
                             externalTransaction: rsp.imp_uid,
                             payWay: rsp.pay_method,
                             amount: rsp.paid_amount
                         };
 
-                        console.log("=== 결제 승인 요청 ===", approveData);
-                        await axios.post("/api/orders/approve", approveData, { withCredentials: true });
+                        await approvePayment(approveData);
                         console.log("=== DB 저장 완료 ===");
 
-                        // [STEP 4] 장바구니 아이템 삭제 (장바구니에서 온 경우)
                         const deletePromises = orderItems
                             .filter(item => item.cartItemIdx)
                             .map(item =>
-                                axios.post(
-                                    "/api/cart/delete",
-                                    { cartItemIdx: item.cartItemIdx },
-                                    { withCredentials: true }
-                                ).catch(() => console.warn(`장바구니 삭제 실패 (ID ${item.cartItemIdx})`))
+                                deleteCartItem(item.cartItemIdx!)
+                                    .catch(() => console.warn(`장바구니 삭제 실패 (ID ${item.cartItemIdx})`))
                             );
 
                         if (deletePromises.length > 0) {
@@ -322,7 +321,7 @@ const Order = () => {
                         >
                             <div className="w-[100px] h-[120px] bg-gray-100 overflow-hidden">
                                 <img
-                                    src={item.image}
+                                    src={`${SERVER_URL}${item.image}`}
                                     alt={item.name}
                                     className="w-full h-full object-cover"
                                 />
@@ -336,7 +335,7 @@ const Order = () => {
                                     수량 : {item.quantity}개
                                 </p>
                                 <p className="font-bold text-[16px]">
-                                    {(item.price * item.quantity).toLocaleString()}원
+                                    {formatPrice(item.price * item.quantity)}
                                 </p>
                             </div>
                             <button
@@ -423,23 +422,23 @@ const Order = () => {
                     <div className="flex justify-between">
                         <span className="text-gray-500">상품 금액</span>
                         <span className="font-bold">
-                            {totalProductAmount.toLocaleString()}원
+                            {formatPrice(totalProductAmount)}
                         </span>
                     </div>
                     <div className="flex justify-between">
                         <span className="text-gray-500">배송비</span>
-                        <span className="font-bold">+{deliveryFee.toLocaleString()}원</span>
+                        <span className="font-bold">+{formatPrice(deliveryFee)}</span>
                     </div>
                     <div className="flex justify-between border-b border-gray-100 pb-4">
                         <span className="text-gray-500">할인 / 적립금</span>
                         <span className="font-bold text-red-500">
-                            -{(couponDiscount + appliedPoints).toLocaleString()}원
+                            -{formatPrice(couponDiscount + appliedPoints)}
                         </span>
                     </div>
                     <div className="bg-[#5C4033] text-white p-5 flex justify-between items-center rounded-sm mb-12">
                         <span className="font-semibold">최종 결제 금액</span>
                         <span className="text-[20px] font-semibold">
-                            {finalAmount.toLocaleString()}원
+                            {formatPrice(finalAmount)}
                         </span>
                     </div>
                 </div>

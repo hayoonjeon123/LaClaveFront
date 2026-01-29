@@ -1,6 +1,7 @@
+// src/api/couponApi.ts
 import axiosInstance from "./axiosInstance";
 
-const API_URL = "http://localhost:8080/api/Coupon";
+const API_BASE_URL = "/api/coupon";
 
 // Coupon 인터페이스
 export interface Coupon {
@@ -18,7 +19,7 @@ export interface Coupon {
 
 // 내 쿠폰 목록 조회
 export const getMyCoupons = async (): Promise<Coupon[]> => {
-  const response = await axiosInstance.get<Coupon[]>(`${API_URL}/my`, {
+  const response = await axiosInstance.get<Coupon[]>(`${API_BASE_URL}/my`, {
     withCredentials: true, // 세션/쿠키 필요 시
   });
   return response.data;

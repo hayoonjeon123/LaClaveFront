@@ -1,7 +1,7 @@
 import axiosInstance from "./axiosInstance";
 import type { Order } from "./ordersApi";
 
-const API_BASE_URL = "http://localhost:8080/api/inquiry";
+const API_BASE_URL = "/api/inquiry";
 
 export interface Inquiry {
   inquiryIdx: number;

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Logo from "@/assets/Logo_brown.png";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { findMemberId, findMemberPw, sendEmailAuth, verifyEmailCode } from "@/api/authApi";
 
 const FindAccount = () => {
   const [activeTab, setActiveTab] = useState("id");
@@ -9,7 +9,6 @@ const FindAccount = () => {
   const [email, setEmail] = useState("");
   const [memberId, setMemberId] = useState("");
   const [authCode, setAuthCode] = useState("");
-  const [isEmailSent, setIsEmailSent] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const navigate = useNavigate();
 
@@ -19,10 +18,8 @@ const FindAccount = () => {
       return;
     }
     try {
-      // Backend expects email for sendAuthCode
-      await axios.post("/api/email-send", { email }, { withCredentials: true });
+      await sendEmailAuth(email);
       alert("인증번호가 전송되었습니다. 이메일을 확인해주세요.");
-      setIsEmailSent(true);
     } catch (error) {
       alert("이메일 전송에 실패했습니다.");
     }
@@ -34,16 +31,9 @@ const FindAccount = () => {
       return;
     }
     try {
-      // Backend expects email and authCode for verifyCode
-      const response = await axios.post("/api/email-verify", {
-        email,
-        authCode
-      }, { withCredentials: true });
-
-      if (response.status === 200) {
-        alert("이메일 인증이 완료되었습니다.");
-        setIsVerified(true);
-      }
+      await verifyEmailCode({ email, authCode });
+      alert("이메일 인증이 완료되었습니다.");
+      setIsVerified(true);
     } catch (error: any) {
       alert(error.response?.data || "인증번호가 틀렸습니다.");
     }
@@ -57,23 +47,16 @@ const FindAccount = () => {
 
     try {
       if (activeTab === "id") {
-        const response = await axios.post("/api/find-id", {
-          memberName: name,
-          email,
-        }, { withCredentials: true });
-        const resultId = response.data.match(/\[(.*?)\]/)?.[1] || response.data;
+        const resultString = await findMemberId({ memberName: name, email });
+        const resultId = resultString.match(/\[(.*?)\]/)?.[1] || resultString;
         navigate("/find-result/id", { state: { name, email, id: resultId } });
       } else {
         if (!memberId) {
           alert("아이디를 입력해주세요.");
           return;
         }
-        const response = await axios.post("/api/find-pw", {
-          memberId,
-          memberName: name,
-          email,
-        }, { withCredentials: true });
-        const tempPw = response.data.match(/\[(.*?)\]/)?.[1] || response.data;
+        const resultString = await findMemberPw({ memberId, memberName: name, email });
+        const tempPw = resultString.match(/\[(.*?)\]/)?.[1] || resultString;
         navigate("/find-result/password", { state: { name, email, id: memberId, password: tempPw } });
       }
     } catch (error: any) {
@@ -92,7 +75,7 @@ const FindAccount = () => {
         {/* 탭 메뉴 */}
         <div className="relative flex border-b border-gray-200 mb-8">
           <button
-            onClick={() => { setActiveTab("id"); setIsVerified(false); setIsEmailSent(false); }}
+            onClick={() => { setActiveTab("id"); setIsVerified(false); }}
             className={`flex-1 py-4 text-center font-bold text-[18px] transition-colors cursor-pointer ${activeTab === "id" ? "text-[#5C4033]" : "text-gray-400"
               }`}
           >
@@ -102,7 +85,7 @@ const FindAccount = () => {
           <div className="w-[2px] h-6 bg-gray-400 self-center" />
 
           <button
-            onClick={() => { setActiveTab("password"); setIsVerified(false); setIsEmailSent(false); }}
+            onClick={() => { setActiveTab("password"); setIsVerified(false); }}
             className={`flex-1 py-4 text-center font-bold text-[18px] transition-colors cursor-pointer ${activeTab === "password" ? "text-[#5C4033]" : "text-gray-400"
               }`}
           >

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useSearchParams } from "react-router-dom";
-import axios from "axios";
 import { CLASS_CATEGORY } from "@/constants/category.constants";
 import {
     Select,
@@ -9,41 +8,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-const SERVER_URL = "http://localhost:8080";
-
-const COLOR_MAP: Record<string, string> = {
-
-    // 영문 색상명
-    "black": "#000000",
-    "white": "#FFFFFF",
-    "gray": "#808080",
-    "grey": "#808080",
-    "red": "#FF0000",
-    "blue": "#0000FF",
-    "navy": "#000080",
-    "beige": "#F5F5DC",
-    "ivory": "#FFFFF0",
-    "brown": "#A52A2A",
-    "light_denim": "#A8C1D8",
-    "mid_denim": "#5A7A9C",
-    "dark_denim": "#2B3E58",
-    "black_denim": "#323232",
-
-
-};
-
-const getSafeColor = (colorName: any) => {
-    if (!colorName || typeof colorName !== "string") return "transparent";
-
-    // 이미 hex 코드면 그대로 반환
-    if (colorName.startsWith("#")) {
-        return colorName;
-    }
-
-    // 한글 색상명이나 영문 색상명을 hex로 변환
-    const cleanName = colorName.replace("색상", "").toLowerCase().trim();
-    return COLOR_MAP[cleanName] || colorName;
-};
+import { getProductsByCategory } from "@/api/productApi";
+import type { Product } from "@/types/product";
+import { formatPrice, getSafeColor, SERVER_URL } from "@/utils/productUtils";
 
 
 export function ProductPage() {
@@ -51,7 +18,7 @@ export function ProductPage() {
     const [searchParams] = useSearchParams();
     const subIdx = searchParams.get("subIdx");
 
-    const [products, setProducts] = useState<any[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
     const [activeSort, setActiveSort] = useState("인기순");
     const [activeSubId, setActiveSubId] = useState<number | null>(null);
 
@@ -82,19 +49,8 @@ export function ProductPage() {
 
     const fetchProducts = async (productCategoryIdx: number) => {
         try {
-            // 프록시 설정(/api -> http://localhost:8080)에 맞춰 호출
-            const response = await axios.get(`/api/category/${productCategoryIdx}`);
-            console.log("=== 서버 응답 전체 데이터 ===", response.data);
-
-            // 첫 번째 상품의 구조를 자세히 확인
-            if (response.data && response.data.length > 0) {
-                console.log("=== 첫 번째 상품 데이터 ===", response.data[0]);
-                console.log("mainImageUrl:", response.data[0].mainImageUrl);
-                console.log("colors:", response.data[0].colors);
-                console.log("전체 키 목록:", Object.keys(response.data[0]));
-            }
-
-            setProducts(Array.isArray(response.data) ? response.data : []);
+            const data = await getProductsByCategory(productCategoryIdx);
+            setProducts(data);
         } catch (error) {
             console.error("데이터 로딩 실패:", error);
             setProducts([]);
@@ -103,10 +59,6 @@ export function ProductPage() {
 
     if (!mainCategory) return <div className="py-20 text-center">카테고리를 찾을 수 없습니다.</div>;
 
-    const formatPrice = (price: any) => {
-        if (price === null || price === undefined) return "0원";
-        return Number(price).toLocaleString() + "원";
-    };
 
     return (
         <div className="w-full max-w-[1000px] mx-auto px-4 py-12 font-['Inter',sans-serif]">
@@ -146,8 +98,8 @@ export function ProductPage() {
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-x-20 gap-y-16 mb-16">
                 {products && products.length > 0 ? (
-                    products.map((product: any) => (
-                        <Link to={`/product/${product.productIdx}`} key={product.productName} className="group block">
+                    products.map((product: Product) => (
+                        <Link to={`/product/${product.productIdx}`} key={product.productIdx} className="group block">
                             <div className="bg-gray-200 mb-4 overflow-hidden relative aspect-[3/4]">
                                 {product.mainImageUrl ? (
                                     <img

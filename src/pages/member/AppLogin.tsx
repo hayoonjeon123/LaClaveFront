@@ -5,7 +5,7 @@ import Kakao from "@/assets/Kakao_login.png";
 import { Link, useNavigate } from "react-router-dom";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import axios from "axios";
+import { login } from "@/api/authApi";
 
 const AppLogin = () => {
   const [rememberMe, setRememberMe] = useState(false);
@@ -20,27 +20,14 @@ const AppLogin = () => {
     }
 
     try {
-      // 1. Spring Security의 formLogin은 기본적으로 FormData 형식을 사용함
-      const formData = new FormData();
-      formData.append("memberId", memberId);
-      formData.append("memberPw", memberPw);
+      await login({ memberId, memberPw });
 
-      // 2. 백엔드의 SecurityConfig에서 설정한 loginProcessingUrl("/loginProc")로 전송
-      const response = await axios.post(
-        "http://localhost:8080/loginProc",
-        formData,
-        {
-          withCredentials: true, // 세션/쿠키 정보 포함
-        }
-      );
+      alert("로그인 성공!");
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("memberId", memberId);
 
-      if (response.status === 200) {
-        alert("로그인 성공!");
-        sessionStorage.setItem("isLoggedIn", "true"); // 로그인 상태 저장
-        sessionStorage.setItem("memberId", memberId); // 필요시 아이디도 저장
-        navigate("/"); // 로그인 성공 시 메인으로 이동
-        window.location.reload(); // 헤더 상태 갱신을 위해 새로고침 (간단한 방법)
-      }
+      navigate("/");
+      window.location.reload();
     } catch (error) {
       console.error("로그인 에러:", error);
       alert("로그인 실패! 아이디 혹은 비밀번호를 확인해주세요.");

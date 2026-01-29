@@ -74,7 +74,7 @@ export default function MemberEdit() {
   };
 
   return (
-    <div className="pb-4 bg-white">
+    <div className="pb-4">
       {/* Header */}
       <div className="max-w-[1000px] mx-auto px-6 pt-6 flex items-center relative mb-6">
         <button
@@ -91,7 +91,7 @@ export default function MemberEdit() {
       </div>
 
       {/* 정보 수정 카드 */}
-      <div className="max-w-[800px] mx-auto bg-white border border-gray-200 rounded-[20px] p-8 shadow-sm">
+      <div className="max-w-[800px] mx-auto border border-gray-200 rounded-[20px] p-8 shadow-sm">
         {/* 프로필 요약 */}
         <div className="flex items-center gap-6 mb-8 px-4">
           <div className="w-[80px] h-[80px] flex items-center justify-center border-2 border-[#5C4033] rounded-full">

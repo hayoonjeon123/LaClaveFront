@@ -11,7 +11,7 @@ export default function MyWishList() {
 
   // ✅ 찜 목록 조회 (memberIdx 없음)
   useEffect(() => {
-    if (sessionStorage.getItem("isLoggedIn") !== "true") {
+    if (localStorage.getItem("isLoggedIn") !== "true") {
       alert("로그인이 필요한 서비스입니다.");
       navigate("/loginProc");
       return;
@@ -61,7 +61,7 @@ export default function MyWishList() {
             찜한 상품이 없습니다.
           </p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-20">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-20">
             {wishItems.map((item) => (
               <div
                 key={item.productIdx}
