@@ -64,8 +64,12 @@ export default function MyRecent() {
             >
               <div className="relative aspect-[4/5] bg-[#F9F9F9] overflow-hidden rounded-sm mb-2">
                 <img
-                  src={imageMap[item.productIdx] || ""}
-                  alt={`상품 ${item.productIdx}`}
+                  src={
+                    item.productImageUrl
+                      ? `http://localhost:8080${item.productImageUrl}`
+                      : ""
+                  }
+                  alt={item.productName || `상품 ${item.productIdx}`}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <button
@@ -77,10 +81,11 @@ export default function MyRecent() {
                 >
                   <Heart
                     size={18}
-                    className={`transition-colors duration-300 ${(item as any).isLiked
-                      ? "fill-red-500 text-red-500"
-                      : "text-gray-300 fill-transparent"
-                      }`}
+                    className={`transition-colors duration-300 ${
+                      (item as any).isLiked
+                        ? "fill-red-500 text-red-500"
+                        : "text-gray-300 fill-transparent"
+                    }`}
                   />
                 </button>
               </div>

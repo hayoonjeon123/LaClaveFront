@@ -2,7 +2,6 @@ import { ArrowDownIcon, ArrowLeft, ChevronUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
-import sampleImg from "../../assets/sample-product.jpg";
 import { getMyOrders } from "../../api/ordersApi";
 import type { Order, PayInfo } from "../../api/ordersApi";
 
@@ -65,11 +64,7 @@ export default function MyOrders() {
                   className="flex gap-4 items-start mb-4"
                 >
                   <img
-                    src={
-                      detail.productImageUrl
-                        ? `http://localhost:8080${detail.productImageUrl}`
-                        : sampleImg
-                    }
+                    src={`http://localhost:8080${detail.productImageUrl}`}
                     alt={detail.productName}
                     className="w-[100px] h-[100px] object-cover rounded-md"
                   />

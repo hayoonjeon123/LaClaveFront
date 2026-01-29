@@ -2,6 +2,8 @@ import { ArrowLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
+import { Route, Routes } from "react-router-dom";
+import MyDeliveryPage from "@/pages/mypage/Mytest";
 // import { getDeliveryInfo } from "@/api/deliveryApi"; // 나중에 연결
 
 interface DeliveryInfo {
@@ -87,23 +89,16 @@ export default function MyDelivery() {
               </p>
             )}
           </div>
-
-          {/* 외부 배송조회 */}
           <button
-            onClick={() =>
-              window.open(
-                `https://tracker.delivery/#/${delivery.courier}/${delivery.trackingNumber}`,
-                "_blank",
-              )
-            }
+            onClick={() => navigate(`/my_delivery/${ordersIdx}`)}
             className="w-full h-[44px]
-              border border-[#5C4033]
-              text-[#5C4033] font-bold text-[15px]
-              rounded-lg
-              hover:bg-[#5C4033] hover:text-white
-              transition"
+    border border-[#5C4033]
+    text-[#5C4033] font-bold text-[15px]
+    rounded-lg
+    hover:bg-[#5C4033] hover:text-white
+    transition"
           >
-            택배사 배송조회
+            실시간 배송조회
           </button>
         </div>
       </div>

@@ -1,40 +1,31 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getMyReviews, deleteReview } from "../../api/reviewApi";
-import type { Review } from "../../api/reviewApi";
-import axios from "axios";
+import {
+  getMyReviews,
+  deleteReview,
+  getWritableReviews,
+} from "../../api/reviewApi";
+import type { Review, WritableReview } from "../../api/reviewApi";
 
 export default function MyReview() {
   const navigate = useNavigate();
+
   const [activeTab, setActiveTab] = useState<"writable" | "written">("written");
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [writableReviews, setWritableReviews] = useState<Review[]>([]);
+  const [writableReviews, setWritableReviews] = useState<WritableReview[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const getReviewImageUrl = (filePath?: string) => {
-    if (!filePath) return ""; // 또는 기본 이미지 URL
-
-    // DB에 /uploads/review/ 포함돼 있으므로 그대로 붙이면 됨
-    return `http://localhost:8080${filePath}`;
-  };
-
-  const fetchWritableReviews = async () => {
-    const res = await axios.get("http://localhost:8080/api/review/writable", {
-      withCredentials: true,
-    });
-    return res.data;
-  };
-
-  console.log(reviews);
   useEffect(() => {
     const fetchReviews = async () => {
       try {
         setLoading(true);
+
         const [written, writable] = await Promise.all([
           getMyReviews(),
-          fetchWritableReviews(),
+          getWritableReviews(),
         ]);
+
         setReviews(written);
         setWritableReviews(writable);
         setActiveTab("written");
@@ -44,11 +35,13 @@ export default function MyReview() {
         setLoading(false);
       }
     };
+
     fetchReviews();
   }, []);
 
   const handleDelete = async (reviewIdx: number) => {
     if (!window.confirm("정말 삭제하시겠습니까?")) return;
+
     try {
       await deleteReview(reviewIdx);
       setReviews((prev) => prev.filter((r) => r.reviewIdx !== reviewIdx));
@@ -78,19 +71,21 @@ export default function MyReview() {
       <div className="grid grid-cols-2 border-b mb-6 border-[#A8A9AD] max-w-[650px] mx-auto">
         <button
           onClick={() => setActiveTab("writable")}
-          className={`w-full pb-2 font-bold text-[18px] text-center transition cursor-pointer ${activeTab === "writable"
+          className={`w-full pb-2 font-bold text-[18px] ${
+            activeTab === "writable"
               ? "text-[#5C4033] border-b-2 border-[#5C4033]"
-              : "text-[#A8A9AD] hover:text-[#5C4033]"
-            }`}
+              : "text-[#A8A9AD]"
+          }`}
         >
           작성 가능 리뷰
         </button>
         <button
           onClick={() => setActiveTab("written")}
-          className={`w-full pb-2 font-bold text-[18px] text-center transition cursor-pointer ${activeTab === "written"
+          className={`w-full pb-2 font-bold text-[18px] ${
+            activeTab === "written"
               ? "text-[#5C4033] border-b-2 border-[#5C4033]"
-              : "text-[#A8A9AD] hover:text-[#5C4033]"
-            }`}
+              : "text-[#A8A9AD]"
+          }`}
         >
           작성 완료 리뷰
         </button>
@@ -104,50 +99,51 @@ export default function MyReview() {
       {!loading && activeTab === "writable" && (
         <div className="space-y-4 px-6">
           {writableReviews.length === 0 ? (
-            <div className="text-center font-medium text-[#A8A9AD] py-10 text-[16px]">
+            <div className="text-center text-[#A8A9AD] py-10">
               작성 가능한 리뷰가 없습니다.
             </div>
           ) : (
             writableReviews.map((review) => (
               <div
                 key={review.ordersIdx}
-                className="border border-[#EEEEEE] rounded-[10px] shadow-sm overflow-hidden bg-white"
+                className="border rounded-[10px] bg-white shadow-sm"
               >
-                <div className="p-4 py-3 flex items-center gap-4">
-                  <div className="w-[52px] h-[52px] flex-shrink-0 overflow-hidden rounded-[8px] bg-gray-50">
-                    <img
-                      src={""}
-                      alt={review.productName}
-                      className="w-full h-full object-cover"
-                    />
+                <div className="p-4 flex items-center gap-4">
+                  <div className="w-[52px] h-[52px] rounded-[8px] bg-gray-50 overflow-hidden">
+                    {review.productImageUrl && (
+                      <img
+                        src={`http://localhost:8080${review.productImageUrl}`}
+                        alt={review.productName}
+                        className="w-full h-full object-cover"
+                      />
+                    )}
                   </div>
+
                   <div className="flex-1 min-w-0">
-                    <p className="font-bold text-[14px] text-[#333] truncate">
+                    <p className="font-bold text-[14px] truncate">
                       {review.productName}
                     </p>
-                    <div className="flex items-center gap-1 text-[12px] text-[#A8A9AD] font-medium mt-0.5">
-                      <span>{review.optionInfo}</span>
-                    </div>
+                    <p className="text-[12px] text-[#A8A9AD] mt-0.5">
+                      {review.optionInfo}
+                    </p>
                   </div>
-                  <div className="flex gap-1.5 min-w-fit">
-                    <button
-                      onClick={() =>
-                        navigate("/writeReview", {
-                          state: {
-                            mode: "write",
-                            ordersIdx: review.ordersIdx,
-                            productIdx: review.productIdx,
-                            productName: review.productName,
-                            optionInfo: review.optionInfo, // 여기서 이미 "색상: 레드, 사이즈: M" 문자열일 것
-                            reviewImageUrl: review.reviewImageUrl,
-                          },
-                        })
-                      }
-                      className="border border-[#A8A9AD] px-3 h-7 py-0.5 rounded-[5px] text-[11px] font-bold transition cursor-pointer text-[#333] hover:bg-gray-50"
-                    >
-                      작성
-                    </button>
-                  </div>
+
+                  <button
+                    onClick={() =>
+                      navigate("/writeReview", {
+                        state: {
+                          mode: "write",
+                          ordersIdx: review.ordersIdx,
+                          productIdx: review.productIdx,
+                          productName: review.productName,
+                          optionInfo: review.optionInfo,
+                        },
+                      })
+                    }
+                    className="border px-3 h-7 rounded-[5px] text-[11px] font-bold"
+                  >
+                    작성
+                  </button>
                 </div>
               </div>
             ))
@@ -155,36 +151,38 @@ export default function MyReview() {
         </div>
       )}
 
-      {/* 작성 완료 리뷰 */}
+      {/* 작성 완료 리뷰 (❗ 건드리지 않음) */}
       {!loading && activeTab === "written" && (
         <div className="space-y-4 px-6">
           {reviews.length === 0 ? (
-            <div className="text-center font-medium text-[#A8A9AD] py-10 text-[16px]">
+            <div className="text-center text-[#A8A9AD] py-10">
               작성 완료된 리뷰가 없습니다.
             </div>
           ) : (
             reviews.map((review) => (
               <div
                 key={review.reviewIdx}
-                className="border border-[#EEEEEE] rounded-[10px] shadow-sm overflow-hidden bg-white"
+                className="border rounded-[10px] bg-white shadow-sm"
               >
-                <div className="p-4 py-3 flex items-center gap-4">
-                  <div className="w-[52px] h-[52px] flex-shrink-0 overflow-hidden rounded-[8px] bg-gray-50">
+                <div className="p-4 flex items-center gap-4">
+                  <div className="w-[52px] h-[52px] rounded-[8px] bg-gray-50 overflow-hidden">
                     <img
-                      src={getReviewImageUrl(review.reviewImageUrl)}
+                      src={`http://localhost:8080${review.reviewImageUrl}`}
                       alt={review.productName}
                       className="w-full h-full object-cover"
                     />
                   </div>
+
                   <div className="flex-1 min-w-0">
-                    <p className="font-bold text-[14px] text-[#333] truncate">
+                    <p className="font-bold text-[14px] truncate">
                       {review.productName}
                     </p>
-                    <div className="flex items-center gap-1 text-[12px] text-[#A8A9AD] font-medium mt-0.5">
-                      <span>{review.optionInfo}</span>
-                    </div>
+                    <p className="text-[12px] text-[#A8A9AD] mt-0.5">
+                      {review.optionInfo}
+                    </p>
                   </div>
-                  <div className="flex gap-1.5 min-w-fit">
+
+                  <div className="flex gap-1.5">
                     <button
                       onClick={() =>
                         navigate("/writeReview", {
@@ -199,13 +197,13 @@ export default function MyReview() {
                           },
                         })
                       }
-                      className="border border-[#A8A9AD] px-3 h-7 py-0.5 rounded-[5px] text-[11px] font-bold transition cursor-pointer text-[#333] hover:bg-gray-50"
+                      className="border px-3 h-7 rounded-[5px] text-[11px] font-bold"
                     >
                       수정
                     </button>
                     <button
                       onClick={() => handleDelete(review.reviewIdx)}
-                      className="border border-[#A8A9AD] bg-[#5C4033] text-white px-3 h-7 py-0.5 rounded-[5px] text-[11px] font-bold transition cursor-pointer hover:bg-[#4a3329]"
+                      className="border bg-[#5C4033] text-white px-3 h-7 rounded-[5px] text-[11px] font-bold"
                     >
                       삭제
                     </button>

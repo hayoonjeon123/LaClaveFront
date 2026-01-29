@@ -20,14 +20,13 @@ import { getRecentProducts } from "../../api/recentApi";
 
 // ------------------- ProductCard -------------------
 function ProductCard({ product }: { product: any }) {
-  const imageUrl =
-    product.productImageUrl ||
-    product.image ||
-    product.images?.[0]?.imagePath ||
-    "";
+  // ✅ 이미지 URL 통일
+  const imageUrl = product.productImageUrl
+    ? `http://localhost:8080${product.productImageUrl}`
+    : "";
+
   const nameDisplay = product.productName || product.name;
   const priceValue = product.productPrice ?? product.price;
-
   const priceDisplay =
     typeof priceValue === "number"
       ? priceValue.toLocaleString() + "원"
@@ -98,20 +97,19 @@ export default function MyPage() {
     fetchMember();
   }, []);
 
-  // === 최근 본 상품 조회 (localStorage) ===
+  // === 최근 본 상품 조회 ===
   useEffect(() => {
     const fetchRecentProducts = async () => {
       try {
         const data = await getRecentProducts();
-        // 최신순 기준 상위 5개
-        setRecentProducts(data.slice(0, 5));
+        setRecentProducts(data.slice(0, 5)); // 최신 5개
       } catch (error) {
         console.error("최근 본 상품 로딩 실패:", error);
       }
     };
-
     fetchRecentProducts();
   }, []);
+
   // === AI 추천 상품 조회 ===
   useEffect(() => {
     const fetchAiProducts = async () => {
@@ -190,6 +188,7 @@ export default function MyPage() {
         </div>
       </div>
 
+      {/* 배송현황 */}
       <div className="mb-3 border-b border-[#5C4033]">
         <Link to="/myDelivery" className="group">
           <div className="flex justify-between items-center pb-2 mb-2">
@@ -222,7 +221,10 @@ export default function MyPage() {
         <div className="flex gap-8 overflow-x-auto scrollbar-hide pb-4 border-b border-[#5C4033] mb-4">
           {recentProducts.length > 0 ? (
             recentProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard
+                key={product.id || product.productIdx}
+                product={product}
+              />
             ))
           ) : (
             <div className="text-gray-400 py-4 w-full text-center">
@@ -248,7 +250,10 @@ export default function MyPage() {
         <div className="flex gap-8 overflow-x-auto pb-4 scrollbar-hide">
           {aiProducts.length > 0 ? (
             aiProducts.map((product) => (
-              <ProductCard key={product.productIdx} product={product} />
+              <ProductCard
+                key={product.productIdx || product.id}
+                product={product}
+              />
             ))
           ) : (
             <div className="text-gray-400 py-4 w-full text-center">

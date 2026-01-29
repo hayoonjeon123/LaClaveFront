@@ -24,7 +24,7 @@ export interface WritableReview {
   ordersIdx: number;
   productIdx: number;
   productName: string;
-  imageUrl: string;
+  productImageUrl: string;
   optionInfo: string;
 }
 // 리뷰 등록
@@ -61,10 +61,11 @@ export const getMyReviews = async (): Promise<Review[]> => {
 };
 
 // [마이페이지] 작성 가능 리뷰 조회
-export const getWritableReviews = async (): Promise<Review[]> => {
-  const res = await axios.get<Review[]>(`${API_URL}/api/review/writable`, {
-    withCredentials: true,
-  });
+export const getWritableReviews = async (): Promise<WritableReview[]> => {
+  const res = await axios.get<WritableReview[]>(
+    `${API_URL}/api/review/writable`,
+    { withCredentials: true },
+  );
   return res.data;
 };
 
