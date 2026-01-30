@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "@/api/axiosInstance";
 import { ArrowLeft } from "lucide-react";
+import { SERVER_URL } from "@/utils/productUtils";
 
 export default function MyAi() {
     const navigate = useNavigate();
@@ -74,7 +75,7 @@ export default function MyAi() {
                                     {/* 백엔드 Item 엔티티는 images Set을 가짐. JSON 변환 시 images 리스트가 됨. */}
                                     {product.images && product.images.length > 0 ? (
                                         <img
-                                            src={product.images[0].imagePath}
+                                            src={`${SERVER_URL}${product.images[0].imagePath}`}
                                             alt={product.productName}
                                             className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
                                         />

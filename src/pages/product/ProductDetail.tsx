@@ -51,7 +51,6 @@ function ProductDetail() {
 
         const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
 
-        // 로그인 상태에 따라 찜 상태 조회
         const detail = await getProductDetail(Number(productIdx));
         let status = false;
 
@@ -63,12 +62,10 @@ function ProductDetail() {
         setWishlistCount(detail.wishlistCount || 0);
         setIsLiked(status);
 
-        // 최근 본 상품 추가 (로그인 시에만)
         if (isLoggedIn) {
           addRecentProduct(Number(productIdx)).catch(console.error);
         }
       } catch (error) {
-        console.error("상품 상세 정보를 가져오는데 실패했습니다:", error);
       } finally {
         setIsLoading(false);
       }
@@ -90,7 +87,6 @@ function ProductDetail() {
       setIsLiked(status);
       setWishlistCount((prev) => (status ? prev + 1 : prev - 1));
     } catch (error: any) {
-      console.error("찜 토글 실패:", error);
     }
   };
 
@@ -126,7 +122,6 @@ function ProductDetail() {
         navigate("/cart");
       }
     } catch (error: any) {
-      console.error("장바구니 추가 실패:", error);
       alert("장바구니 추가 중 오류가 발생했습니다.");
     }
   };
@@ -152,7 +147,7 @@ function ProductDetail() {
         price: productData.productPrice,
         quantity: 1,
         image: mainImages[0],
-        colorCommonIdx: productData.colorCommonIdx[0], // 실제 선택된 인덱스로 매칭 필요할 수 있음
+        colorCommonIdx: productData.colorCommonIdx[0],
         sizeCommonIdx: productData.sizeCommonIdx[0],
       },
     ];
@@ -164,7 +159,6 @@ function ProductDetail() {
     if (!productData) return;
 
     const handleScroll = () => {
-      // 페이지 하단 강제 전환 로직 삭제
       // if (
       //   window.innerHeight + window.scrollY >=
       //   document.body.offsetHeight - 50
@@ -212,11 +206,9 @@ function ProductDetail() {
       </div>
     );
 
-  // 메인 이미지 및 상세 이미지 배열 구성
   const mainImages = productData.mainImageUrl ? [productData.mainImageUrl] : [];
   const detailImages = productData.detailImages || [];
 
-  // 탭 설정 (서버 데이터 기반)
   const tabConfig = [
     {
       id: "info",
@@ -272,7 +264,6 @@ function ProductDetail() {
   return (
     <div className="w-full max-w-[1200px] mx-auto py-8 px-4">
       <div className="grid grid-cols-12 gap-8">
-        {/* 왼쪽: 상품 이미지 캐러셀 */}
         <div className="col-span-6 bg-[#F5F5F5] flex items-center justify-center p-8 rounded-lg overflow-hidden">
           {mainImages.length > 0 ? (
             <Carousel className="w-full h-full flex flex-col justify-center">
@@ -303,7 +294,6 @@ function ProductDetail() {
           )}
         </div>
 
-        {/* 오른쪽: 상품 정보 및 옵션 선택 */}
         <div className="col-span-6 pt-4">
           <div className="flex flex-col max-w-[500px] w-full mx-auto">
             <div className="mb-6">
@@ -355,7 +345,6 @@ function ProductDetail() {
             </div>
 
             <div className="space-y-6 mb-12">
-              {/* 사이즈 선택 */}
               <Select value={selectedSize} onValueChange={setSelectedSize}>
                 <SelectTrigger className="w-full !h-[50px] text-lg text-gray-500 focus:ring-[#5C4033]">
                   <SelectValue placeholder="사이즈 선택" />
@@ -369,7 +358,6 @@ function ProductDetail() {
                 </SelectContent>
               </Select>
 
-              {/* 색상 선택 */}
               <Select value={selectedColor} onValueChange={setSelectedColor}>
                 <SelectTrigger className="w-full !h-[50px] text-lg text-gray-500 focus:ring-[#5C4033]">
                   <SelectValue placeholder="색상 선택" />
@@ -420,9 +408,7 @@ function ProductDetail() {
         </div>
       </div>
 
-      {/* 상품 정보 및 네비게이션 */}
       <div className="mt-20">
-        {/* Sticky Navigation */}
         <div className="sticky top-0 z-50 w-full h-[60px] bg-white p-0 rounded-[10px] border border-[#A8A9AD] overflow-hidden flex shadow-sm">
           {tabConfig.map((tab, index) => (
             <button
@@ -454,7 +440,6 @@ function ProductDetail() {
           ))}
         </div>
 
-        {/* Content Sections (Vertically Stacked) */}
         <div className="flex flex-col gap-12 mt-12 mb-20">
           {tabConfig.map((tab) => (
             <div key={tab.id} id={tab.id} className="scroll-mt-[100px]">

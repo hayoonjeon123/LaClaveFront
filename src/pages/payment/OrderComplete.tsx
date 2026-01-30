@@ -23,14 +23,11 @@ const OrderComplete = () => {
         </div>
       </div>
 
-      {/* 2. 완료 메시지 */}
       <h2 className="text-center text-[28px] font-bold mb-6 tracking-tight">
         주문이 성공적으로 완료되었습니다!
       </h2>
 
-      {/* 3. 주문 정보 박스 */}
       <section className="border border-gray-300 rounded-xl p-8 mb-6 flex gap-8 items-center">
-        {/* 상품 이미지 */}
         <div className="w-[120px] h-[150px] bg-gray-100 rounded overflow-hidden">
           <img
             src={`${SERVER_URL}${orderInfo.image}`}
@@ -39,7 +36,6 @@ const OrderComplete = () => {
           />
         </div>
 
-        {/* 세부 주문 정보 */}
         <div className="flex-1 space-y-2 text-[18px]">
           <p className="flex gap-3">
             <span className="font-medium">주문번호</span>
@@ -57,7 +53,6 @@ const OrderComplete = () => {
         </div>
       </section>
 
-      {/* 4. 하단 버튼 영역 */}
       <div className="flex gap-4">
         <button
           className="flex-1 h-14 border border-[#A8A9AD] rounded-[10px] text-[18px] font-bold hover:bg-gray-50 transition-colors cursor-pointer"

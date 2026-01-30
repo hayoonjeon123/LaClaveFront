@@ -19,7 +19,6 @@ const PW_REGEX =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,16}$/;
 const SignUp = () => {
   const navigate = useNavigate();
-  const IS_DEV_MODE = false;
   const [agreeAll, setAgreeAll] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [agreePrivacy, setAgreePrivacy] = useState(false);
@@ -57,14 +56,7 @@ const SignUp = () => {
     }
   }, [agreeTerms, agreePrivacy, agreeMarketing]);
 
-  /* ================= 실시간 유효성 검사 로직 ================= */
   useEffect(() => {
-    if (IS_DEV_MODE) {
-      setIdError("");
-      setIsIdAvailable(true);
-      return;
-    }
-
     if (memberId.length === 0) {
       setIdError("");
       setIsIdAvailable(false);
@@ -93,13 +85,9 @@ const SignUp = () => {
     }, 500);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [memberId, IS_DEV_MODE]);
+  }, [memberId]);
 
   useEffect(() => {
-    if (IS_DEV_MODE) {
-      setPwError("");
-      return;
-    }
     if (memberPw.length > 0 && !PW_REGEX.test(memberPw)) {
       setPwError(
         "비밀번호는 8자 이상, 영문, 숫자, 특수문자를 모두 포함해야 합니다."
@@ -107,19 +95,15 @@ const SignUp = () => {
     } else {
       setPwError("");
     }
-  }, [memberPw, IS_DEV_MODE]);
+  }, [memberPw]);
 
   useEffect(() => {
-    if (IS_DEV_MODE) {
-      setConfirmPwError("");
-      return;
-    }
     if (confirmPw.length > 0 && memberPw !== confirmPw) {
       setConfirmPwError("비밀번호가 일치하지 않습니다.");
     } else {
       setConfirmPwError("");
     }
-  }, [memberPw, confirmPw, IS_DEV_MODE]);
+  }, [memberPw, confirmPw]);
 
   const isRequiredAgreed = agreeTerms && agreePrivacy;
 
@@ -333,7 +317,7 @@ const SignUp = () => {
             value={postCode}
             readOnly
             className="flex-1 h-[44px] px-[12px] text-[14px]
-                 border border-[#5C4033] bg-gray-50
+                 border border-[#5C4033] 
                  focus:outline-none"
           />
 
@@ -357,7 +341,7 @@ const SignUp = () => {
           value={address}
           readOnly
           className="flex-1 h-[40px] px-[12px] text-[14px]
-                     border border-[#5C4033] placeholder:text-[#A8A9AD] bg-gray-50
+                     border border-[#5C4033] placeholder:text-[#A8A9AD]
                      focus:outline-none focus:ring-1 focus:ring-[#5C4033]"
         />
       </div>
@@ -638,27 +622,6 @@ const SignUp = () => {
               onClick={() => {
                 console.log("Next button clicked!");
 
-                if (IS_DEV_MODE) {
-                  navigate("/save-ai-info", {
-                    state: {
-                      memberId: memberId || "devuser_" + Date.now(),
-                      memberPw: memberPw || "Dev1234!", // 특수문자 규칙 대응
-                      memberName: memberName || "테스터",
-                      email:
-                        emailId && emailDomain
-                          ? `${emailId}@${emailDomain}`
-                          : `dev_${Date.now()}@naver.com`,
-                      gender: gender || 1,
-                      birth: birth || "1995-01-01",
-                      postCode: postCode || "06159",
-                      address: address || "서울 강남구 테헤란로 427",
-                      addressDetail: addressDetail || "트레이드타워",
-                      marketingAgree: agreeMarketing,
-                    },
-                  });
-                  return;
-                }
-
                 if (!memberId || idError) {
                   window.alert("아이디를 올바르게 입력해주세요.");
                   return;
@@ -699,10 +662,12 @@ const SignUp = () => {
                   window.alert("아이디를 올바르게 입력해주세요.");
                   return;
                 }
+                /*
                 if (!isEmailVerified) {
                   window.alert("이메일 인증을 완료해주세요.");
                   return;
                 }
+                */
 
                 // 모든 검사가 끝나면 다음 페이지로 데이터와 함께 이동
                 navigate("/save-ai-info", {

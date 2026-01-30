@@ -28,6 +28,7 @@ const AiSelect = () => {
     const data = {
       ...signUpData,
       marketingAgree: signUpData.marketingAgree ? 1 : 0,
+      memberStatusCommonIdx: 3,
       height: height ? parseFloat(height) : 0,
       weight: weight ? parseFloat(weight) : 0,
       prefStyles: selectedStyles,

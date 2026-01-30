@@ -30,13 +30,10 @@ export function ProductPage() {
         if (!mainCategory) return;
 
         if (subIdx) {
-            // URL에 subIdx가 있으면 해당 하위 카테고리 선택
             setActiveSubId(Number(subIdx));
         } else if (mainCategory.subItems && mainCategory.subItems.length > 0) {
-            // 하위 카테고리가 있으면 첫 번째 하위 카테고리 자동 선택
             setActiveSubId(mainCategory.subItems[0].id);
         } else {
-            // 하위 카테고리가 없으면 메인 카테고리 ID 사용 (베스트 등)
             setActiveSubId(mainCategory.id);
         }
     }, [categoryName, subIdx, mainCategory]);
@@ -52,7 +49,6 @@ export function ProductPage() {
             const data = await getProductsByCategory(productCategoryIdx);
             setProducts(data);
         } catch (error) {
-            console.error("데이터 로딩 실패:", error);
             setProducts([]);
         }
     };

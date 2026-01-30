@@ -24,7 +24,6 @@ export function SearchResult() {
             const data = await searchProducts(searchKeyword);
             setProducts(data);
         } catch (error) {
-            console.error("검색 실패:", error);
             setProducts([]);
         } finally {
             setLoading(false);
@@ -48,7 +47,6 @@ export function SearchResult() {
                         products.map((product: Product) => (
                             <Link to={`/product/${product.productIdx}`} key={product.productIdx} className="group block">
                                 <div className="bg-gray-200 mb-4 overflow-hidden relative aspect-[3/4]">
-                                    {/* 이미지 처리 로직 */}
                                     {(product.mainImageUrl) ? (
                                         <img
                                             src={`${SERVER_URL}${product.mainImageUrl}`}
@@ -75,7 +73,6 @@ export function SearchResult() {
                                         )}
                                         <span className="text-gray-900 font-bold text-lg">{formatPrice(product.productPrice)}</span>
                                     </div>
-                                    {/* 색상 스와치 추가 */}
                                     <div className="flex gap-1.5 mt-2">
                                         {product.colors && product.colors.length > 0 ? (
                                             product.colors.map((color: string, index: number) => (

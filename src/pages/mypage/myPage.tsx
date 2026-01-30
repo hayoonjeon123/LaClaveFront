@@ -17,13 +17,15 @@ import { useState, useEffect } from "react";
 import axiosInstance from "@/api/axiosInstance";
 import { getMemberInfo } from "@/api/member/memberApi";
 import { getRecentProducts } from "../../api/myPage/recentApi";
+import { SERVER_URL } from "@/utils/productUtils";
 
 // ------------------- ProductCard -------------------
 function ProductCard({ product }: { product: any }) {
-  // ✅ 이미지 URL 통일
   const imageUrl = product.productImageUrl
-    ? `http://localhost:8080${product.productImageUrl}`
-    : "";
+    ? `${SERVER_URL}${product.productImageUrl}`
+    : (product.images && product.images.length > 0)
+      ? `${SERVER_URL}${product.images[0].imagePath}`
+      : "";
 
   const nameDisplay = product.productName || product.name;
   const priceValue = product.productPrice ?? product.price;

@@ -33,6 +33,7 @@ export interface SignUpRequestDto {
     address: string;
     addressDetail: string;
     marketingAgree: number;
+    memberStatusCommonIdx?: number;
     height?: number;
     weight?: number;
     prefStyles?: string[];

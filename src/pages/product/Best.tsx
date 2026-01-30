@@ -18,7 +18,6 @@ export function Best() {
 
     const categories = ["베스트", "상의", "하의", "아우터", "ACC"];
 
-    // 카테고리별 ID 매핑 (category.constants.tsx 참고)
     const categoryIds: Record<string, number> = {
         "상의": 86,
         "하의": 87,
@@ -34,10 +33,10 @@ export function Best() {
         try {
             let url = "";
             if (activeCategory === "베스트") {
-                url = "/api/products/best"; // 베스트 상품 엔드포인트
+                url = "/api/products/best";
             } else {
                 const categoryId = categoryIds[activeCategory];
-                url = `/api/category/${categoryId}`; // 카테고리별 엔드포인트
+                url = `/api/category/${categoryId}`;
             }
 
             const response = await axios.get(url, {
@@ -45,7 +44,6 @@ export function Best() {
             });
             setProducts(Array.isArray(response.data) ? response.data : []);
         } catch (error) {
-            console.error("데이터 로딩 실패:", error);
             setProducts([]);
         }
     };

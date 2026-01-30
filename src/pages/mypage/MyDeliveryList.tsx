@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getMyDeliveryList } from "@/api/myPage/myDeliveryApi";
-import { Separator } from "@/components/ui/separator";
 import type { MyDelivery } from "@/api/myPage/myDeliveryApi";
 
 export default function MyDeliveryList() {
@@ -86,7 +85,6 @@ export default function MyDeliveryList() {
                 {delivery.endDate}
               </p>
             )}
-            <Separator />
           </div>
         ))}
       </div>

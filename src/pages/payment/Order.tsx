@@ -36,10 +36,8 @@ const Order = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    // CartPage에서 넘겨준 선택 상품들
     const selectedItemsFromCart = location.state?.selectedItems || [];
 
-    // OrderItem 형식에 맞게 변환 (CartItemResponse -> OrderItem)
     const initialOrderItems = selectedItemsFromCart.map((item: any) => ({
         id: item.cartItemIdx || item.productIdx,
         cartItemIdx: item.cartItemIdx,
@@ -68,44 +66,34 @@ const Order = () => {
             navigate("/loginProc");
             return;
         }
-        // 상품이 없으면 장바구니로 리다이렉트
         if (orderItems.length === 0) {
             alert("주문할 상품이 없습니다.");
             navigate("/cart");
             return;
         }
 
-        // 이니시스 스크립트 동적 로드
         const loadInicisScript = () => {
             return new Promise((resolve, reject) => {
-                // 이미 로드되어 있으면 즉시 resolve
                 if (window.INIStdPay) {
-                    console.log("이니시스 스크립트 이미 로드됨");
                     resolve(true);
                     return;
                 }
 
-                // 이미 스크립트 태그가 있는지 확인
                 const existingScript = document.querySelector('script[src*="INIStdPay.js"]');
                 if (existingScript) {
-                    console.log("이니시스 스크립트 로딩 중...");
-                    // 스크립트가 로드될 때까지 대기
                     existingScript.addEventListener('load', () => resolve(true));
                     existingScript.addEventListener('error', () => reject(new Error("스크립트 로드 실패")));
                     return;
                 }
 
-                // 새로운 스크립트 태그 생성
                 const script = document.createElement('script');
                 script.src = 'https://stgstdpay.inicis.com/stdjs/INIStdPay.js';
                 script.type = 'text/javascript';
                 script.charset = 'UTF-8';
                 script.onload = () => {
-                    console.log("이니시스 스크립트 로드 완료");
                     resolve(true);
                 };
                 script.onerror = () => {
-                    console.error("이니시스 스크립트 로드 실패");
                     reject(new Error("스크립트 로드 실패"));
                 };
                 document.body.appendChild(script);
@@ -113,20 +101,17 @@ const Order = () => {
         };
 
         loadInicisScript().catch(error => {
-            console.error("이니시스 초기화 실패:", error);
         });
 
-        // 회원 정보 및 배송지 목록 가져오기
         const fetchData = async () => {
             try {
                 const [info, addrList] = await Promise.all([
-                    getMemberInfo(), // memberApi의 getMemberInfo 사용
+                    getMemberInfo(),
                     getMyAddressList()
                 ]);
                 setMemberInfo(info);
                 setAddressList(addrList);
             } catch (error) {
-                console.error("데이터 조회 실패:", error);
                 alert("로그인 정보가 없거나 세션이 만료되었습니다.");
                 navigate("/login");
             }
@@ -153,7 +138,6 @@ const Order = () => {
         }
 
         try {
-            // [STEP 1] 주문 생성
             const orderData: OrderRequest = {
                 addrIdx: memberInfo?.addrIdx,
                 usedPoint: appliedPoints,
@@ -171,21 +155,17 @@ const Order = () => {
             };
 
             const orderNo = await createOrder(orderData);
-            console.log("=== 주문 생성 성공, 번호:", orderNo);
 
-            // [STEP 2] 포트원 결제 요청
             if (!window.IMP) {
                 alert("포트원 SDK를 불러오지 못했습니다. 페이지를 새로고침 해주세요.");
                 return;
             }
 
-            // 포트원 가맹점 식별코드 (테스트용)
             const IMP = window.IMP;
-            IMP.init("imp67574350"); // 포트원 공식 테스트 가맹점 식별코드
+            IMP.init("imp67574350");
 
-            // 결제 요청
             IMP.request_pay({
-                pg: "html5_inicis",  // 이니시스 웹표준 (가장 안정적)
+                pg: "html5_inicis",
                 pay_method: "card",
                 merchant_uid: orderNo,
                 name: orderItems[0].name + (orderItems.length > 1 ? ` 외 ${orderItems.length - 1}건` : ""),
@@ -196,14 +176,8 @@ const Order = () => {
                 buyer_addr: memberInfo?.address || "",
                 buyer_postcode: memberInfo?.postCode || "",
             }, async (rsp: any) => {
-                // 결제 완료 콜백
                 if (rsp.success) {
-                    console.log("✅ 결제 성공 - 전체 응답:", rsp);
-                    console.log("✅ imp_uid (externalTransaction):", rsp.imp_uid);
-                    console.log("✅ merchant_uid:", rsp.merchant_uid);
-
                     try {
-                        // [STEP 3] 백엔드 결제 승인 처리 (DB 저장)
                         const approveData: OrderApprovalRequest = {
                             orderNo: orderNo,
                             externalTransaction: rsp.imp_uid,
@@ -212,21 +186,20 @@ const Order = () => {
                         };
 
                         await approvePayment(approveData);
-                        console.log("=== DB 저장 완료 ===");
 
                         const deletePromises = orderItems
                             .filter(item => item.cartItemIdx)
                             .map(item =>
                                 deleteCartItem(item.cartItemIdx!)
-                                    .catch(() => console.warn(`장바구니 삭제 실패 (ID ${item.cartItemIdx})`))
+                                    .catch(() => {
+                                        console.warn(`장바구니 삭제 실패 (ID ${item.cartItemIdx})`);
+                                    })
                             );
 
                         if (deletePromises.length > 0) {
                             await Promise.all(deletePromises);
-                            console.log("=== 장바구니 아이템 삭제 완료 ===");
                         }
 
-                        // [STEP 5] 결제 완료 페이지로 이동
                         navigate("/order-complete", {
                             state: {
                                 orderNo: orderNo,
@@ -238,18 +211,15 @@ const Order = () => {
                             }
                         });
                     } catch (error) {
-                        console.error("DB 저장 실패:", error);
                         alert("결제는 완료되었으나 주문 정보 저장 중 오류가 발생했습니다. 고객센터에 문의해주세요.");
                     }
 
                 } else {
-                    console.error("❌ 결제 실패:", rsp);
                     alert(`결제에 실패했습니다.\n${rsp.error_msg}`);
                 }
             });
 
         } catch (error: any) {
-            console.error("결제 프로세스 에러:", error);
             alert("결제 준비 중 오류가 발생했습니다.");
         }
     };
@@ -278,7 +248,6 @@ const Order = () => {
                 ORDER
             </h2>
 
-            {/* 배송지 섹션 */}
             <section className="mb-12">
                 <div className="flex justify-between items-center border-b border-black pb-2 mb-6">
                     <h3 className="text-[16px] font-bold">배송지</h3>
@@ -308,7 +277,6 @@ const Order = () => {
                 </div>
             </section>
 
-            {/* 주문 상품 섹션 */}
             <section className="mb-12">
                 <h3 className="text-[16px] font-bold border-b border-black pb-2 mb-6">
                     주문 상품
@@ -353,7 +321,6 @@ const Order = () => {
                 )}
             </section>
 
-            {/* 적립금 / 쿠폰 사용 섹션 */}
             <section className="mb-14">
                 <h3 className="text-[14px] font-bold pb-3 mb-8 border-b border-gray-200">
                     적립금 / 쿠폰 사용
@@ -413,7 +380,6 @@ const Order = () => {
                 </div>
             </section>
 
-            {/* 결제 정보 섹션 */}
             <section className="mb-12">
                 <h3 className="text-[16px] font-semibold border-b border-[#000000] pb-2 mb-6">
                     결제 정보
@@ -444,7 +410,6 @@ const Order = () => {
                 </div>
             </section>
 
-            {/* 결제 수단 및 버튼 */}
             <section>
                 <h3 className="text-[16px] font-semibold border-b border-[#000000] pb-2 mb-6">
                     결제 수단
@@ -466,7 +431,7 @@ const Order = () => {
                     {finalAmount.toLocaleString()}원 결제 하기
                 </button>
             </section>
-            {/* 배송지 변경 모달 */}
+
             {isAddressModalOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
                     <div className="bg-white w-full max-w-[500px] rounded-lg p-6 shadow-xl overflow-hidden flex flex-col max-h-[80vh]">
