@@ -1,17 +1,24 @@
 import Logo from "@/assets/image/Logo_brown.png";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import type { FindResultData } from "@/types/member";
 
 const FindResult = () => {
   const { type } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const userData = location.state as FindResultData | null;
 
-  const userData = location.state || {
-    name: "정보 없음",
-    id: "정보 없음",
-    email: "정보 없음",
-    password: "정보 없음",
-  };
+  useEffect(() => {
+    if (!userData || !userData.name || !userData.email) {
+      alert("잘못된 접근입니다. 계정 찾기 페이지로 이동합니다.");
+      navigate("/findaccount");
+    }
+  }, [userData, navigate]);
+
+  if (!userData) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col items-center justify-center py-14">

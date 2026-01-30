@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import AddressSearch from "@/components/AddressSearch/addressSearch";
-import type { SelectedAddress } from "@/components/AddressSearch/address";
+import type { SelectedAddress } from "@/types/address";
 import { X } from "lucide-react";
 
 const ID_REGEX = /^(?=.*\d)[A-Za-z\d@$!%*#?&]{4,20}$/;
@@ -19,17 +19,12 @@ const PW_REGEX =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,16}$/;
 const SignUp = () => {
   const navigate = useNavigate();
-  /* ================= 개발 모드 설정 ================= */
-  const IS_DEV_MODE = false; // true일 때 유효성 검사를 건너뜁니다.
-
-  /* ================= 약관 상태 ================= */
+  const IS_DEV_MODE = false;
   const [agreeAll, setAgreeAll] = useState(false);
-  const [agreeTerms, setAgreeTerms] = useState(false); // 필수
-  const [agreePrivacy, setAgreePrivacy] = useState(false); // 필수
-  const [agreeMarketing, setAgreeMarketing] = useState(false); // 선택
-  const [gender, setGender] = useState<number | null>(null); // Integer 대응 (1:남, 2:여)
-
-  /* ================= 입력 상태 ================= */
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [agreePrivacy, setAgreePrivacy] = useState(false);
+  const [agreeMarketing, setAgreeMarketing] = useState(false);
+  const [gender, setGender] = useState<number | null>(null);
   const [memberId, setMemberId] = useState("");
   const [memberPw, setMemberPw] = useState("");
   const [confirmPw, setConfirmPw] = useState("");
@@ -40,19 +35,13 @@ const SignUp = () => {
   const [authCode, setAuthCode] = useState<string>("");
   const [isEmailVerified, setIsEmailVerified] = useState<boolean>(false);
   const [isIdAvailable, setIsIdAvailable] = useState<boolean>(false);
-
-  /* ================= 주소 상태 ================= */
   const [postCode, setPostCode] = useState("");
   const [address, setAddress] = useState("");
   const [addressDetail, setAddressDetail] = useState("");
   const [isAddressSearchOpen, setIsAddressSearchOpen] = useState(false);
-
-  /* ================= 에러 메시지 상태 (실시간 유효성 검사) ================= */
   const [idError, setIdError] = useState("");
   const [pwError, setPwError] = useState("");
   const [confirmPwError, setConfirmPwError] = useState("");
-
-  /* 전체 동의 클릭 */
   const handleAgreeAll = (checked: boolean) => {
     setAgreeAll(checked);
     setAgreeTerms(checked);
@@ -60,7 +49,6 @@ const SignUp = () => {
     setAgreeMarketing(checked);
   };
 
-  /* 개별 동의 변경 시 전체 동의 상태 동기화 */
   useEffect(() => {
     if (agreeTerms && agreePrivacy && agreeMarketing) {
       setAgreeAll(true);
@@ -89,7 +77,6 @@ const SignUp = () => {
       return;
     }
 
-    // 디바운싱: 입력이 멈춘 후 500ms 뒤에 중복 체크 수행
     const delayDebounceFn = setTimeout(async () => {
       try {
         const isUsed = await checkIdDuplicate(memberId);
@@ -108,7 +95,6 @@ const SignUp = () => {
     return () => clearTimeout(delayDebounceFn);
   }, [memberId, IS_DEV_MODE]);
 
-  // 비밀번호 검증
   useEffect(() => {
     if (IS_DEV_MODE) {
       setPwError("");
@@ -123,7 +109,6 @@ const SignUp = () => {
     }
   }, [memberPw, IS_DEV_MODE]);
 
-  // 비밀번호 확인 검증
   useEffect(() => {
     if (IS_DEV_MODE) {
       setConfirmPwError("");
@@ -136,10 +121,8 @@ const SignUp = () => {
     }
   }, [memberPw, confirmPw, IS_DEV_MODE]);
 
-  /* 필수 약관 체크 여부 */
   const isRequiredAgreed = agreeTerms && agreePrivacy;
 
-  /* ================= 이메일 인증 핸들러 ================= */
   const handleSendEmail = async () => {
     const fullEmail = `${emailId}@${emailDomain}`;
     if (!emailId || !emailDomain) {
@@ -148,14 +131,12 @@ const SignUp = () => {
     }
 
     try {
-      // 1. 회원가입 시에는 먼저 이메일 중복 체크 수행
       const isUsed = await checkEmailDuplicate(fullEmail);
       if (isUsed) {
         alert("이미 가입된 이메일입니다.");
         return;
       }
 
-      // 2. 중복이 아닐 때만 인증번호 발송 요청
       await sendEmailAuth(fullEmail);
       alert("인증번호가 발송되었습니다.");
     } catch (error: any) {
@@ -185,7 +166,6 @@ const SignUp = () => {
     }
   };
 
-  /* ================= 주소 핸들러 ================= */
   const handleAddressComplete = (data: SelectedAddress) => {
     setPostCode(data.postCode);
     setAddress(data.address);
@@ -195,20 +175,15 @@ const SignUp = () => {
 
   return (
     <div className="w-full flex flex-col items-center">
-      {/* 제목 */}
       <div className="text-[30px] font-semibold text-[#000000] mt-[20px]">
         회원가입
       </div>
 
-      {/* 아이디 입력 */}
       <div className="w-full max-w-md mt-[40px] flex flex-col">
         <div className="flex items-center">
-          {/* 라벨 */}
           <label className="w-[120px] text-[16px] font-medium text-[#000000]">
             아이디
           </label>
-
-          {/* 인풋 */}
           <input
             type="text"
             placeholder="영문, 숫자, 특수문자 / 4~20자리"
@@ -233,15 +208,11 @@ const SignUp = () => {
         )}
       </div>
 
-      {/* 비밀번호 입력 */}
       <div className="w-full max-w-md mt-[30px] flex flex-col">
         <div className="flex items-center">
-          {/* 라벨 */}
           <label className="w-[120px] text-[16px] font-medium text-[#000000]">
             비밀번호
           </label>
-
-          {/* 인풋 */}
           <input
             type="password"
             placeholder="영문 대소문자, 숫자, 특수문자 조합 / 8~16자리"
@@ -261,7 +232,6 @@ const SignUp = () => {
         )}
       </div>
 
-      {/* 비밀번호 확인 */}
       <div className="w-full max-w-md mt-[30px] flex flex-col">
         <div className="flex items-center">
           <label className="w-[120px] text-[16px] font-medium text-[#000000]">
@@ -288,7 +258,6 @@ const SignUp = () => {
         )}
       </div>
 
-      {/* 이름 입력 */}
       <div className="w-full max-w-md mt-[30px] flex items-center">
         <label className="w-[120px] text-[16px] font-medium text-[#000000]">
           이름
@@ -303,12 +272,10 @@ const SignUp = () => {
         />
       </div>
 
-      {/* 성별 */}
       <div className="w-full max-w-md mt-[30px] flex items-center">
         <label className="w-[120px] text-[16px] font-medium text-[#000000]">
           성별
         </label>
-
         <div className="w-full flex max-w-md justify-center mt-[4px] gap-[20px]">
           <div className="flex items-center gap-[6px]">
             <Checkbox
@@ -339,7 +306,6 @@ const SignUp = () => {
         </div>
       </div>
 
-      {/* 생년월일 */}
       <div className="w-full max-w-md mt-[30px] flex items-center">
         <label className="w-[120px] text-[16px] font-medium text-[#000000]">
           생년월일
@@ -355,9 +321,7 @@ const SignUp = () => {
         />
       </div>
 
-      {/* 주소 */}
       <div className="w-full max-w-md mt-[30px] flex items-center">
-        {/* 라벨 */}
         <label className="w-[120px] text-[16px] font-medium text-[#000000]">
           주소
         </label>
@@ -385,10 +349,8 @@ const SignUp = () => {
         </div>
       </div>
 
-      {/* 기본주소 */}
       <div className="w-full max-w-md mt-[10px] flex items-center">
         <div className="w-[120px]" />
-        {/* 인풋 */}
         <input
           type="text"
           placeholder="기본주소"
@@ -400,10 +362,8 @@ const SignUp = () => {
         />
       </div>
 
-      {/* 상세주소 */}
       <div className="w-full max-w-md mt-[10px] flex items-center">
         <div className="w-[120px]" />
-        {/* 인풋 */}
         <input
           type="text"
           placeholder="상세주소"
@@ -415,7 +375,6 @@ const SignUp = () => {
         />
       </div>
 
-      {/* 주소 검색 모달 */}
       {isAddressSearchOpen && (
         <div
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4"
@@ -444,13 +403,10 @@ const SignUp = () => {
         </div>
       )}
 
-      {/* 이메일 입력 */}
       <div className="w-full max-w-md mt-[40px] flex items-center relative">
-        {/* 라벨 */}
         <label className="w-[135px] text-[16px] font-medium text-[#000000] ">
           이메일
         </label>
-        {/* 인풋 */}
         <input
           type="email"
           placeholder="이메일"
@@ -462,7 +418,6 @@ const SignUp = () => {
                  focus:outline-none focus:ring-1 focus:ring-[#5C4033] disabled:bg-gray-100"
         />
         <span className="text-[14px] mx-[5px]">@</span>
-        {/* 도메인 선택 */}
         <Select
           value={emailDomain}
           onValueChange={setEmailDomain}
@@ -478,7 +433,6 @@ const SignUp = () => {
             <SelectItem value="kakao.com">kakao.com</SelectItem>
           </SelectContent>
         </Select>{" "}
-        {/* 버튼 영역 */}
         <div className="absolute right-[-102px] top-0 flex flex-col gap-[12px]">
           <button
             type="button"
@@ -502,10 +456,8 @@ const SignUp = () => {
           </button>
         </div>
       </div>
-      {/* 인증번호 확인 */}
       <div className="w-full max-w-md mt-[10px] flex items-center">
         <div className="w-[120px]" />
-        {/* 인풋 */}
         <input
           type="text"
           placeholder="인증번호"
@@ -526,10 +478,8 @@ const SignUp = () => {
         </div>
       )}
 
-      {/* ================= 약관 동의 영역 ================= */}
       <div className="w-full flex justify-center mt-[40px]">
         <div className="w-full max-w-[1000px]">
-          {/* 전체 동의 */}
           <div className="flex items-center gap-3 border border-[#5C4033] px-4 py-3">
             <Checkbox
               id="agree-all"
@@ -543,9 +493,7 @@ const SignUp = () => {
             </Label>
           </div>
 
-          {/* 약관 박스 3개 */}
           <div className="grid grid-cols-3 gap-[24px]">
-            {/* 이용약관 */}
             <div className="border border-[#5C4033] mt-[20px] flex flex-col h-[260px]">
               <div className="px-3 py-2 text-[14px] font-medium border-b border-[#5C4033]">
                 [필수] 이용약관 동의
@@ -594,7 +542,6 @@ const SignUp = () => {
               </div>
             </div>
 
-            {/* 개인정보 */}
             <div className="border border-[#5C4033] mt-[20px] flex flex-col h-[260px]">
               <div className="px-3 py-2 text-[14px] font-medium border-b border-[#5C4033]">
                 [필수] 개인정보 수집 및 이용 동의
@@ -642,13 +589,11 @@ const SignUp = () => {
               </div>
             </div>
 
-            {/* 쇼핑정보 */}
             <div className="border border-[#5C4033] mt-[20px] flex flex-col h-[260px]">
               <div className="px-3 py-2 text-[14px] font-medium border-b border-[#5C4033]">
                 [선택] 쇼핑정보 수신 동의
               </div>
 
-              {/* 내용 */}
               <div className="flex-1 px-3 py-2 text-[13px] overflow-y-auto leading-[1.6]">
                 <p>
                   회사는 회원에게 다양한 혜택과 정보를 제공하기 위해 마케팅
@@ -668,7 +613,6 @@ const SignUp = () => {
                 </p>
               </div>
 
-              {/* 하단 동의 */}
               <div className="flex justify-end items-center gap-2 px-3 py-2 border-t border-[#5C4033]">
                 <Label
                   htmlFor="agree-marketing"
@@ -688,14 +632,12 @@ const SignUp = () => {
             </div>
           </div>
 
-          {/* 다음 버튼 */}
           <div className="mt-[40px] mb-[60px]">
             <button
               type="button"
               onClick={() => {
                 console.log("Next button clicked!");
 
-                // 개발 모드일 때는 모든 검사를 건너뛰고 바로 이동
                 if (IS_DEV_MODE) {
                   navigate("/save-ai-info", {
                     state: {
@@ -717,7 +659,6 @@ const SignUp = () => {
                   return;
                 }
 
-                // 최종 유효성 검사 (입력값이 없거나 에러가 있는 경우)
                 if (!memberId || idError) {
                   window.alert("아이디를 올바르게 입력해주세요.");
                   return;

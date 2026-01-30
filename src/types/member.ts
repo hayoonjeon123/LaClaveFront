@@ -62,3 +62,11 @@ export interface FindPwRequest {
     memberName: string;
     email: string;
 }
+
+// 계정 찾기 결과 데이터 (FindResult 페이지에서 사용)
+export interface FindResultData {
+    name: string;
+    id?: string;
+    email: string;
+    password?: string;
+}

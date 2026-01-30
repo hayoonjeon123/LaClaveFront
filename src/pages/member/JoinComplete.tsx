@@ -12,9 +12,7 @@ const JoinComplete = () => {
         </div>
       </div>
 
-      {/* 완료 메시지 박스 */}
       <section className="border border-gray-400 rounded-lg p-16 mb-12 flex flex-col items-center justify-center shadow-sm">
-        {/* 체크 아이콘 */}
         <div className="w-24 h-24 border-2 border-gray-800 rounded-full flex items-center justify-center mb-8">
           <svg
             width="48"
@@ -35,7 +33,6 @@ const JoinComplete = () => {
         </h2>
       </section>
 
-      {/* 하단 버튼 영역 */}
       <div className="flex gap-4 max-w-[540px] mx-auto">
         <button
           className="flex-1 h-14 border border-[#A8A9AD] rounded-[10px] text-[18px] font-bold hover:bg-gray-50 transition-colors cursor-pointer"
