@@ -190,7 +190,7 @@ export default function MyPage() {
 
       {/* 배송현황 */}
       <div className="mb-3 border-b border-[#5C4033]">
-        <Link to="/myDelivery" className="group">
+        <Link to="/MyDeliveryList" className="group">
           <div className="flex justify-between items-center pb-2 mb-2">
             <div className="flex items-center gap-3 text-left">
               <Truck size={30} strokeWidth={1.5} className="text-[#5C4033]" />

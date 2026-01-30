@@ -8,7 +8,7 @@ import { App } from "./App";
 import { BlankLayout, MainLayout, AdminLayout } from "./layouts";
 import { SignUp } from "./pages/member/SignUp";
 import MyPage from "./pages/mypage/myPage";
-import Mytest from "./pages/mypage/Mytest";
+import MyDeliveryList from "./pages/mypage/MyDeliveryList";
 import MyOrders from "./pages/mypage/myOrders";
 import MyReview from "./pages/mypage/myReview";
 import MyInquiryHistory from "./pages/mypage/myInquiryHistory";
@@ -62,6 +62,7 @@ import PrivacyPolicy from "./pages/policy/PrivacyPolicy";
 import ErrorPage from "./pages/error/ErrorPage";
 import { JoinComplete } from "./pages/member/JoinComplete";
 import { Best } from "./pages/product/Best";
+import MyDeliveryPage from "./pages/mypage/myDelivery";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -70,7 +71,7 @@ createRoot(document.getElementById("root")!).render(
         <Route element={<MainLayout />}>
           <Route index element={<App />} />
           <Route path="myPage" element={<MyPage />} />
-          <Route path="mytest" element={<Mytest />} />
+          <Route path="MyDeliveryList" element={<MyDeliveryList />} />
           <Route path="myOrders" element={<MyOrders />} />
           <Route path="myReview" element={<MyReview />} />
           <Route path="writeReview" element={<WriteReview />} />
@@ -82,6 +83,10 @@ createRoot(document.getElementById("root")!).render(
           <Route path="myWithDraw" element={<MyWithDraw />} />
           <Route path="myCoupon" element={<MyCoupon />} />
           <Route path="myDelivery/:orderIdx" element={<MyDelivery />} />
+          <Route
+            path="/mypage/mydelivery/:orderIdx"
+            element={<MyDeliveryPage />}
+          />
           <Route path="myClaim" element={<MyClaim />} />
           <Route path="myMemberEdit" element={<MyMemberEdit />} />
           <Route path="myPwEdit" element={<MyPwEdit />} />

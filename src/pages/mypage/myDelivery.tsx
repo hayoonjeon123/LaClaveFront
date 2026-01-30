@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { getDeliveryByOrder } from "@/api/myPage/myDeliveryApi";
@@ -22,6 +22,8 @@ export default function MyDeliveryPage() {
   const { orderIdx } = useParams<{ orderIdx: string }>();
   const [deliveryLogs, setDeliveryLogs] = useState<DeliveryLog[]>([]);
   const [orderInfo, setOrderInfo] = useState<Order | null>(null);
+  const location = useLocation();
+  const orderNo = location.state?.orderNo;
 
   useEffect(() => {
     if (!orderIdx) return;
@@ -141,7 +143,9 @@ export default function MyDeliveryPage() {
 
         {/* 주문 요약 */}
         <div className="py-4 flex items-center gap-5">
-          {orderInfo && orderInfo.details.length > 0 && orderInfo.details[0].productImageUrl ? (
+          {orderInfo &&
+          orderInfo.details.length > 0 &&
+          orderInfo.details[0].productImageUrl ? (
             <img
               src={`${SERVER_URL}${orderInfo.details[0].productImageUrl}`}
               alt="상품"
@@ -153,7 +157,9 @@ export default function MyDeliveryPage() {
             </div>
           )}
           <div>
-            <h4 className="text-[18px] font-bold">주문번호 {orderIdx}</h4>
+            <h4 className="text-[18px] font-bold">
+              주문번호 {orderNo ?? orderIdx}
+            </h4>
             <p className="text-[14px] text-gray-400">배송 현황 조회</p>
           </div>
         </div>

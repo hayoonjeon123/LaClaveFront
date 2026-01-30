@@ -212,7 +212,9 @@ export default function MyOrders() {
                     console.log("📦 배송조회 클릭됨");
                     console.log("주문번호(orderIdx):", order.ordersIdx);
 
-                    navigate(`/myDelivery/${order.ordersIdx}`);
+                    navigate(`/myDelivery/${order.ordersIdx}`, {
+                      state: { orderNo: order.orderNo },
+                    });
                   }}
                   className="w-full h-[44px]
       border border-[#5C4033]

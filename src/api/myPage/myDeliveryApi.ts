@@ -10,6 +10,8 @@ export interface MyDelivery {
   trackingNO: string;
   courier: string;
   updatedAt: string | null;
+  orderNo: string;
+  productImageUrl: string;
 }
 
 // // 로그인한 회원 기준 호출
@@ -38,5 +40,11 @@ const API_BASE_URL = "/api/myDelivery";
 
 export const getDeliveryByOrder = async (orderIdx: number) => {
   const res = await axiosInstance.get(`${API_BASE_URL}/${orderIdx}/delivery`);
+  return res.data;
+};
+
+// 로그인한 회원 기준 배송 조회
+export const getMyDeliveryList = async (): Promise<MyDelivery[]> => {
+  const res = await axiosInstance.get(`${API_BASE_URL}/member`);
   return res.data;
 };
