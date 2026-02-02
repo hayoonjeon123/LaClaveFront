@@ -107,7 +107,7 @@ export default function MyReview() {
             writableReviews.map((review) => (
               <div
                 key={review.ordersIdx}
-                className="border rounded-[10px] bg-white shadow-sm"
+                className="border rounded-[10px] shadow-sm"
               >
                 <div className="p-4 flex items-center gap-4">
                   <div className="w-[52px] h-[52px] rounded-[8px] bg-gray-50 overflow-hidden">
@@ -162,7 +162,7 @@ export default function MyReview() {
             reviews.map((review) => (
               <div
                 key={review.reviewIdx}
-                className="border rounded-[10px] bg-white shadow-sm"
+                className="border rounded-[10px] shadow-sm"
               >
                 <div className="p-4 flex items-center gap-4">
                   <div className="w-[52px] h-[52px] rounded-[8px] bg-gray-50 overflow-hidden">

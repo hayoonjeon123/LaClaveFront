@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import { getCartItems, deleteCartItem, updateCartItemQuantity } from "@/api/order/cartApi";
 import type { CartItemResponse } from "@/types/cart";
 import { formatPrice, SERVER_URL } from "@/utils/productUtils";
@@ -71,9 +72,17 @@ const Cart = () => {
 
     return (
         <div className="w-full max-w-[1200px] mx-auto py-20 px-6">
-            <h2 className="text-center text-[32px] font-bold mb-16 tracking-tight">
-                장바구니
-            </h2>
+            <div className="max-w-[700px] mx-auto flex items-center relative mb-16">
+                <button
+                    onClick={() => navigate(-1)}
+                    className="absolute left-[-40px] p-1.5 rounded-full hover:bg-gray-100 cursor-pointer"
+                >
+                    <ArrowLeft size={28} />
+                </button>
+                <h2 className="flex-1 text-center text-[32px] font-bold tracking-tight">
+                    장바구니
+                </h2>
+            </div>
 
             <div className="flex justify-between items-center pb-4 border-b border-[#000000]">
                 <label className="flex items-center gap-3 cursor-pointer">

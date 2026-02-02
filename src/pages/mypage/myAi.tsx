@@ -16,21 +16,17 @@ export default function MyAi() {
     const fetchRecommendations = async () => {
         setLoading(true);
         try {
-            // 프록시 설정(/api -> http://localhost:8080)에 맞춰 호출
-            // withCredentials: true 로 세션 정보(로그인 여부) 전달
             const response = await axiosInstance.get("/api/ai/recommend");
             setProducts(Array.isArray(response.data) ? response.data : []);
         } catch (error: any) {
             console.error("데이터 로딩 실패:", error);
             if (error.response) {
                 if (error.response.status === 401) {
-                    // 세션 만료 시에만 로그아웃 처리
                     alert("로그인이 필요한 서비스입니다.");
                     localStorage.removeItem("isLoggedIn");
                     localStorage.removeItem("memberId");
                     window.location.href = "/loginProc";
                 } else if (error.response.status === 500) {
-                    // 서버 에러는 로그아웃 하지 않음
                     alert("AI 서비스 응답 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
                 }
             }
