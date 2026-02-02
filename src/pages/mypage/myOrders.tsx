@@ -5,13 +5,16 @@ import { Separator } from "@/components/ui/separator";
 import { getMyOrders } from "../../api/order/myOrdersApi";
 import type { Order } from "../../api/order/myOrdersApi";
 import { SERVER_URL } from "@/utils/productUtils";
+import { getWritableReviews } from "@/api/myPage/reviewApi";
 
 export default function MyOrders() {
   const navigate = useNavigate();
   const [orders, setOrders] = useState<Order[]>([]);
   const [openPaymentIdx, setOpenPaymentIdx] = useState<number | null>(null);
   const [openDeliveryIdx, setOpenDeliveryIdx] = useState<number | null>(null);
-
+  const [writableProductSet, setWritableProductSet] = useState<Set<number>>(
+    new Set(),
+  );
   useEffect(() => {
     getMyOrders()
       .then((res) => {
@@ -20,7 +23,13 @@ export default function MyOrders() {
       })
       .catch(console.error);
   }, []);
-
+  useEffect(() => {
+    getWritableReviews().then((list) => {
+      // productIdx 기준 Set 생성
+      const set = new Set(list.map((r) => r.productIdx));
+      setWritableProductSet(set);
+    });
+  }, []);
   return (
     <div className="text-black pb-10">
       {/* Header */}
@@ -59,74 +68,86 @@ export default function MyOrders() {
               <Separator className="mb-4" />
 
               {/* 상품 목록 */}
-              {order.details.map((detail) => (
-                <div
-                  key={detail.productIdx}
-                  className="flex gap-4 items-start mb-4"
-                >
-                  <img
-                    src={`${SERVER_URL}${detail.productImageUrl}`}
-                    alt={detail.productName}
-                    className="w-[100px] h-[100px] object-cover rounded-md"
-                  />
+              {order.details.map((detail) => {
+                const canWriteReview = writableProductSet.has(
+                  detail.productIdx,
+                );
 
-                  <div className="flex-1 text-sm">
-                    <p className="font-bold mb-1">{detail.productName}</p>
-                    <p>색상 : {detail.colorName ?? detail.colorCode}</p>
-                    <p>사이즈 : {detail.sizeName ?? detail.sizeCode}</p>
-                    <p>수량 : {detail.quantity}개</p>
+                return (
+                  <div
+                    key={detail.productIdx}
+                    className="flex gap-4 items-start mb-4"
+                  >
+                    <img
+                      src={`${SERVER_URL}${detail.productImageUrl}`}
+                      alt={detail.productName}
+                      className="w-[100px] h-[100px] object-cover rounded-md"
+                    />
 
-                    {/* 상품 액션 버튼 */}
-                    <div className="mt-3 flex gap-2">
-                      <button
-                        className="flex-1 h-[34px] border border-[#5C4033] text-[#5C4033]
-                        rounded-md text-[13px] font-bold
-                        hover:bg-[#5C4033] hover:text-white transition"
-                      >
-                        취소
-                      </button>
+                    <div className="flex-1 text-sm">
+                      <p className="font-bold mb-1">{detail.productName}</p>
+                      <p>색상 : {detail.colorName ?? detail.colorCode}</p>
+                      <p>사이즈 : {detail.sizeName ?? detail.sizeCode}</p>
+                      <p>수량 : {detail.quantity}개</p>
 
-                      <button
-                        onClick={() =>
-                          navigate("/writeReview", {
-                            state: {
-                              ordersIdx: order.ordersIdx,
-                              productIdx: detail.productIdx,
-                              productName: detail.productName,
-                              optionInfo: `색상: ${detail.colorCode}, 사이즈: ${detail.sizeCode}`,
-                            },
-                          })
-                        }
-                        className="flex-1 h-[34px] border border-[#5C4033] text-[#5C4033]
-                        rounded-md text-[13px] font-bold
-                        hover:bg-[#5C4033] hover:text-white transition"
-                      >
-                        리뷰쓰기
-                      </button>
+                      {/* 상품 액션 버튼 */}
+                      <div className="mt-3 flex gap-2">
+                        <button
+                          className="flex-1 h-[34px] border border-[#5C4033] text-[#5C4033]
+            rounded-md text-[13px] font-bold
+            hover:bg-[#5C4033] hover:text-white transition"
+                        >
+                          취소
+                        </button>
 
-                      <button
-                        onClick={() =>
-                          navigate("/writeInquiry", {
-                            state: {
-                              productIdx: detail.productIdx,
-                              productName: detail.productName,
-                            },
-                          })
-                        }
-                        className="flex-1 h-[34px] border border-[#5C4033] text-[#5C4033]
-                        rounded-md text-[13px] font-bold
-                        hover:bg-[#5C4033] hover:text-white transition"
-                      >
-                        문의하기
-                      </button>
+                        <button
+                          disabled={!canWriteReview}
+                          onClick={() => {
+                            if (!canWriteReview) return;
+
+                            navigate("/writeReview", {
+                              state: {
+                                ordersIdx: order.ordersIdx,
+                                productIdx: detail.productIdx,
+                                productName: detail.productName,
+                                optionInfo: `색상: ${detail.colorCode}, 사이즈: ${detail.sizeCode}`,
+                              },
+                            });
+                          }}
+                          className={`flex-1 h-[34px] rounded-md text-[13px] font-bold transition
+              ${
+                canWriteReview
+                  ? "border border-[#5C4033] text-[#5C4033] hover:bg-[#5C4033] hover:text-white"
+                  : "bg-gray-200 text-gray-400 border border-gray-300 cursor-not-allowed"
+              }`}
+                        >
+                          {canWriteReview ? "리뷰쓰기" : "리뷰 작성 완료"}
+                        </button>
+
+                        <button
+                          onClick={() =>
+                            navigate("/writeInquiry", {
+                              state: {
+                                productIdx: detail.productIdx,
+                                productName: detail.productName,
+                              },
+                            })
+                          }
+                          className="flex-1 h-[34px] border border-[#5C4033] text-[#5C4033]
+              rounded-md text-[13px] font-bold
+              hover:bg-[#5C4033] hover:text-white transition"
+                        >
+                          문의하기
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="text-right font-bold">
+                      {detail.totalPrice.toLocaleString()}원
                     </div>
                   </div>
-
-                  <div className="text-right font-bold">
-                    {detail.totalPrice.toLocaleString()}원
-                  </div>
-                </div>
-              ))}
+                );
+              })}
 
               {/* 배송지 / 결제 정보 */}
               {order.delivery && (
