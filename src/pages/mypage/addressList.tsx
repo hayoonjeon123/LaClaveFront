@@ -93,7 +93,7 @@ export default function AddressList() {
                   {addr.address}
                 </div>
                 <div className="text-[14px] font-medium text-[#333]">
-                  {addr.phone}
+                  {addr.phone.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3")}
                 </div>
               </div>
 
@@ -116,11 +116,7 @@ export default function AddressList() {
         )}
 
         {/* 저장하기 버튼 */}
-        <div className="flex justify-center mt-12">
-          <button className="w-[140px] h-[44px] border border-[#A8A9AD] rounded-[6px] font-bold text-[15px] text-black hover-[#5C4033] hover:border-[#5C4033] hover:text-white hover:bg-[#5C4033] transition shadow-sm cursor-pointer">
-            저장
-          </button>
-        </div>
+        <div className="flex justify-center mt-12"></div>
       </div>
     </div>
   );

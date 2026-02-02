@@ -33,11 +33,17 @@ export default function MyWithDraw() {
 
       alert("회원 탈퇴가 완료되었습니다.");
 
-      // 🔐 로그아웃 처리
       localStorage.clear();
       navigate("/");
     } catch (error: any) {
-      alert(error.response?.data ?? "회원 탈퇴 중 오류가 발생했습니다.");
+      // 서버 에러 메시지 처리
+      const msg =
+        error.response?.data?.message ||
+        (typeof error.response?.data === "string"
+          ? error.response?.data
+          : JSON.stringify(error.response?.data)) ||
+        "회원 탈퇴 중 오류가 발생했습니다.";
+      alert(msg);
     } finally {
       setLoading(false);
     }

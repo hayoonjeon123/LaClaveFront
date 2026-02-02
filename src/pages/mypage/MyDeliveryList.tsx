@@ -14,7 +14,6 @@ export default function MyDeliveryList() {
     setLoading(true);
     getMyDeliveryList()
       .then((list) => {
-        console.log("받은 배송 리스트:", list);
         setDeliveries(list);
       })
       .catch((err) => console.error("배송 목록 불러오기 실패", err))

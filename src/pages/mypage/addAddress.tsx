@@ -60,7 +60,7 @@ export default function AddAddress() {
       const response = await axiosInstance.post<number>(
         "http://localhost:8080/api/member/address",
         payload,
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       if (response.data) {

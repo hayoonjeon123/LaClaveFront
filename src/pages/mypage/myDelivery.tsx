@@ -28,12 +28,9 @@ export default function MyDeliveryPage() {
   useEffect(() => {
     if (!orderIdx) return;
 
-    console.log("📦 주문별 배송 조회 시작:", orderIdx);
-
     const fetchDelivery = async () => {
       try {
         const data: MyDelivery[] = await getDeliveryByOrder(Number(orderIdx));
-        console.log("📦 배송 API 응답:", data);
 
         if (!Array.isArray(data) || data.length === 0) {
           setDeliveryLogs([]);

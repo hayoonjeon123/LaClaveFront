@@ -11,7 +11,6 @@ export default function MyInquiryHistory() {
   useEffect(() => {
     getInquiryList()
       .then((res) => {
-        console.log("inquiry response:", res.data);
         setInquiries(res.data);
       })
       .catch((err) => {

@@ -20,7 +20,6 @@ export default function MyRecent() {
   useEffect(() => {
     getRecentProducts()
       .then((data) => {
-        console.log("최근 본 상품 응답:", data);
         setRecentItems(data);
       })
       .catch(console.error);
@@ -81,10 +80,11 @@ export default function MyRecent() {
                 >
                   <Heart
                     size={18}
-                    className={`transition-colors duration-300 ${(item as any).isLiked
-                      ? "fill-red-500 text-red-500"
-                      : "text-gray-300 fill-transparent"
-                      }`}
+                    className={`transition-colors duration-300 ${
+                      (item as any).isLiked
+                        ? "fill-red-500 text-red-500"
+                        : "text-gray-300 fill-transparent"
+                    }`}
                   />
                 </button>
               </div>

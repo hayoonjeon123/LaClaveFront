@@ -72,19 +72,21 @@ export default function MyReview() {
       <div className="grid grid-cols-2 border-b mb-6 border-[#A8A9AD] max-w-[650px] mx-auto">
         <button
           onClick={() => setActiveTab("writable")}
-          className={`w-full pb-2 font-bold text-[18px] ${activeTab === "writable"
-            ? "text-[#5C4033] border-b-2 border-[#5C4033]"
-            : "text-[#A8A9AD]"
-            }`}
+          className={`w-full pb-2 font-bold text-[18px] ${
+            activeTab === "writable"
+              ? "text-[#5C4033] border-b-2 border-[#5C4033] cursor-pointer"
+              : "text-[#A8A9AD] cursor-pointer"
+          }`}
         >
           작성 가능 리뷰
         </button>
         <button
           onClick={() => setActiveTab("written")}
-          className={`w-full pb-2 font-bold text-[18px] ${activeTab === "written"
-            ? "text-[#5C4033] border-b-2 border-[#5C4033]"
-            : "text-[#A8A9AD]"
-            }`}
+          className={`w-full pb-2 font-bold text-[18px] ${
+            activeTab === "written"
+              ? "text-[#5C4033] border-b-2 border-[#5C4033] cursor-pointer"
+              : "text-[#A8A9AD] cursor-pointer"
+          }`}
         >
           작성 완료 리뷰
         </button>
@@ -139,7 +141,7 @@ export default function MyReview() {
                         },
                       })
                     }
-                    className="border px-3 h-7 rounded-[5px] text-[11px] font-bold"
+                    className="border px-3 h-7 rounded-[5px] text-[11px] font-bold cursor-pointer hover:bg-[#5C4033]/80 transition"
                   >
                     작성
                   </button>
@@ -197,13 +199,13 @@ export default function MyReview() {
                           },
                         })
                       }
-                      className="border px-3 h-7 rounded-[5px] text-[11px] font-bold"
+                      className="border px-3 h-7 rounded-[5px] text-[11px] font-bold cursor-pointer hover:bg-[#5C4033]/80 transition"
                     >
                       수정
                     </button>
                     <button
                       onClick={() => handleDelete(review.reviewIdx)}
-                      className="border bg-[#5C4033] text-white px-3 h-7 rounded-[5px] text-[11px] font-bold"
+                      className="border bg-[#5C4033] text-white px-3 h-7 rounded-[5px] text-[11px] font-bold cursor-pointer hover:bg-[#5C4033]/80 transition"
                     >
                       삭제
                     </button>

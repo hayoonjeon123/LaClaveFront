@@ -18,7 +18,6 @@ export default function MyOrders() {
   useEffect(() => {
     getMyOrders()
       .then((res) => {
-        console.log("📦 주문목록:", res);
         setOrders(res);
       })
       .catch(console.error);
@@ -95,7 +94,7 @@ export default function MyOrders() {
                         <button
                           className="flex-1 h-[34px] border border-[#5C4033] text-[#5C4033]
             rounded-md text-[13px] font-bold
-            hover:bg-[#5C4033] hover:text-white transition"
+            hover:bg-[#5C4033] hover:text-white transition cursor-pointer"
                         >
                           취소
                         </button>
@@ -117,7 +116,7 @@ export default function MyOrders() {
                           className={`flex-1 h-[34px] rounded-md text-[13px] font-bold transition
               ${
                 canWriteReview
-                  ? "border border-[#5C4033] text-[#5C4033] hover:bg-[#5C4033] hover:text-white"
+                  ? "border border-[#5C4033] text-[#5C4033] hover:bg-[#5C4033] hover:text-white cursor-pointer"
                   : "bg-gray-200 text-gray-400 border border-gray-300 cursor-not-allowed"
               }`}
                         >
@@ -135,7 +134,7 @@ export default function MyOrders() {
                           }
                           className="flex-1 h-[34px] border border-[#5C4033] text-[#5C4033]
               rounded-md text-[13px] font-bold
-              hover:bg-[#5C4033] hover:text-white transition"
+              hover:bg-[#5C4033] hover:text-white transition cursor-pointer"
                         >
                           문의하기
                         </button>
@@ -162,7 +161,7 @@ export default function MyOrders() {
                             : order.ordersIdx,
                         )
                       }
-                      className="w-full h-[50px] px-6 flex items-center justify-between"
+                      className="w-full h-[50px] px-6 flex items-center justify-between cursor-pointer"
                     >
                       배송지 정보
                       {openDeliveryIdx === order.ordersIdx ? (
@@ -195,7 +194,7 @@ export default function MyOrders() {
                             : order.ordersIdx,
                         )
                       }
-                      className="w-full h-[50px] px-6 flex items-center justify-between"
+                      className="w-full h-[50px] px-6 flex items-center justify-between cursor-pointer"
                     >
                       결제 정보
                       {openPaymentIdx === order.ordersIdx ? (
@@ -242,7 +241,7 @@ export default function MyOrders() {
       text-[#5C4033] font-bold text-[15px]
       rounded-lg
       hover:bg-[#5C4033] hover:text-white
-      transition"
+      transition cursor-pointer"
                 >
                   배송 현황 조회
                 </button>

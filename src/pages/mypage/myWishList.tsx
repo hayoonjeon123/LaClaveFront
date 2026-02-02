@@ -1,7 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { Heart, ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getWishlistByMember, deleteWishlist } from "../../api/myPage/wishlistApi";
+import {
+  getWishlistByMember,
+  deleteWishlist,
+} from "../../api/myPage/wishlistApi";
 import type { Wishlist } from "../../api/myPage/wishlistApi";
 
 export default function MyWishList() {

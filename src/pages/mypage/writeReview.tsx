@@ -41,16 +41,16 @@ export default function WriteReview() {
     // ⭐ 수정/작성 분기 명확히
     const reviewPayload = isEdit
       ? {
-        reviewIdx: state.reviewIdx,
-        score: rating,
-        content,
-      }
+          reviewIdx: state.reviewIdx,
+          score: rating,
+          content,
+        }
       : {
-        ordersIdx: state.ordersIdx,
-        productIdx: state.productIdx,
-        score: rating,
-        content,
-      };
+          ordersIdx: state.ordersIdx,
+          productIdx: state.productIdx,
+          score: rating,
+          content,
+        };
 
     formData.append(
       "review",
