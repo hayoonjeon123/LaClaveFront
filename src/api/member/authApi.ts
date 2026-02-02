@@ -34,8 +34,8 @@ export const checkEmailDuplicate = async (email: string): Promise<boolean> => {
 };
 
 //이메일 인증번호 발송
-export const sendEmailAuth = async (email: string): Promise<any> => {
-    const response = await axiosInstance.post("/api/email-send", { email });
+export const sendEmailAuth = async (email: string, memberName?: string, memberId?: string): Promise<any> => {
+    const response = await axiosInstance.post("/api/email-send", { email, memberName, memberId });
     return response.data;
 };
 

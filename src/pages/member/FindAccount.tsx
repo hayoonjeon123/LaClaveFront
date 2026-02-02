@@ -13,15 +13,27 @@ const FindAccount = () => {
   const navigate = useNavigate();
 
   const handleSendEmail = async () => {
+    if (!name) {
+      alert("이름을 입력해주세요.");
+      return;
+    }
+    if (activeTab === "password" && !memberId) {
+      alert("아이디를 입력해주세요.");
+      return;
+    }
     if (!email) {
       alert("이메일을 입력해주세요.");
       return;
     }
     try {
-      await sendEmailAuth(email);
+      if (activeTab === "id") {
+        await sendEmailAuth(email, name);
+      } else {
+        await sendEmailAuth(email, name, memberId);
+      }
       alert("인증번호가 전송되었습니다. 이메일을 확인해주세요.");
-    } catch (error) {
-      alert("이메일 전송에 실패했습니다.");
+    } catch (error: any) {
+      alert(error.response?.data || "이메일 전송에 실패했습니다.");
     }
   };
 

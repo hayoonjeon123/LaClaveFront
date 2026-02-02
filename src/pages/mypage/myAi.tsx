@@ -19,7 +19,6 @@ export default function MyAi() {
             const response = await axiosInstance.get("/api/ai/recommend");
             setProducts(Array.isArray(response.data) ? response.data : []);
         } catch (error: any) {
-            console.error("데이터 로딩 실패:", error);
             if (error.response) {
                 if (error.response.status === 401) {
                     alert("로그인이 필요한 서비스입니다.");
