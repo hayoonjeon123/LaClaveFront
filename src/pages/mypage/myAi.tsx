@@ -71,8 +71,7 @@ export default function MyAi() {
                         products.map((product) => (
                             <Link to={`/product/${product.productIdx}`} key={product.productIdx} className="group block relative">
                                 <div className="bg-gray-200 mb-4 overflow-hidden relative aspect-[3/4]">
-                                    {/* DTO에서 mainImageUrl로 가정 (실제 응답구조 확인 필요, Item 엔티티 기준 images 리스트 사용시 수정 필요) */}
-                                    {/* 백엔드 Item 엔티티는 images Set을 가짐. JSON 변환 시 images 리스트가 됨. */}
+
                                     {product.images && product.images.length > 0 ? (
                                         <img
                                             src={`${SERVER_URL}${product.images[0].imagePath}`}

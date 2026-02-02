@@ -4,7 +4,7 @@ import { Heart, Star } from "lucide-react";
 import { getProductDetail, getWishlistStatus, toggleWishlist } from "@/api/product/productApi";
 import { addToCart } from "@/api/order/cartApi";
 import type { ProductDetail as ProductDetailType } from "@/types/product";
-import { formatPrice, getDisplayColor, sortSizes } from "@/utils/productUtils";
+import { formatPrice, getDisplayColor, sortSizes, SERVER_URL } from "@/utils/productUtils";
 import {
   Select,
   SelectContent,
@@ -220,7 +220,7 @@ function ProductDetail() {
             detailImages.map((img: string, idx: number) => (
               <img
                 key={idx}
-                src={img}
+                src={`${SERVER_URL}${img}`}
                 alt={`Detail ${idx}`}
                 className="w-full object-cover"
               />
@@ -272,7 +272,7 @@ function ProductDetail() {
                   <CarouselItem key={index}>
                     <div className="flex items-center justify-center h-full">
                       <img
-                        src={img}
+                        src={`${SERVER_URL}${img}`}
                         alt={`Product ${index + 1}`}
                         className="w-full h-[600px] object-contain"
                       />
@@ -450,7 +450,7 @@ function ProductDetail() {
                   {tab.content.map((img, index) => (
                     <img
                       key={index}
-                      src={img}
+                      src={`${SERVER_URL}${img}`}
                       alt={`${tab.label} ${index + 1}`}
                       className="w-full object-cover"
                     />
