@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import { getMemberInfo } from "@/api/member/memberApi";
 import { getMyAddressList } from "@/api/myPage/memberAddressApi";
 import type { MemberAddressDto } from "@/api/myPage/memberAddressApi";
@@ -244,9 +245,17 @@ const Order = () => {
 
     return (
         <div className="w-full max-w-[800px] mx-auto py-20 px-6 text-[#000]">
-            <h2 className="text-center text-[24px] font-bold mb-12 tracking-widest">
-                ORDER
-            </h2>
+            <div className="max-w-[700px] mx-auto flex items-center relative mb-12">
+                <button
+                    onClick={() => navigate(-1)}
+                    className="absolute left-[-40px] p-1.5 rounded-full hover:bg-gray-100 cursor-pointer"
+                >
+                    <ArrowLeft size={28} />
+                </button>
+                <h2 className="flex-1 text-center text-[24px] font-bold tracking-widest uppercase">
+                    Order
+                </h2>
+            </div>
 
             <section className="mb-12">
                 <div className="flex justify-between items-center border-b border-black pb-2 mb-6">
