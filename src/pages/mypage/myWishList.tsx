@@ -21,7 +21,6 @@ export default function MyWishList() {
     }
     getWishlistByMember()
       .then((data) => {
-        console.log("📦 wishlist data:", data);
         setWishItems(data);
       })
       .catch((err) => {

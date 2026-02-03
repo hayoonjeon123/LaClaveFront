@@ -29,6 +29,10 @@ export default function PwEdit() {
       setError("모든 필드를 입력해주세요.");
       return;
     }
+    if (current === newPw) {
+      setError("새 비밀번호는 기존 비밀번호와 달라야 합니다.");
+      return;
+    }
 
     const dto: PasswordUpdateDto = {
       currentPassword: current,

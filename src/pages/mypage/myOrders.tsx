@@ -106,6 +106,7 @@ export default function MyOrders() {
 
                             navigate("/writeReview", {
                               state: {
+                                mode: "create",
                                 ordersIdx: order.ordersIdx,
                                 productIdx: detail.productIdx,
                                 productName: detail.productName,

@@ -51,6 +51,8 @@ export default function WriteReview() {
           score: rating,
           content,
         };
+    console.log("🚀 state:", state);
+    console.log("🚀 reviewPayload:", reviewPayload);
 
     formData.append(
       "review",

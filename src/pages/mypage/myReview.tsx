@@ -133,7 +133,7 @@ export default function MyReview() {
                     onClick={() =>
                       navigate("/writeReview", {
                         state: {
-                          mode: "write",
+                          mode: "create",
                           ordersIdx: review.ordersIdx,
                           productIdx: review.productIdx,
                           productName: review.productName,
